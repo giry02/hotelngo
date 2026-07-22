@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HotelnGo 곡선형 벡터 n 컬러 타입</title>
+  <style>
+    @font-face{font-family:Pretendard;src:url("../fonts/PretendardVariable.woff2") format("woff2-variations");font-weight:100 900}
+    *{box-sizing:border-box}body{margin:0;background:#fff;color:#181b1a;font-family:Pretendard,sans-serif}main{width:min(calc(100% - 40px),1160px);margin:auto;padding:48px 0 72px}header{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:24px}header small{color:#2f6bff;font-size:11px;font-weight:780;letter-spacing:.14em}h1{margin:7px 0 0;font-size:28px;line-height:1.3}header p{max-width:570px;margin:0;color:#737b79;font-size:13px;line-height:1.65}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{padding:22px;border:1px solid #e1e4e3;border-radius:16px;background:#fff}.card.reference{border-color:#adc1ff;box-shadow:0 8px 25px rgba(47,107,255,.07)}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.num{color:#2f6bff;font-size:9px;font-weight:800;letter-spacing:.12em}.head h2{margin:5px 0 0;font-size:17px}.stops{display:flex;gap:5px}.stops i{width:17px;height:17px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #e3e6e5}.large{display:grid;place-items:center;height:165px;margin:15px 0 11px;border-radius:11px;background:#fff}.large svg{width:min(350px,94%);height:auto}.actual{display:flex;align-items:center;height:62px;padding:0 14px;border:1px solid #e7eae9;border-radius:10px;background:#fff}.actual svg{width:160px;height:auto}.actual span{margin-left:auto;color:#959c9a;font-size:9px}.card p{min-height:37px;margin:12px 0 0;color:#777f7d;font-size:11px;line-height:1.55}.word-shape{fill:#171918}.pin{fill:#2f6bff}.pin-hole{fill:#fff}footer{margin-top:18px;color:#8b9290;font-size:11px}@media(max-width:760px){main{padding-top:32px}header{display:block}header p{margin-top:12px}.grid{grid-template-columns:1fr}.large{height:145px}}
+  </style>
+</head>
+<body>
+  <main>
+    <header><div><small>HOTELNGO · SMOOTH VECTOR COLOR STUDY</small><h1>곡선형 워드마크를 고정하고 n만 비교</h1></div><p>첨부 이미지의 짧고 둥근 비례를 바탕으로 Hotel과 g를 매끈한 베지어 곡선 SVG로 다시 그렸습니다. 폰트를 사용하지 않으며 지도 마커는 현재 블루, 두 리본 n만 색상 타입별로 바뀝니다.</p></header>
+    <section class="grid" id="palette-grid"></section>
+    <footer>메인 로고는 변경하지 않았습니다. 실제 사용 미리보기는 첨부한 헤더 로고 느낌에 맞춘 160px 폭입니다.</footer>
+  </main>
+  <script>
+    const palettes=[
+      {no:"01",name:"Warm Sunset",reference:true,desc:"노랑–오렌지–핑크의 따뜻한 여행·이벤트형입니다.",stops:[[0,"#FFD21A"],[.52,"#FF9B42"],[1,"#F45B8D"]]},
+      {no:"02",name:"Aqua Violet",reference:true,desc:"청록–스카이블루–보라의 선명한 디지털 여행형입니다.",stops:[[0,"#18D5D0"],[.5,"#36B2E7"],[1,"#8B45F5"]]},
+      {no:"03",name:"Ocean Route",reference:true,desc:"해외여행과 바다 이미지를 살린 청록–로열블루형입니다.",stops:[[0,"#00C6B7"],[.48,"#1CB3E5"],[1,"#2F6BFF"]]},
+      {no:"04",name:"Lagoon Sky",desc:"밝고 가벼운 리조트·휴양지 인상의 조합입니다.",stops:[[0,"#58D9E7"],[.52,"#4F91F5"],[1,"#6258E8"]]},
+      {no:"05",name:"Violet Coral",desc:"소셜 콘텐츠와 이벤트에 어울리는 보라–코럴형입니다.",stops:[[0,"#725AF6"],[.52,"#B94BE2"],[1,"#F05D8E"]]},
+      {no:"06",name:"Dusk Indigo",desc:"그라데이션을 절제한 블루그레이–인디고형입니다.",stops:[[0,"#8798BB"],[.5,"#6878C5"],[1,"#4659A9"]]},
+      {no:"07",name:"Blue Gray",desc:"현재 브랜드 보조색을 그대로 사용하는 단색안입니다.",solid:"#7D8FB8"},
+      {no:"08",name:"Neutral Gray",desc:"지도 마커 O에만 시선을 남기는 뉴트럴 단색안입니다.",solid:"#8E9693"},
+      {no:"09",name:"Teal Indigo",reference:true,desc:"청록–블루–인디고가 흰 배경에서 차분하게 이어지는 타입입니다.",stops:[[0,"#16A8BC"],[.5,"#2F73BA"],[1,"#342F8F"]]}
+    ];
+    const hotelPaths=[
+      "M24 29C20.1 29 17 32.1 17 36v45c0 3.9 3.1 7 7 7h3c3.9 0 7-3.1 7-7V64h16v17c0 3.9 3.1 7 7 7h3c3.9 0 7-3.1 7-7V36c0-3.9-3.1-7-7-7h-3c-3.9 0-7 3.1-7 7v15H34V36c0-3.9-3.1-7-7-7Z",
+      "M90 42C76 42 67 51.2 67 65s9 23 23 23 23-9.2 23-23-9-23-23-23Zm0 12c6.1 0 10 4.2 10 11s-3.9 11-10 11-10-4.2-10-11 3.9-11 10-11Z",
+      "M119 34c0-3.3 2.7-6 6-6h2c3.3 0 6 2.7 6 6v9h7v11h-7v18c0 3.1 1.4 4.5 4.4 4.5h3.1v10.2c-2.7.9-5.5 1.3-8.4 1.3-8.6 0-13.1-5.1-13.1-14.1V54h-7V43h7Z",
+      "M159 42c-13.2 0-22 9.3-22 23 0 14.1 9.2 23 23.5 23 8.3 0 14.6-2.7 19-8.1l-8.1-7.3c-2.8 3-6.2 4.4-10.5 4.4-6 0-10-2.8-11.5-7.8h30.3c.3-1.7.5-3.5.5-5.3 0-13.1-8.4-21.9-21.2-21.9Zm-9.5 17.6c1.3-4.6 4.6-7.1 9.5-7.1 4.7 0 7.8 2.6 8.8 7.1Z",
+      "M184 35c0-3.9 3.1-7 7-7h4v53c0 3.9-3.1 7-7 7h-4Z"
+    ];
+    const gPath="M308.5 42c-12.5 0-21 9.2-21 22.8 0 13.1 8.1 21.9 19.8 21.9 4.8 0 8.8-1.6 11.7-4.7v2.6c0 6.6-3.6 9.8-10.6 9.8-5.3 0-9.2-1.6-13.2-5.1l-6.5 9.2c5.2 4.7 11.7 7 20.6 7 14.6 0 23.2-7.7 23.2-21.8V49c0-3.9-3.1-7-7-7h-1c-3.1 0-5.8 2-6.7 4.8-2.7-3.1-5.8-4.8-9.3-4.8Zm1.5 12c5.7 0 9.3 4.2 9.3 10.8 0 6.5-3.6 10.7-9.3 10.7-5.8 0-9.3-4.2-9.3-10.7 0-6.6 3.5-10.8 9.3-10.8Z";
+    const nLeft="M211 28.5c-5.2 0-9.5 4.3-9.5 9.5v23.5c0 16.1 11.5 26.5 28.3 26.5 17.2 0 28.7-10.7 28.7-27v-5.5c0-5.2-4.3-9.5-9.5-9.5s-9.5 4.3-9.5 9.5V61c0 7.1-3.8 11-10.2 11-6.1 0-9.8-4-9.8-10.5V38c0-5.2-4.3-9.5-9.5-9.5Z";
+    const nRight="M251.8 27c-16.9 0-29.3 10.8-29.3 27v5.5c0 5.2 4.3 9.5 9.5 9.5s9.5-4.3 9.5-9.5V54c0-7.1 3.9-11 10.3-11 6.5 0 10.7 4.2 10.7 11v24.5c0 5.2 4.3 9.5 9.5 9.5s9.5-4.3 9.5-9.5V54c0-16.2-12.6-27-29.7-27Z";
+    const gradient=(p,id)=>p.solid?"":`<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="203" y1="58" x2="281" y2="58">${p.stops.map(([o,c])=>`<stop offset="${o*100}%" stop-color="${c}"/>`).join("")}</linearGradient></defs>`;
+    const logo=(p,id)=>{const fill=p.solid?p.solid:`url(#${id})`;return `<svg viewBox="12 15 400 90" role="img" aria-label="HotelnGo ${p.name} 벡터 로고">${gradient(p,id)}<g class="word-shape" fill-rule="evenodd">${hotelPaths.map(d=>`<path d="${d}"/>`).join("")}<path d="${gPath}"/></g><path d="${nLeft}" fill="${fill}"/><path d="${nRight}" fill="${fill}"/><g transform="translate(125 13)"><path class="pin" d="M247 6c-20.5 0-35 13.7-35 33.5 0 16.5 11.3 28.7 35 45.5 23.7-16.8 35-29 35-45.5C282 19.7 267.5 6 247 6Z"/><circle class="pin-hole" cx="247" cy="38.5" r="14"/><path class="pin" d="m239 39 17-8-6.2 17.6-4.5-7Z"/></g></svg>`};
+    const chips=p=>(p.solid?[p.solid]:p.stops.map(x=>x[1])).map(c=>`<i style="background:${c}"></i>`).join("");
+    document.querySelector("#palette-grid").innerHTML=palettes.map(p=>`<article class="card${p.reference?' reference':''}" id="traced-${p.no}"><div class="head"><div><span class="num">TYPE ${p.no}${p.reference?' · REFERENCE':''}</span><h2>${p.name}</h2></div><div class="stops">${chips(p)}</div></div><div class="large">${logo(p,`trace-${p.no}-large`)}</div><div class="actual">${logo(p,`trace-${p.no}-actual`)}<span>실사용 160px</span></div><p>${p.desc}</p></article>`).join("");
+  </script>
+</body>
+</html>

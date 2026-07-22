@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">HotelNGo Bridge N logo concept</title>
+  <desc id="desc">A deep teal wordmark with a coral n forming a bridge between Hotel and Go.</desc>
+  <defs>
+    <linearGradient id="bridgeBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0C5B58"/>
+      <stop offset="1" stop-color="#073A3A"/>
+    </linearGradient>
+    <linearGradient id="bridgeLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FF7A38"/>
+      <stop offset="1" stop-color="#FFB04A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Standalone bridge icon -->
+  <circle cx="166" cy="165" r="100" fill="#FFF2DF"/>
+  <path d="M93 211v-48c0-64 42-98 73-98s73 34 73 98v48" fill="none" stroke="url(#bridgeBg)" stroke-width="23" stroke-linecap="round"/>
+  <path d="M84 212h164" fill="none" stroke="url(#bridgeLine)" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="117" cy="212" r="8" fill="#FFF2DF"/>
+  <circle cx="215" cy="212" r="8" fill="#FFF2DF"/>
+
+  <!-- Wordmark -->
+  <text x="320" y="211" fill="#0B5351" font-family="Segoe UI, Arial, sans-serif" font-size="124" font-weight="740" letter-spacing="-5" textLength="318" lengthAdjust="spacingAndGlyphs">Hotel</text>
+  <path d="M657 211V119h36v20c16-19 37-28 63-28 43 0 67 28 67 73v27h-38v-30c0-24-12-36-34-36-31 0-57 21-57 54v12z" fill="#FF7133"/>
+  <path d="M628 224c54 0 92-4 132-17 42-14 74-14 116 0 34 11 74 15 138 15" fill="none" stroke="url(#bridgeLine)" stroke-width="8" stroke-linecap="round"/>
+  <text x="842" y="211" fill="#0B5351" font-family="Segoe UI, Arial, sans-serif" font-size="124" font-weight="740" letter-spacing="-6" textLength="196" lengthAdjust="spacingAndGlyphs">Go</text>
+
+  <text x="323" y="276" fill="#467572" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="650" letter-spacing="5.5">ONE JOURNEY, CONNECTED</text>
+</svg>

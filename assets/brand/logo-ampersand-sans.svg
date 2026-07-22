@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="86" viewBox="0 0 300 86" role="img" aria-labelledby="title desc">
+  <title id="title">Hotel&amp;Go · Sans Ampersand</title>
+  <desc id="desc">Liberation Sans Bold 앰퍼샌드를 적용한 Hotel&amp;Go 로고</desc>
+  <style>
+    @font-face { font-family: "HotelnGo Liberation Sans"; src: url("../fonts/LiberationSans-Bold.ttf") format("truetype"); font-weight: 700; }
+    .wordmark, .connector { font-family: "HotelnGo Liberation Sans", "Liberation Sans", Arial, sans-serif; font-weight: 700; }
+    .wordmark { letter-spacing: -2.8px; }
+  </style>
+  <g transform="translate(8 0)">
+    <text class="wordmark" x="0" y="59" fill="#181B1A" font-size="59">Hotel</text>
+    <text class="connector" x="139" y="59" fill="#A7AEC5" font-size="56">&amp;</text>
+    <text class="wordmark" x="187" y="59" fill="#181B1A" font-size="56">g</text>
+    <g transform="translate(9 0)"><path d="M247 6c-20.5 0-35 13.7-35 33.5 0 16.5 11.3 28.7 35 45.5 23.7-16.8 35-29 35-45.5C282 19.7 267.5 6 247 6Z" fill="#2F6BFF"/><circle cx="247" cy="38.5" r="14" fill="#FFFFFF"/><path d="m239 39 17-8-6.2 17.6-4.5-7Z" fill="#2F6BFF"/></g>
+  </g>
+</svg>

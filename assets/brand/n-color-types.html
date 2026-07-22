@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HotelnGo n 컬러 타입 비교</title>
+  <style>
+    @font-face{font-family:Pretendard;src:url("../fonts/PretendardVariable.woff2") format("woff2-variations");font-weight:100 900}
+    *{box-sizing:border-box}body{margin:0;background:#f4f5f5;color:#181b1a;font-family:Pretendard,sans-serif}main{width:min(calc(100% - 40px),1160px);margin:auto;padding:48px 0 72px}header{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:24px}header small{color:#2f6bff;font-size:11px;font-weight:780;letter-spacing:.14em}h1{margin:7px 0 0;font-size:28px;line-height:1.3}header p{max-width:550px;margin:0;color:#737b79;font-size:13px;line-height:1.65}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{padding:22px;border:1px solid #e1e4e3;border-radius:16px;background:#fff}.card.reference{border-color:#adc1ff;box-shadow:0 8px 25px rgba(47,107,255,.07)}.card.selected{border-color:#2f6bff;box-shadow:0 0 0 2px rgba(47,107,255,.18),0 12px 30px rgba(47,107,255,.1)}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.num{color:#2f6bff;font-size:9px;font-weight:800;letter-spacing:.12em}.head h2{margin:5px 0 0;font-size:17px}.stops{display:flex;align-items:center;gap:5px}.stops i{width:17px;height:17px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #e4e7e6}.large{display:grid;place-items:center;height:166px;margin:15px 0 11px;border-radius:11px;background:#fff}.large svg{width:min(300px,92%);height:auto}.actual{display:flex;align-items:center;height:57px;padding:0 14px;border:1px solid #e7eae9;border-radius:9px;background:#fff}.actual svg{width:126px;height:auto}.actual span{margin-left:auto;color:#959c9a;font-size:9px}.card p{min-height:37px;margin:12px 0 0;color:#777f7d;font-size:11px;line-height:1.55}.logo .word{font-family:Pretendard,"Noto Sans",Arial,sans-serif;font-weight:800;letter-spacing:-2.4px;fill:#181b1a;transform:scaleY(.94);transform-box:fill-box;transform-origin:center}.logo .pin{fill:#2f6bff}.logo .pin-hole{fill:#fff}footer{margin-top:18px;color:#8b9290;font-size:11px}@media(max-width:760px){main{padding-top:32px}header{display:block}header p{margin-top:12px}.grid{grid-template-columns:1fr}.large{height:145px}}
+  </style>
+</head>
+<body>
+  <main>
+    <header><div><small>HOTELNGO · N COLOR STUDY</small><h1>확대한 n에서 색상만 비교</h1></div><p>원본에서 추출한 두 리본 심볼을 모든 카드에서 동일하게 1.45배 확대했습니다. Hotel·g·지도 마커 O의 형태는 고정하고 확대된 n에 맞춰 자간만 다시 정렬했습니다.</p></header>
+    <section class="grid" id="palette-grid"></section>
+    <footer>메인 로고는 변경하지 않았습니다. 선택한 컬러 번호를 기준으로 정본 SVG와 단색·역상 버전을 만들 수 있습니다.</footer>
+  </main>
+  <script>
+    const palettes=[
+      {no:"01",name:"Warm Sunset",reference:true,desc:"첫 번째 첨부안에 가장 가까운 노랑–오렌지–핑크 조합입니다.",stops:[[0,"#FFD21A"],[.52,"#FF9B42"],[1,"#F45B8D"]]},
+      {no:"02",name:"Aqua Violet",reference:true,desc:"추가한 첨부안의 청록–스카이블루–보라 조합입니다.",stops:[[0,"#18D5D0"],[.5,"#36B2E7"],[1,"#8B45F5"]]},
+      {no:"03",name:"Ocean Route",selected:true,desc:"공식 선택안 · 해외여행과 바다 이미지를 살린 청록–로열블루 조합입니다.",stops:[[0,"#00C6B7"],[.48,"#1CB3E5"],[1,"#2F6BFF"]]},
+      {no:"04",name:"Lagoon Sky",desc:"조금 더 밝고 가벼운 리조트·휴양지 인상의 조합입니다.",stops:[[0,"#58D9E7"],[.52,"#4F91F5"],[1,"#6258E8"]]},
+      {no:"05",name:"Violet Coral",desc:"소셜 콘텐츠와 이벤트에 어울리는 보라–코럴 조합입니다.",stops:[[0,"#725AF6"],[.52,"#B94BE2"],[1,"#F05D8E"]]},
+      {no:"06",name:"Dusk Indigo",desc:"선명한 그라데이션을 절제한 블루그레이–인디고 조합입니다.",stops:[[0,"#8798BB"],[.5,"#6878C5"],[1,"#4659A9"]]},
+      {no:"07",name:"Blue Gray",desc:"현재 브랜드 보조색을 그대로 사용하는 안정적인 단색안입니다.",solid:"#7D8FB8"},
+      {no:"08",name:"Neutral Gray",desc:"색상 강조를 가장 낮춰 지도 마커 O에만 시선을 남기는 단색안입니다.",solid:"#8E9693"},
+      {no:"09",name:"Teal Indigo",reference:true,desc:"추가 이미지의 청록–블루–인디고 흐름을 n에만 적용한 흰 배경 전용안입니다.",stops:[[0,"#16A8BC"],[.5,"#2F73BA"],[1,"#342F8F"]]}
+    ];
+    const leftPath="M147.51 31.89 149.62 32.24 151.55 34.54 151.73 46.77 152.08 48.01 154.19 50.49 158.40 51.38 161.21 50.14 162.79 47.48 163.14 44.11 164.90 42.16 167.71 41.81 169.99 43.41 170.52 46.06 169.64 50.67 168.06 53.51 165.07 56.52 161.21 58.47 157 59 152.43 58.11 149.97 56.87 147.16 54.39 144.35 48.72 144 35.43 145.23 32.77Z";
+    const rightPath="M164.72 31 168.76 31 172.45 32.06 175.61 34.19 178.77 38.44 180 43.05 180 55.81 179.47 57.23 177.89 58.65 174.56 58.65 172.62 56.52 172.45 43.05 171.04 40.22 169.64 39.15 165.42 38.62 162.61 40.22 161.21 42.87 160.86 45.89 158.93 47.84 155.59 47.84 153.48 45.18 154.01 40.22 156.47 35.61 160.16 32.59Z";
+    const gradient=(p,id)=>p.solid?"":`<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="144" y1="45" x2="180" y2="45">${p.stops.map(([o,c])=>`<stop offset="${o*100}%" stop-color="${c}"/>`).join("")}</linearGradient></defs>`;
+    const logo=(p,id)=>{const fill=p.solid?p.solid:`url(#${id})`;return `<svg class="logo" viewBox="0 0 315 86" role="img" aria-label="HotelnGo ${p.name} 확대 n 컬러 로고">${gradient(p,id)}<g transform="translate(-.65)"><text class="word" x="7.3" y="59" font-size="56">Hotel</text><g transform="translate(144 59) scale(1.45) translate(-144 -59)"><path d="${leftPath}" fill="${fill}"/><path d="${rightPath}" fill="${fill}"/></g><text class="word" x="202" y="59" font-size="56">g</text><g transform="translate(28)"><path class="pin" d="M247 6c-20.5 0-35 13.7-35 33.5 0 16.5 11.3 28.7 35 45.5 23.7-16.8 35-29 35-45.5C282 19.7 267.5 6 247 6Z"/><circle class="pin-hole" cx="247" cy="38.5" r="14"/><path class="pin" d="m239 39 17-8-6.2 17.6-4.5-7Z" transform="translate(-1.8 -.5)"/></g></g></svg>`};
+    const chips=p=>(p.solid?[p.solid]:p.stops.map(x=>x[1])).map(c=>`<i style="background:${c}"></i>`).join("");
+    document.querySelector("#palette-grid").innerHTML=palettes.map(p=>`<article class="card${p.reference?' reference':''}${p.selected?' selected':''}" id="color-${p.no}"><div class="head"><div><span class="num">COLOR ${p.no}${p.selected?' · SELECTED':p.reference?' · REFERENCE':''}</span><h2>${p.name}</h2></div><div class="stops" aria-label="색상 구성">${chips(p)}</div></div><div class="large">${logo(p,`g-${p.no}-large`)}</div><div class="actual">${logo(p,`g-${p.no}-actual`)}<span>실제 헤더 126px</span></div><p>${p.desc}</p></article>`).join("");
+  </script>
+</body>
+</html>

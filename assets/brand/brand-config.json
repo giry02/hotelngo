@@ -1,0 +1,49 @@
+{
+  "version": "1.4.0",
+  "status": "LOCKED",
+  "selectedAt": "2026-07-22",
+  "brandName": "HotelnGo",
+  "selectedVariant": {
+    "id": "03",
+    "name": "Ocean Route",
+    "sourcePage": "assets/brand/n-color-types.html#color-03",
+    "sourceContext": "actual header 126px"
+  },
+  "primaryAsset": {
+    "path": "index.html (.site-header .brand-logo)",
+    "format": "INLINE_SVG_EXACT_COPY",
+    "viewBox": "0 0 315 86",
+    "source": "assets/brand/n-color-types.html#color-03 .actual svg",
+    "background": "transparent",
+    "policy": "DO_NOT_REDRAW_OR_SUBSTITUTE"
+  },
+  "savedDesignSource": {
+    "path": "assets/brand/n-color-types-v10-ocean-route.html",
+    "sha256": "9AF4324CC044FB3D04F1C26962371476AF22D807F91A59A5DB1ADF9FBDE268C4",
+    "purpose": "Use #color-03 when converting the approved logo back to SVG later."
+  },
+  "headerUsage": {
+    "desktop": {
+      "minViewport": 801,
+      "logoWidth": 126,
+      "headerHeight": 72
+    },
+    "tablet": {
+      "maxViewport": 800,
+      "logoWidth": 116,
+      "headerHeight": 62
+    },
+    "mobile": {
+      "maxViewport": 560,
+      "logoWidth": 105,
+      "headerHeight": 62
+    }
+  },
+  "rules": [
+    "Use the exact #color-03 actual SVG markup from n-color-types.html in the current website header.",
+    "Display it at 126px in the desktop header with the original 315:86 ratio.",
+    "Do not redraw, trace, crop, or substitute the header logo.",
+    "Keep the saved n-color-types v10 HTML unchanged for future SVG work.",
+    "Do not use the previous wordmark PNG in website headers; do not overwrite the saved HTML source."
+  ]
+}

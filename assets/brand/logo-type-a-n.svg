@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="86" viewBox="0 0 300 86" role="img" aria-labelledby="title desc">
+  <title id="title">HotelnGo · Liberation Sans</title>
+  <desc id="desc">Liberation Sans Bold와 블루그레이 n을 적용한 HotelnGo 로고</desc>
+  <style>
+    @font-face {
+      font-family: "HotelnGo Liberation Sans";
+      src: url("../fonts/LiberationSans-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+    .wordmark,
+    .connector {
+      font-family: "HotelnGo Liberation Sans", "Liberation Sans", Arial, sans-serif;
+      font-weight: 700;
+    }
+    .wordmark { letter-spacing: -2.8px; }
+    .connector { letter-spacing: -1.8px; }
+  </style>
+  <g transform="translate(8 0)">
+    <text class="wordmark" x="0" y="59" fill="#181B1A" font-size="59">Hotel</text>
+    <text class="connector" x="139" y="59" fill="#7D8FB8" font-size="55">n</text>
+    <text class="wordmark" x="174" y="59" fill="#181B1A" font-size="56">g</text>
+    <path d="M247 6c-20.5 0-35 13.7-35 33.5 0 16.5 11.3 28.7 35 45.5 23.7-16.8 35-29 35-45.5C282 19.7 267.5 6 247 6Z" fill="#2F6BFF"/>
+    <circle cx="247" cy="38.5" r="14" fill="#FFFFFF"/>
+    <path d="m239 39 17-8-6.2 17.6-4.5-7Z" fill="#2F6BFF"/>
+  </g>
+</svg>

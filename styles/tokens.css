@@ -1,0 +1,38 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --brand-primary: #2f6bff;
+  --brand-primary-deep: #1f55d5;
+  --brand-primary-soft: #edf3ff;
+  --brand-journey: #159a8c;
+  --brand-accent: #2f6bff;
+  --brand-accent-strong: #1f55d5;
+  --brand-accent-soft: #edf3ff;
+  --surface-page: #ffffff;
+  --surface-soft: #f7f8f8;
+  --surface-muted: #f0f2f1;
+  --surface-card: #ffffff;
+  --text-strong: #161a19;
+  --text-body: #4b5351;
+  --text-muted: #848b89;
+  --border-soft: #e8eae9;
+  --border-strong: #d7dcda;
+  --success: #147d64;
+  --danger: #f05252;
+  --shadow-card: 0 8px 24px rgb(17 40 36 / 6%);
+  --shadow-search: 0 12px 34px rgb(15 44 39 / 9%);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+  --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --shell: 1180px;
+  --header-height: 72px;
+  --ease: cubic-bezier(.2, .72, .2, 1);
+}
