@@ -1,0 +1,263 @@
+{
+  "schemaVersion": "1.0",
+  "plannerVersion": "RULE-RANKER-2.0",
+  "generatedAt": "2026-07-23T20:30:00+09:00",
+  "dataPolicy": {
+    "catalogSource": "HotelNGo place/product JSON fixtures",
+    "liveSourcesConnected": false,
+    "llmConnected": false,
+    "mapsConnected": false,
+    "supplierInventoryConnected": false,
+    "safeResultPolicy": "운영시간·이동시간·재고를 실시간 확인하지 못한 항목은 예약 확정으로 표시하지 않는다."
+  },
+  "destinations": [
+    {
+      "id": "dest_kyoto",
+      "name": "교토",
+      "aliases": [
+        "kyoto",
+        "京都"
+      ],
+      "landmarks": [
+        {
+          "id": "kyoto_gion",
+          "name": "기온 시라카와",
+          "type": "LANDMARK",
+          "tags": [
+            "감성",
+            "골목",
+            "야경",
+            "사진"
+          ],
+          "score": 96,
+          "estimatedMinutes": 70,
+          "bestTime": "18:20",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "CATALOG_VERIFIED",
+          "reason": "해질 무렵의 골목과 수로 풍경을 천천히 걷기 좋습니다.",
+          "alternatives": [
+            "kyoto_pontocho",
+            "kyoto_yasaka"
+          ]
+        },
+        {
+          "id": "kyoto_pontocho",
+          "name": "폰토초 골목",
+          "type": "LANDMARK",
+          "tags": [
+            "야경",
+            "맛집",
+            "골목"
+          ],
+          "score": 91,
+          "estimatedMinutes": 60,
+          "bestTime": "19:30",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "CATALOG_VERIFIED",
+          "reason": "저녁 식사와 강변 산책을 한 동선에 넣기 좋습니다.",
+          "alternatives": [
+            "kyoto_gion",
+            "kyoto_nishiki"
+          ]
+        },
+        {
+          "id": "kyoto_yasaka",
+          "name": "야사카 신사",
+          "type": "LANDMARK",
+          "tags": [
+            "전통",
+            "야경",
+            "사진"
+          ],
+          "score": 88,
+          "estimatedMinutes": 55,
+          "bestTime": "20:00",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "CATALOG_VERIFIED",
+          "reason": "기온에서 도보로 이어지며 밤에도 분위기가 살아납니다.",
+          "alternatives": [
+            "kyoto_gion",
+            "kyoto_pontocho"
+          ]
+        },
+        {
+          "id": "kyoto_nishiki",
+          "name": "니시키 시장",
+          "type": "FOOD",
+          "tags": [
+            "미식",
+            "시장",
+            "낮"
+          ],
+          "score": 84,
+          "estimatedMinutes": 90,
+          "bestTime": "11:30",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "HOURS_CHECK_REQUIRED",
+          "reason": "간단한 점심과 지역 식재료 탐색을 함께 할 수 있습니다.",
+          "alternatives": [
+            "kyoto_pontocho"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dest_danang",
+      "name": "다낭",
+      "aliases": [
+        "danang",
+        "da nang"
+      ],
+      "landmarks": [
+        {
+          "id": "danang_my_khe",
+          "name": "미케 비치",
+          "type": "LANDMARK",
+          "tags": [
+            "바다",
+            "휴양",
+            "일출",
+            "사진"
+          ],
+          "score": 95,
+          "estimatedMinutes": 90,
+          "bestTime": "06:10",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "CATALOG_VERIFIED",
+          "reason": "이동 부담이 낮고 아침 바다를 중심으로 하루를 열기 좋습니다.",
+          "alternatives": [
+            "danang_son_tra",
+            "danang_hoi_an"
+          ]
+        },
+        {
+          "id": "danang_son_tra",
+          "name": "선짜 반도",
+          "type": "LANDMARK",
+          "tags": [
+            "전망",
+            "자연",
+            "드라이브"
+          ],
+          "score": 90,
+          "estimatedMinutes": 150,
+          "bestTime": "15:30",
+          "bookingType": "REQUEST",
+          "confidence": "TRANSPORT_CHECK_REQUIRED",
+          "reason": "해안 전망과 드라이브를 함께 구성할 수 있습니다.",
+          "alternatives": [
+            "danang_my_khe",
+            "danang_ba_na"
+          ]
+        },
+        {
+          "id": "danang_hoi_an",
+          "name": "호이안 올드타운",
+          "type": "LANDMARK",
+          "tags": [
+            "야경",
+            "골목",
+            "미식"
+          ],
+          "score": 93,
+          "estimatedMinutes": 240,
+          "bestTime": "16:30",
+          "bookingType": "REQUEST",
+          "confidence": "TRANSPORT_CHECK_REQUIRED",
+          "reason": "해질 무렵부터 등불이 켜지는 시간까지 한 장면처럼 이어집니다.",
+          "alternatives": [
+            "danang_son_tra",
+            "danang_ba_na"
+          ]
+        },
+        {
+          "id": "danang_ba_na",
+          "name": "바나힐",
+          "type": "TOUR",
+          "tags": [
+            "가족",
+            "전망",
+            "테마"
+          ],
+          "score": 82,
+          "estimatedMinutes": 360,
+          "bestTime": "08:00",
+          "bookingType": "INSTANT",
+          "confidence": "INVENTORY_CHECK_REQUIRED",
+          "reason": "가족 여행에서 하루 단위 체험으로 구성하기 좋습니다.",
+          "alternatives": [
+            "danang_son_tra"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dest_bangkok",
+      "name": "방콕",
+      "aliases": [
+        "bangkok"
+      ],
+      "landmarks": [
+        {
+          "id": "bangkok_wat_arun",
+          "name": "왓 아룬",
+          "type": "LANDMARK",
+          "tags": [
+            "야경",
+            "강변",
+            "사진"
+          ],
+          "score": 95,
+          "estimatedMinutes": 90,
+          "bestTime": "17:00",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "HOURS_CHECK_REQUIRED",
+          "reason": "해 질 무렵 강변에서 방콕의 대표 장면을 볼 수 있습니다.",
+          "alternatives": [
+            "bangkok_chinatown",
+            "bangkok_rooftop"
+          ]
+        },
+        {
+          "id": "bangkok_chinatown",
+          "name": "차이나타운 푸드워크",
+          "type": "TOUR",
+          "tags": [
+            "미식",
+            "야시장",
+            "가이드"
+          ],
+          "score": 93,
+          "estimatedMinutes": 180,
+          "bestTime": "19:00",
+          "bookingType": "REQUEST",
+          "confidence": "INVENTORY_CHECK_REQUIRED",
+          "reason": "가이드와 함께 여러 음식을 짧은 동선으로 경험할 수 있습니다.",
+          "alternatives": [
+            "bangkok_rooftop"
+          ]
+        },
+        {
+          "id": "bangkok_rooftop",
+          "name": "짜오프라야 루프톱",
+          "type": "RESTAURANT",
+          "tags": [
+            "야경",
+            "데이트",
+            "미식"
+          ],
+          "score": 89,
+          "estimatedMinutes": 120,
+          "bestTime": "20:00",
+          "bookingType": "REQUEST",
+          "confidence": "INVENTORY_CHECK_REQUIRED",
+          "reason": "강변 야경과 저녁 식사를 한 번에 구성할 수 있습니다.",
+          "alternatives": [
+            "bangkok_chinatown",
+            "bangkok_wat_arun"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T10:00:00+09:00",
+  "member": {
+    "id": "usr_demo_jiho",
+    "realm": "HOTELNGO_B2C",
+    "email": "demo@hotelngo.test",
+    "name": "김지호",
+    "locale": "ko-KR",
+    "currency": "KRW",
+    "residenceCountry": "KR",
+    "nationality": "KR"
+  },
+  "travelerProfiles": [
+    {
+      "id": "traveler_primary",
+      "memberId": "usr_demo_jiho",
+      "isPrimary": true,
+      "passportName": "KIM JIHO",
+      "nationality": "KR",
+      "birthDate": "1992-05-14",
+      "gender": "UNSPECIFIED",
+      "passport": {
+        "maskedNumber": "M12••••45",
+        "issuingCountry": "KR",
+        "expiresOn": "2031-04-03"
+      },
+      "pmsGuestLinks": []
+    }
+  ]
+}

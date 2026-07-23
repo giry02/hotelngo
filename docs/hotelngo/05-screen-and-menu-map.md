@@ -41,7 +41,9 @@
 
 ### 2.3 공통 검색 결과
 
-- 검색어/목적지, 날짜·시간, 인원, 카테고리 탭
+- 여행지와 호텔명을 한 입력창에서 검색하고, 로그인 회원에게는 동일 검색창의 `내 숙박내역` 그룹으로 과거 투숙 호텔을 함께 제안한다.
+- 호텔명 또는 과거 숙박 호텔을 선택하면 호텔 상세로, 여행지를 선택하면 해당 지역 호텔 결과로 이동한다.
+- 검색어/목적지·호텔명, 날짜·시간, 인원, 카테고리 탭
 - 지도/목록 전환, 정렬, 필터, 결과 개수
 - 카드: 대표 이미지, 이름, 위치, 평점/리뷰, 핵심 태그, 최저가 또는 정보성 상태, 최신 확인시각
 - 모바일에서는 필터를 바텀시트로, 지도와 목록을 전환형으로 제공한다.
@@ -78,7 +80,7 @@
 | 재검증 | 가격/재고 변화, 홀드 만료시간, 최종 결제금액 |
 | 완료/상태 | HotelNGo 예약번호, 공급자 상태, 결제, 취소조건, 고객지원 |
 
-Release 1은 검색·상세·객실유형별 요금/재고까지만 활성화하고 예약 CTA는 비활성/준비중 상태로 제공한다.
+Release 1의 실제 연동 범위는 검색·상세·객실유형별 요금/재고까지다. 예약·결제 CTA는 사용자 피드백을 위한 정적 HTML 단계 전환만 제공하며, 공급자 예약 명령과 금전 거래는 비활성 상태다.
 
 ## 5. 기타 업종 화면
 
@@ -168,26 +170,90 @@ Release 1은 검색·상세·객실유형별 요금/재고까지만 활성화하
 | 스토리 상세 | `story.html` | 시간·소리·장소·호텔·일정 담기 표현 |
 | 랜드마크 상세 | `landmark.html` | 운영정보, 추천시간, 지도, 주변 호텔·스토리 |
 | 호텔 검색 | `hotels.html` | 필터, 정렬, 공급 상태, 확인 시각, 가격·재고 |
-| 호텔 상세 | `hotel-detail.html` | 갤러리, 객실유형별 Offer, 재고, 정책, 주변 장소 |
+| 호텔 상세 | `hotel-detail.html` | 호텔 8장·객실유형별 4~5장 갤러리, 객실 상세, PMS Offer·재고, 정책, 주변 장소 |
+| 호텔 후기 | `hotel-reviews.html` | 예약 확인 후기 요약, 항목별 평점, 여행 유형·객실·정렬 필터, 후기 상세 진입 |
 | 즐길거리 | `experiences.html` | 정보형·예약 요청형 콘텐츠와 업종 탐색 |
 | 즐길거리 상세 | `experience-detail.html` | 소요시간·언어·집결·포함사항·일정 저장 |
 | 통합검색 | `search.html` | 호텔·랜드마크·업종별 통합 탐색과 모바일 검색 진입 |
-| 해외 항공 | `flights.html` | 출도착·시간·수하물 탐색, 구매 연동 준비 상태 |
+| 해외 항공 | `flights.html` | 출도착·시간·수하물 탐색, 실시간 발권 API 미연결 상태 |
 | 해외 패키지 | `packages.html` | 해외 우선 큐레이션과 예상 구성, 일정 저장 진입 |
-| AI 여행 | `ai-travel.html` | AI 일정 UX 미리보기, 경고와 재검증 원칙 |
-| 내 여행 | `trips.html` | 일자별 일정, 상태, 검증 경고, 예약 준비중 |
+| AI 여행 | `ai-travel.html` | 규칙형 Mock 일정 생성, 근거·경고·로그인 저장 경계 |
+| 내 여행 | `trips.html` | 로그인 전용 일자별 일정, 편집, 검증 경고 |
 | 저장한 여행 | `saved.html` | 스토리·호텔·장소 저장 목록과 일정 연결 |
 | 예약 조회 | `bookings.html` | 예약번호 조회 계약과 공급자 상태 분리 표현 |
+| 여행 카트 | `cart.html` | 항목 선택·제거·합계 갱신과 다음 단계 진입 |
+| 예약자 입력 | `booking-guests.html` | 예약자·투숙객·요청사항 입력과 필수값 검증 |
+| 예약 최종 확인 | `booking-review.html` | 재고·가격·취소조건·개인정보 제공 동의 확인 |
+| 결제 | `checkout.html` | 결제수단·현금영수증·최종 금액 확인, 외부 결제 미연결 |
+| 예약 접수 완료 | `booking-complete.html` | HotelnGo 접수번호와 공급자 처리 대기 상태 분리 |
+| 예약 상세 | `booking-detail.html` | 예약·결제·공급자 상태와 처리 타임라인 |
+| 주문 목록 | `orders.html` | 주문 단위와 항목별 예약 상태의 분리 표현 |
 | 마이 | `my.html` | 여행·저장·예약·프로필 진입 허브 |
-| 로그인 | `login.html` | B2C 인증 진입 UI, 실제 세션 미연결 안내 |
+| 로그인 | `login.html` | HotelnGo B2C JSON 계정 검증과 독립 Session Mock |
+| 회원가입·복구 | `signup.html`, `password-reset.html`, `password-reset-confirm.html`, `password-change.html` | B2C 계정 생성, Mock 인증번호 재설정, 로그인 후 변경 |
+| 계정·여행자 설정 | `account-settings.html` | 회원 기본값, 여행자 기본값, 마스킹 여권, PMS 연결 상태 |
+| 혜택·정책 | `benefits.html`, `company.html`, `terms.html`, `privacy.html` | 쿠폰 Mock과 회사·이용·개인정보 고지 초안 |
+| 호텔 콘텐츠센터 | `hotel-login.html`, `hotel-dashboard.html`, `hotel-content.html`, `hotel-rooms.html`, `hotel-room-edit.html`, `hotel-media.html`, `hotel-amenities.html`, `hotel-pms-mapping.html` | PMS 직원과 분리된 호텔 계정, PMS 읽기 전용 매핑, 호텔·객실 공개 콘텐츠 보완 |
+| 파트너 로그인 | `partner-login.html` | B2C·호텔 계정과 분리된 비호텔 파트너 인증·업체 범위 안내 |
 | 파트너 대시보드 | `partner-dashboard.html` | 예약·매출·재고 경고·할 일 Mock |
+| 파트너 온보딩 | `partner-onboarding.html` | 가입·업체·상품·정산·증빙·심사 단계 |
 | 파트너 업체정보 | `partner-property.html` | 공개정보·정책과 필드 소유권 표현 |
 | 파트너 가격·재고 | `partner-inventory.html` | PARTNER_MANAGED 달력형 가격·재고 UI |
 | 파트너 예약 | `partner-bookings.html` | 고객 상태·공급자 상태·대사 필요 분리 |
+| 파트너 정산·권한·설정 | `partner-finance.html`, `partner-members.html`, `partner-settings.html` | Mock 정산, 역할 범위, 공급 연동 설정 |
 | 관리자 대시보드 | `admin-dashboard.html` | 작업 큐·공급 장애·최신성 운영 현황 |
+| 관리자 로그인 | `admin-login.html` | B2C·파트너·PMS와 분리된 관리자 JSON Session Mock |
+| 관리자 회원 | `admin-members.html`, `admin-member-detail.html` | HotelnGo B2C 회원, 마스킹 여행자 정보, PmsGuestLink 상태 |
 | 관리자 카탈로그 | `admin-catalog.html` | Provider·Place·공급방식·소유권·중복 관리 |
 | 관리자 심사 | `admin-review.html` | 파트너 심사·claim·변경요청·고위험 작업 |
 | 관리자 콘텐츠 | `admin-content.html` | 스토리·랜드마크·번역·AI 근거 검수 |
+| 관리자 예약·거래 | `admin-commerce.html` | 주문·결제·공급자 처리·대사 상태 분리 |
+| 관리자 AI·시스템 | `admin-ai.html`, `admin-system.html` | AI 근거·평가·인덱스와 권한·감사·연동 상태 |
 | 디자인 시스템 | `style-guide.html` | 로고·컬러·서체·컴포넌트·밀도·금지 규칙 |
 
 이 화면들은 정적 UI 프로토타입이다. `hotels.html`과 `hotel-detail.html`의 데이터는 PMS 구조를 반영한 독립 Mock 표현이며 실제 Hotel_PMS 파일이나 `localStorage`를 읽지 않는다. 예약·결제·AI 실행을 실연동 완료로 간주하지 않는다.
+
+## 12. 파트너·업종 확장 화면 매핑
+
+| 사용자 경로 | 파일 | 현재 상태 |
+|---|---|---|
+| 파트너 회원가입·복구 | `partner-signup.html`, `partner-password-reset.html` | `HOTELNGO_PARTNER` 독립 Local/Session Mock, 업종 선택, 비밀번호 갱신 |
+| 입점 신청·상태 | `partner-application.html`, `partner-application-status.html` | 업체·증빙·정산·약관 제출과 DRAFT~APPROVED 상태 표현 |
+| 기존 업체 인수 | `partner-claim.html` | 미입점 Provider·Place 선택과 소유권 요청 Mock |
+| 호텔 영역 안내 | `partner-hotel.html` | 호텔 기능이 호텔 콘텐츠센터로 분리되었음을 안내 |
+| 골프장 | `partner-golf.html` | 코스·티타임·그린피·결합상품 구조 |
+| 차량·픽업 | `partner-vehicle.html` | 차량·지역·배차·운행 상태 구조 |
+| 음식점·카페 | `partner-restaurant.html` | 지점·메뉴·좌석·슬롯·공지 구조 |
+| 마사지·스파 | `partner-spa.html` | 프로그램·룸·치료사 수용량·슬롯 구조 |
+| 투어·체험 | `partner-tour.html` | 출발 일정·가이드·언어·옵션·바우처 구조 |
+| 자원·슬롯·결합혜택 | `partner-resources.html`, `partner-schedules.html`, `partner-bundles.html` | 업종별 실제 자원·수용량·운영회차와 호텔 결합 할인·정산 부담 등록 |
+| 공통 운영 | `partner-operations.html` | 프로모션·공지·리뷰·문의 Mock 저장 |
+| 파트너 가입 심사 | `admin-partners.html` | 신청 검토·승인, 로컬 파트너 상태 갱신 |
+| 업체·장소 선등록 | `admin-providers.html` | 6개 업종 Provider·Place, 출처·최신성·안전한 예약 방식 |
+| 소유권 요청 심사 | `admin-provider-claims.html` | Claim 승인·반려와 소유권 상태 갱신 |
+| B2C 현지 장소 | `places.html`, `place-detail.html` | 인증 파트너와 미입점 정보성 장소, 출처·검수일·예약 방식 구분 |
+
+파트너 업종이 다른 화면은 구조 확인을 위한 읽기 전용 미리보기로 표시한다. 실제 API에서는 로그인한 계정의 `partnerId/providerId/businessType` 범위를 서버에서 강제해야 한다.
+
+## 13. 회원 일정·업종별 선택·호텔 콘텐츠 보완 화면
+
+| 사용자 경로 | 파일 | 현재 상태 |
+|---|---|---|
+| 회원 일정 피드 | `community.html` | 회원 공개 일정, 작성자·태그·저장·복사 지표 |
+| 회원 일정 상세·복사 | `trip-guide-detail.html` | 날짜별 코스, 예약 분류, 로그인 후 독립 초안 복사 |
+| 일정 공개·공유 | `trip-publish.html` | 링크 공유/공개 심사, 개인정보 제외 동의 |
+| 일정 예약 준비 | `trip-booking-plan.html` | 즉시예약·요청예약·정보형·확인 필요 분류 |
+| 골프 선택 | `golf-detail.html` | 9/18홀, 코스·Par·난이도·티타임·캐디/카트/픽업·결합 할인 |
+| 차량 선택 | `vehicle-detail.html` | 차종·정원·수하물·기사·보험·구간·견적 방식 |
+| 음식점 선택 | `restaurant-detail.html` | 메뉴·코스·사진·좌석/룸·시간·현장/요청 방식 |
+| 스파 선택 | `spa-detail.html` | 프로그램·시간·룸·수용량·픽업·제한 |
+| 투어 선택 | `tour-detail.html` | 코스·회차·언어·가이드·집결·옵션 |
+
+## 14. 2026-07-23 계획 기준선 화면 구현 현황
+
+- 제품 화면은 `sample.html`을 제외하고 총 192개다.
+- 기존 166개 기준선에 호텔 콘텐츠센터, 회원 일정 커뮤니티, 업종별 실제 선택·자원·슬롯·결합 혜택 화면 21개를 추가했다.
+- 기존 77개 화면에서 빠졌던 89개 화면을 `data/mock/workflow-pages.json`과 공통 화면 엔진으로 추가했다.
+- 로그인·가입·인증·복구, 회원 부가 화면, 고객지원, 후기·스토리·여행 편집, 업종별 목록/상세, 예약 결과 상태, 파트너 온보딩·상품·구성원, 관리자 세부 업무, PMS 채널 세부 조회·대사 화면을 각각 독립 URL로 유지한다.
+- 공통 목록은 검색·상태 필터·행 선택·일괄 Mock 작업·상세 이동을 제공한다. 공통 폼은 유효성 검사·확인 Dialog·Local Storage Mock 저장·완료 화면 이동을 제공한다.
+- 화면 구현 완료와 실서비스 구현 완료는 구분한다. 서버 인증, 관계형 DB, 실제 결제, Hotel_PMS 채널 쓰기, 지도 SDK, LLM/RAG는 별도 백로그다.

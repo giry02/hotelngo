@@ -1,6 +1,8 @@
 # Local Codex/workspace metadata
 .codex/
 .agents/
+.codex-tmp/
+outputs/
 
 # Local runtime output
 *.log

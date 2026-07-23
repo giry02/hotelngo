@@ -8,9 +8,9 @@
   <title>HotelnGo — Stay here. Go anywhere.</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png?v=2" type="image/png">
   <link rel="stylesheet" href="styles/tokens.css?v=9">
-  <link rel="stylesheet" href="styles/main.css?v=20">
-  <script src="scripts/site-shell.js?v=2" defer></script>
-  <script src="scripts/main.js?v=9" defer></script>
+  <link rel="stylesheet" href="styles/main.css?v=27">
+  <script src="scripts/site-shell.js?v=11" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/auth.js?v=4" defer></script>
+  <script src="scripts/main.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -36,7 +36,7 @@
               <span>EARLY SUMMER · MEMBER ONLY</span>
               <h2>여름 휴가,<br>지금 준비하면 더 여유로워요</h2>
               <p>방콕·발리·괌 인기 숙소 최대 20% 회원 전용 할인.</p>
-              <a href="#benefit-title">얼리버드 혜택 보기 <b>→</b></a>
+            <a href="benefits.html">얼리버드 혜택 보기 <b>→</b></a>
             </div>
           </article>
           <article class="hero-slide" data-hero-slide aria-hidden="true">
@@ -45,7 +45,7 @@
               <span>LANDMARK STORY · KYOTO</span>
               <h2>한 장면에서 시작하는<br>나만의 여행</h2>
               <p>사람들이 저장한 골목과 랜드마크 주변 숙소를 만나보세요.</p>
-              <a href="#landmarks">여행 이야기 보기 <b>→</b></a>
+            <a href="story.html">여행 이야기 보기 <b>→</b></a>
             </div>
           </article>
         </div>
@@ -61,10 +61,6 @@
       </div>
 
       <div class="search-wrap shell">
-        <div class="search-tabs" role="tablist" aria-label="숙소 지역 선택">
-          <button class="is-active" type="button" role="tab" aria-selected="true" data-search-tab="overseas">해외 숙소</button>
-          <button type="button" role="tab" aria-selected="false" disabled>국내 숙소 <small>준비중</small></button>
-        </div>
         <form class="search-box" data-search-form>
           <label class="search-field destination-field">
             <span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
@@ -119,8 +115,8 @@
       </div>
       <div class="secondary-services" aria-label="테마 여행 서비스">
         <span class="secondary-label">MORE TO EXPLORE</span>
-        <a href="#golf" id="golf"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="M10 28V5l13 5-13 5M7 28h10M20 23c4 0 7 1 7 2s-3 2-7 2"/></svg></span><span><b>골프</b><small>티타임과 리조트</small></span></a>
-        <a href="#taste" id="taste"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="M8 4v10c0 3 2 5 5 5V4M10.5 4v15M24 4v24M19 4v8c0 3 2 5 5 5"/></svg></span><span><b>미식</b><small>도시별 로컬 다이닝</small></span></a>
+          <a href="places.html?category=GOLF" id="golf"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="M10 28V5l13 5-13 5M7 28h10M20 23c4 0 7 1 7 2s-3 2-7 2"/></svg></span><span><b>골프</b><small>티타임과 리조트</small></span></a>
+          <a href="places.html?category=RESTAURANT" id="taste"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="M8 4v10c0 3 2 5 5 5V4M10.5 4v15M24 4v24M19 4v8c0 3 2 5 5 5"/></svg></span><span><b>미식</b><small>도시별 로컬 다이닝</small></span></a>
         <a href="landmark.html"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="M25 13c0 6-9 14-9 14S7 19 7 13a9 9 0 1 1 18 0Z"/><circle cx="16" cy="13" r="3"/></svg></span><span><b>랜드마크</b><small>놓치면 아쉬운 명소</small></span></a>
         <a href="ai-travel.html" id="ai"><span class="service-icon"><svg viewBox="0 0 32 32"><path d="m16 4 2.3 7.7L26 14l-7.7 2.3L16 24l-2.3-7.7L6 14l7.7-2.3L16 4ZM25 22l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z"/></svg></span><span><b>AI 여행 <i>NEW</i></b><small>취향으로 만드는 여행</small></span></a>
       </div>
@@ -141,7 +137,7 @@
             <span class="scene-copy"><small>TONIGHT'S WALK</small><strong>비가 그친 기온,<br>등불을 따라 걷는 저녁</strong><em>90초 동안 미리 걸어보기 →</em></span>
           </a>
           <aside class="guide-notes" aria-label="교토 테마 가이드 동선">
-            <div class="guide-creator"><span class="creator-avatar">SC</span><span><b>@slow.city</b><small>교토 로컬 가이드 · 팔로워 28K</small></span><button type="button">팔로우</button></div>
+            <div class="guide-creator"><span class="creator-avatar">SC</span><span><b>@slow.city</b><small>교토 로컬 가이드 · 팔로워 28K</small></span><button type="button" data-main-follow>팔로우</button></div>
             <div class="guide-intro"><span>CURATED ROUTE · 2.4 KM</span><h3>관광지가 문을 닫은 뒤,<br>진짜 교토를 만나는 세 곳</h3><p>유명한 곳보다 오래 기억되는 온도와 냄새를 담은 저녁 산책 코스예요.</p></div>
             <ol class="guide-route">
               <li><span>01</span><div><b>기온 시라카와</b><small>18:40 · 물가에 등불이 켜지는 시간</small></div></li>
@@ -152,19 +148,19 @@
           </aside>
         </div>
         <div class="theme-guide-rail" aria-label="추천 테마 가이드">
-          <a class="theme-mini-card" href="#landmarks"><img src="assets/images/landmark-paris.jpg" alt="저녁의 파리 센강"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@mood.archive · PARIS</small><strong>영화처럼 걷는<br>센강의 푸른 저녁</strong><em>5 SPOTS · 1 DAY</em></span><b aria-hidden="true">↗</b></a>
-          <a class="theme-mini-card" href="#landmarks"><img src="assets/images/landmark-bangkok.jpg" alt="밤의 방콕 차이나타운"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@taste.route · BANGKOK</small><strong>한입씩 따라가는<br>방콕의 가장 뜨거운 밤</strong><em>8 SPOTS · FOOD WALK</em></span><b aria-hidden="true">↗</b></a>
-          <a class="theme-mini-card" href="#landmarks"><img src="assets/images/landmark-bali.jpg" alt="고요한 발리 사원"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@island.notes · BALI</small><strong>알람 없이 눈뜨는<br>발리의 느린 아침</strong><em>4 SPOTS · SLOW TRIP</em></span><b aria-hidden="true">↗</b></a>
+          <a class="theme-mini-card" href="landmark.html?destination=paris"><img src="assets/images/landmark-paris.jpg" alt="저녁의 파리 센강"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@mood.archive · PARIS</small><strong>영화처럼 걷는<br>센강의 푸른 저녁</strong><em>5 SPOTS · 1 DAY</em></span><b aria-hidden="true">↗</b></a>
+          <a class="theme-mini-card" href="landmark.html?destination=bangkok"><img src="assets/images/landmark-bangkok.jpg" alt="밤의 방콕 차이나타운"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@taste.route · BANGKOK</small><strong>한입씩 따라가는<br>방콕의 가장 뜨거운 밤</strong><em>8 SPOTS · FOOD WALK</em></span><b aria-hidden="true">↗</b></a>
+          <a class="theme-mini-card" href="landmark.html?destination=bali"><img src="assets/images/landmark-bali.jpg" alt="고요한 발리 사원"><span class="mini-card-shade"></span><span class="mini-card-copy"><small>@island.notes · BALI</small><strong>알람 없이 눈뜨는<br>발리의 느린 아침</strong><em>4 SPOTS · SLOW TRIP</em></span><b aria-hidden="true">↗</b></a>
         </div>
       </div>
     </section>
 
     <section class="section promo-section shell" aria-labelledby="benefit-title">
-      <div class="section-heading"><div><span class="heading-chip">BENEFIT</span><h2 id="benefit-title">해외여행, 지금 받을 수 있는 혜택</h2></div><a href="#">전체보기 <span>›</span></a></div>
+      <div class="section-heading"><div><span class="heading-chip">BENEFIT</span><h2 id="benefit-title">해외여행, 지금 받을 수 있는 혜택</h2></div><a href="benefits.html">전체보기 <span>›</span></a></div>
       <div class="promo-grid">
-        <a class="promo-card promo-orange" href="#stays"><div><small>HotelnGo 첫 해외 예약</small><h3>회원가입하면<br><em>3만원 쿠폰팩</em></h3><p>해외 호텔 즉시 사용 가능</p></div><div class="coupon-art" aria-hidden="true"><span>₩</span><b>30,000</b></div></a>
-        <a class="promo-card promo-green" href="#regions"><div><small>비행시간 5시간 이내</small><h3>주말에도 가능한<br><em>가까운 해외</em></h3><p>후쿠오카·오사카·타이베이</p></div><div class="route-art" aria-hidden="true"><span>ICN</span><i></i><b>GO</b></div></a>
-        <a class="promo-card promo-yellow" href="#stays"><div><small>매일 오전 10시 오픈</small><h3>선착순으로 잡는<br><em>글로벌 호텔 특가</em></h3><p>인기 도시 최대 40% 할인</p></div><div class="clock-art" aria-hidden="true"><span>10</span><small>AM</small></div></a>
+          <a class="promo-card promo-orange" href="signup.html"><div><small>HotelnGo 첫 해외 예약</small><h3>회원가입하면<br><em>3만원 쿠폰팩</em></h3><p>해외 호텔 즉시 사용 가능</p></div><div class="coupon-art" aria-hidden="true"><span>₩</span><b>30,000</b></div></a>
+          <a class="promo-card promo-green" href="packages.html?theme=short-haul"><div><small>비행시간 5시간 이내</small><h3>주말에도 가능한<br><em>가까운 해외</em></h3><p>후쿠오카·오사카·타이베이</p></div><div class="route-art" aria-hidden="true"><span>ICN</span><i></i><b>GO</b></div></a>
+          <a class="promo-card promo-yellow" href="hotels.html?deal=global"><div><small>매일 오전 10시 오픈</small><h3>선착순으로 잡는<br><em>글로벌 호텔 특가</em></h3><p>인기 도시 최대 40% 할인</p></div><div class="clock-art" aria-hidden="true"><span>10</span><small>AM</small></div></a>
       </div>
     </section>
 
@@ -176,15 +172,15 @@
           <div class="story-info"><div><small>@slow.city</small><h3>낮보다 오래 기억되는 교토의 골목</h3><p>#교토여행 #골목산책 #로컬바</p></div><button type="button" aria-label="교토 스토리 저장" data-story-save>♡</button></div>
         </article>
         <article class="story-card">
-          <a class="story-image" href="#"><img src="assets/images/landmark-paris.jpg" alt="센강에서 바라본 에펠탑"><span>PARIS · SEINE</span></a>
+          <a class="story-image" href="story.html"><img src="assets/images/landmark-paris.jpg" alt="센강에서 바라본 에펠탑"><span>PARIS · SEINE</span></a>
           <div class="story-info"><div><small>@mood.archive</small><h3>해 질 무렵 센강에서</h3><p>#파리 #에펠탑 #선셋</p></div><button type="button" aria-label="파리 스토리 저장" data-story-save>♡</button></div>
         </article>
         <article class="story-card">
-          <a class="story-image" href="#"><img src="assets/images/landmark-bangkok.jpg" alt="비 오는 밤의 방콕 차이나타운"><span>BANGKOK · AFTER DARK</span></a>
+          <a class="story-image" href="story.html"><img src="assets/images/landmark-bangkok.jpg" alt="비 오는 밤의 방콕 차이나타운"><span>BANGKOK · AFTER DARK</span></a>
           <div class="story-info"><div><small>@taste.route</small><h3>비가 와도 멈추지 않는 밤</h3><p>#방콕 #차이나타운 #야시장</p></div><button type="button" aria-label="방콕 스토리 저장" data-story-save>♡</button></div>
         </article>
         <article class="story-card">
-          <a class="story-image" href="#"><img src="assets/images/landmark-bali.jpg" alt="물에 비친 발리 사원"><span>BALI · STILL MORNING</span></a>
+          <a class="story-image" href="story.html"><img src="assets/images/landmark-bali.jpg" alt="물에 비친 발리 사원"><span>BALI · STILL MORNING</span></a>
           <div class="story-info"><div><small>@island.notes</small><h3>조용한 아침이 머무는 곳</h3><p>#발리 #울룬다누 #감성여행</p></div><button type="button" aria-label="발리 스토리 저장" data-story-save>♡</button></div>
         </article>
       </div>
@@ -192,14 +188,14 @@
 
     <section class="section region-section" id="regions">
       <div class="shell">
-        <div class="section-heading region-head"><div><span class="heading-chip">POPULAR</span><h2>요즘 많이 찾는 해외 여행지</h2></div><div class="segment-tabs" role="tablist" aria-label="인기 여행지 구분"><button class="is-active" type="button" role="tab" aria-selected="true" data-region-tab="overseas">해외</button><button type="button" disabled>국내 · 준비중</button></div></div>
+        <div class="section-heading region-head"><div><span class="heading-chip">POPULAR</span><h2>요즘 많이 찾는 해외 여행지</h2></div></div>
         <div class="region-grid" data-region-panel="overseas">
-          <a class="region-card" href="#stays"><span class="region-image osaka"><b>OSAKA</b></span><strong>오사카</strong><small>먹고 쇼핑하는 재미</small></a>
-          <a class="region-card" href="#stays"><span class="region-image tokyo"><b>TOKYO</b></span><strong>도쿄</strong><small>취향을 찾는 도시</small></a>
-          <a class="region-card" href="#stays"><span class="region-image danang"><b>DANANG</b></span><strong>다낭</strong><small>가족 휴양의 정석</small></a>
-          <a class="region-card" href="#stays"><span class="region-image bangkok"><b>BANGKOK</b></span><strong>방콕</strong><small>맛과 밤이 풍성한 곳</small></a>
-          <a class="region-card" href="#stays"><span class="region-image fukuoka"><b>FUKUOKA</b></span><strong>후쿠오카</strong><small>가까운 일본 여행</small></a>
-          <a class="region-card" href="#stays"><span class="region-image guam"><b>GUAM</b></span><strong>괌</strong><small>아이와 함께 쉬기</small></a>
+          <a class="region-card" href="hotels.html?destination=오사카"><span class="region-image osaka"><b>OSAKA</b></span><strong>오사카</strong><small>먹고 쇼핑하는 재미</small></a>
+          <a class="region-card" href="hotels.html?destination=도쿄"><span class="region-image tokyo"><b>TOKYO</b></span><strong>도쿄</strong><small>취향을 찾는 도시</small></a>
+          <a class="region-card" href="hotels.html?destination=다낭"><span class="region-image danang"><b>DANANG</b></span><strong>다낭</strong><small>가족 휴양의 정석</small></a>
+          <a class="region-card" href="hotels.html?destination=방콕"><span class="region-image bangkok"><b>BANGKOK</b></span><strong>방콕</strong><small>맛과 밤이 풍성한 곳</small></a>
+          <a class="region-card" href="hotels.html?destination=후쿠오카"><span class="region-image fukuoka"><b>FUKUOKA</b></span><strong>후쿠오카</strong><small>가까운 일본 여행</small></a>
+          <a class="region-card" href="hotels.html?destination=괌"><span class="region-image guam"><b>GUAM</b></span><strong>괌</strong><small>아이와 함께 쉬기</small></a>
         </div>
       </div>
     </section>
@@ -215,8 +211,8 @@
       <a class="more-button" href="hotels.html">해외 호텔 더보기 <span>＋</span></a>
     </section>
 
-    <section class="section member-banner shell"><div><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt="" aria-hidden="true"><span><small>HotelnGo 회원 전용</small><strong>로그인하고 해외 호텔 회원가를 확인하세요.</strong></span></div><button type="button">로그인/회원가입</button></section>
-    <section class="section app-banner"><div class="shell app-inner"><div><span class="app-icon"><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt=""></span><p><small>여행 장면을 저장하고 예약까지</small><strong>HotelnGo 앱에서 내 여행을 이어가세요</strong></p></div><div class="app-actions"><button type="button">앱 다운로드</button><span>QR</span></div></div></section>
+    <section class="section member-banner shell"><div><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt="" aria-hidden="true"><span><small>HotelnGo 회원 전용</small><strong>로그인하고 해외 호텔 회원가를 확인하세요.</strong></span></div><a class="member-cta" href="login.html">로그인/회원가입</a></section>
+    <section class="section app-banner"><div class="shell app-inner"><div><span class="app-icon"><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt=""></span><p><small>여행 장면을 저장하고 예약까지</small><strong>HotelnGo 앱에서 내 여행을 이어가세요</strong></p></div><div class="app-actions"><a href="app-download.html">앱 다운로드 안내</a><span>WEB</span></div></div></section>
   </main>
 
   <div data-site-footer></div>

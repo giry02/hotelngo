@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-22T09:00:00+09:00",
+  "users": [
+    {
+      "id": "usr_demo_jiho",
+      "email": "demo@hotelngo.test",
+      "passwordHash": "fb0f89287e8ec5c3cfa13868d989360fc74b89bc597209bc1db36f6956790eeb",
+      "name": "김지호",
+      "displayName": "지호",
+      "locale": "ko-KR",
+      "roles": ["TRAVELER"],
+      "marketingConsent": false
+    }
+  ]
+}

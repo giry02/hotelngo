@@ -1,3 +1,31 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>예약 운영 · HotelnGo 파트너</title><link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png"><link rel="stylesheet" href="styles/backoffice.css?v=1"><script src="scripts/backoffice-shell.js?v=1" defer></script></head>
-<body data-app="partner" data-section="bookings"><div class="bo-app"><div data-backoffice-shell></div><main class="bo-main"><header class="bo-page-head"><div><h1>예약·변경·취소</h1><p>고객 계약과 공급자 처리 상태를 분리해 확인합니다.</p></div><div class="bo-actions"><button class="bo-button">CSV 내보내기</button><button class="bo-button primary">수동 예약 등록</button></div></header><div class="bo-notice"><span><b>예약 명령 미연결</b> · 아래 행은 상태 UI 검증용입니다. 실제 예약 생성·변경·취소 명령은 실행되지 않습니다.</span><span class="bo-status warn">Write disabled</span></div><div class="bo-filterbar"><input placeholder="예약번호, 고객명 검색"><select><option>모든 상태</option><option>확정</option><option>공급자 대기</option><option>대사 필요</option></select><select><option>체크인 기준</option></select><button class="bo-button">필터 적용</button></div><section class="bo-card"><div class="bo-table-wrap"><table class="bo-table"><thead><tr><th>예약번호</th><th>고객</th><th>투숙</th><th>객실</th><th>고객 상태</th><th>공급자 상태</th><th>총액</th><th>작업</th></tr></thead><tbody><tr><td><strong>HNG-P-10482</strong></td><td>KIM JIHO</td><td>08.14–08.17</td><td>오션뷰 킹</td><td><span class="bo-status">확정</span></td><td><span class="bo-status">CONFIRMED</span></td><td>₩559,200</td><td><button class="bo-button">상세</button></td></tr><tr><td><strong>HNG-P-10483</strong></td><td>LEE SORA</td><td>08.15–08.18</td><td>패밀리 스위트</td><td><span class="bo-status warn">변경 요청</span></td><td><span class="bo-status muted">PENDING</span></td><td>₩824,000</td><td><button class="bo-button">검토</button></td></tr><tr><td><strong>HNG-P-10484</strong></td><td>PARK MIN</td><td>08.16–08.17</td><td>디럭스 트윈</td><td><span class="bo-status danger">대사 필요</span></td><td><span class="bo-status danger">UNKNOWN</span></td><td>₩198,000</td><td><button class="bo-button">재조회</button></td></tr></tbody></table></div></section>
-</main></div></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>액티비티 예약 운영 · HotelnGo 파트너</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/backoffice-shell.js?v=13" defer></script>
+  <script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body data-partner-auth-required data-partner-approved-required data-app="partner" data-section="bookings">
+  <div class="bo-app"><div data-backoffice-shell></div><main class="bo-main">
+    <header class="bo-page-head">
+      <div><h1>예약·변경·취소</h1><p>고객이 선택한 상품·자원·시간대·옵션과 공급 처리 상태를 함께 확인합니다.</p></div>
+      <div class="bo-actions"><button class="bo-button" type="button">CSV 내보내기</button><a class="bo-button primary" href="partner-booking-detail.html?mode=create">수동 예약 등록</a></div>
+    </header>
+    <div class="bo-notice"><span><b>예약 명령 미연결</b> · 화면과 Mock 상태만 동작하며 실제 슬롯 차감·결제·환불은 수행하지 않습니다.</span><span class="bo-status warn">Write disabled</span></div>
+    <div class="bo-filterbar"><input placeholder="예약번호, 고객, 상품 검색"><select><option>모든 상태</option><option>확정</option><option>요청 대기</option><option>취소</option></select><select><option>이용일 기준</option><option>예약일 기준</option></select><button class="bo-button" type="button">필터 적용</button></div>
+    <section class="bo-card"><div class="bo-table-wrap"><table class="bo-table">
+      <thead><tr><th>예약번호</th><th>고객·인원</th><th>상품·이용일</th><th>시간·자원</th><th>선택 옵션</th><th>결합 혜택</th><th>결제액</th><th>상태</th><th>작업</th></tr></thead>
+      <tbody>
+        <tr><td><strong>HNG-G-10482</strong><small>07.23 10:42</small></td><td>KIM JIHO<small>성인 2명</small></td><td>Ocean Course 18홀<small>2026.08.14</small></td><td>07:10<small>Ocean Course · 2/4</small></td><td>클럽 2세트<small>호텔 픽업</small></td><td>하얏트 결합<small>-36,000원</small></td><td>₩390,000<small>결제 완료</small></td><td><span class="bo-status">확정</span></td><td><a class="bo-button" href="partner-booking-detail.html?id=HNG-G-10482">상세</a></td></tr>
+        <tr><td><strong>HNG-G-10483</strong><small>07.23 11:08</small></td><td>LEE SORA<small>성인 4명</small></td><td>Mountain Course 18홀<small>2026.08.14</small></td><td>11:40<small>Mountain Course · 4/4</small></td><td>골프화 2켤레</td><td>없음</td><td>₩808,000<small>승인 대기</small></td><td><span class="bo-status warn">요청 확인</span></td><td><a class="bo-button" href="partner-booking-detail.html?id=HNG-G-10483">검토</a></td></tr>
+        <tr><td><strong>HNG-G-10477</strong><small>07.22 16:18</small></td><td>PARK MIN<small>성인 1명</small></td><td>Ocean Twilight 9홀<small>2026.08.10</small></td><td>16:20<small>Ocean Course</small></td><td>없음</td><td>없음</td><td>₩98,000<small>환불 예정</small></td><td><span class="bo-status danger">취소 요청</span></td><td><a class="bo-button" href="partner-booking-detail.html?id=HNG-G-10477">처리</a></td></tr>
+      </tbody>
+    </table></div></section>
+  </main></div>
+</body>
+</html>

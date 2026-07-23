@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "userId": "usr_demo_jiho",
+  "summary": {
+    "upcomingTrips": 2,
+    "savedPlaces": 12,
+    "orders": 2,
+    "orderBreakdown": "확정 1 · 공급 확인 1"
+  },
+  "trips": [
+    {"id":"trip_kyoto_202608","title":"저녁이 좋은 교토","dates":"2026.08.14–08.17","status":"EDITING","places":7},
+    {"id":"trip_danang_family","title":"다낭 가족 휴양","dates":"날짜 미정","status":"SAVED","places":8}
+  ],
+  "orders": [
+    {"id":"HNG-O-2026-00014","createdAt":"2026.07.22","total":617200,"status":"PARTIAL","label":"부분 처리"},
+    {"id":"HNG-O-2026-00003","createdAt":"2026.05.04","total":328000,"status":"COMPLETED","label":"여행 완료"}
+  ]
+}

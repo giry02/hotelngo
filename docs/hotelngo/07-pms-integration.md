@@ -218,4 +218,6 @@ sequenceDiagram
 - 계약 테스트용 비운영 테넌트와 개인정보 없는 fixture
 
 이 조건이 갖춰지기 전에는 HotelNGo 예약 쓰기를 PMS에 연결하지 않는다.
+## 12. Guest 매핑 원칙
 
+HotelnGo `Member`를 PMS `Guest`로 가져오거나 PMS 계정으로 로그인시키지 않는다. 예약 시점에는 선택된 `TravelerProfile`의 최소 스냅샷만 채널 API로 보낸다. PMS가 기존 고객을 식별하더라도 결과는 호텔·테넌트 범위의 `PmsGuestLink`로 저장하고 HotelnGo 계정 ID와 PMS 고객 ID를 병합하지 않는다.

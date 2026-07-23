@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PMS 채널 운영 로그인 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script>
+  <script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/channel-auth.js?v=2" defer></script>
+</head>
+<body>
+  <main class="bo-auth-page">
+    <section class="bo-auth-visual">
+      <img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo">
+      <div><h1>공급 연결은<br>별도의 운영 경계로</h1><p>Hotel_PMS 원천과 HotelnGo 공개 모델 사이의 매핑·최신성·신뢰 상태를 관리합니다.</p></div>
+      <small>CHANNEL OPERATIONS REALM</small>
+    </section>
+    <section class="bo-auth-panel">
+      <div class="bo-auth-card">
+        <a class="bo-auth-brand" href="index.html"><img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo"><span>PMS 채널 운영</span></a>
+        <span class="bo-auth-realm">HOTELNGO_CHANNEL</span>
+        <h1>채널 운영 로그인</h1>
+        <p>플랫폼 관리자·파트너 계정과 분리된 채널 운영자 인증 영역입니다.</p>
+        <form class="bo-auth-form" data-channel-login-form>
+          <label>운영자 이메일<input name="email" type="email" required value="channel.ops@hotelngo.test" autocomplete="username"></label>
+          <label>비밀번호<input name="password" type="password" minlength="8" required value="Channel!2026" autocomplete="current-password"></label>
+          <button class="bo-button primary" type="submit">채널 콘솔 로그인</button>
+          <p class="bo-auth-feedback" data-channel-feedback hidden></p>
+        </form>
+        <div class="bo-demo-account"><div><strong>Mock 채널 운영자</strong><span>channel.ops@hotelngo.test · Channel!2026</span></div><button type="button" data-fill-channel-demo>계정 입력</button></div>
+        <div class="bo-auth-note">JSON 계정과 채널 전용 세션을 검증합니다. 실제 운영 전에는 서버 토큰·MFA·공급자별 권한·감사 로그로 교체해야 합니다.</div>
+        <nav class="bo-auth-links"><a href="admin-login.html">플랫폼 관리자</a><a href="partner-login.html">파트너센터</a></nav>
+      </div>
+    </section>
+  </main>
+  <div class="bo-toast" role="status" aria-live="polite" data-bo-toast></div>
+</body>
+</html>

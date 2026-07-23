@@ -1,0 +1,6562 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T09:18:02.831Z",
+  "note": "화면 동작 검증용 JSON Fixture. 실제 서버·결제·PMS 데이터를 변경하지 않습니다.",
+  "pages": {
+    "email-verification.html": {
+      "route": "email-verification.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원·인증",
+      "title": "이메일 인증",
+      "purpose": "회원가입 인증",
+      "parent": "signup.html",
+      "priority": "최상",
+      "kind": "form",
+      "section": "",
+      "description": "독립된 HotelnGo 회원 계정의 보안과 가입 상태를 관리합니다. 회원가입 인증.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "email",
+          "label": "인증 이메일",
+          "type": "email",
+          "required": true,
+          "value": "demo@hotelngo.test"
+        },
+        {
+          "name": "verificationCode",
+          "label": "6자리 인증번호",
+          "type": "text",
+          "required": true,
+          "value": "260723",
+          "help": "Mock 인증번호는 260723입니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "signup.html",
+          "position": "head"
+        },
+        {
+          "label": "인증 확인",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "signup-complete.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "signup-complete.html": {
+      "route": "signup-complete.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원·인증",
+      "title": "가입 완료",
+      "purpose": "계정 생성 결과",
+      "parent": "signup.html",
+      "priority": "높음",
+      "kind": "state",
+      "section": "",
+      "description": "독립된 HotelnGo 회원 계정의 보안과 가입 상태를 관리합니다. 계정 생성 결과.",
+      "status": "완료",
+      "details": [
+        [
+          "화면 식별",
+          "SIGNUP-COMPLETE"
+        ],
+        [
+          "업무 구분",
+          "회원·인증"
+        ],
+        [
+          "처리 목적",
+          "계정 생성 결과"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "signup.html",
+          "position": "head"
+        },
+        {
+          "label": "로그인하기",
+          "href": "login.html",
+          "tone": "primary",
+          "position": "state"
+        }
+      ],
+      "successUrl": "signup.html",
+      "tone": "success",
+      "icon": "✓",
+      "nextLabel": "상태 이력 확인"
+    },
+    "login-challenge.html": {
+      "route": "login-challenge.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원·인증",
+      "title": "로그인 보안 확인",
+      "purpose": "위험 로그인·추가 인증",
+      "parent": "login.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "독립된 HotelnGo 회원 계정의 보안과 가입 상태를 관리합니다. 위험 로그인·추가 인증.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "method",
+          "label": "추가 인증 방식",
+          "type": "select",
+          "required": true,
+          "options": [
+            "이메일 인증",
+            "등록 기기 확인",
+            "복구 코드"
+          ]
+        },
+        {
+          "name": "code",
+          "label": "보안 코드",
+          "type": "text",
+          "required": true,
+          "value": "260723"
+        },
+        {
+          "name": "rememberDevice",
+          "label": "이 기기 기억",
+          "type": "checkbox",
+          "full": true,
+          "help": "공용 기기에서는 선택하지 마세요."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "login.html",
+          "position": "head"
+        },
+        {
+          "label": "인증 확인",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "my.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "notifications.html": {
+      "route": "notifications.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "알림 센터",
+      "purpose": "예약·결제·일정 알림",
+      "parent": "my.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 예약·결제·일정 알림.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "4",
+          "회원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "notifications_01",
+          "title": "다낭 오션 리조트 예약이 확정되었습니다.",
+          "subtitle": "예약 · HNG-B-2026-10482",
+          "updated": "10분 전",
+          "status": "확정",
+          "href": "booking-detail.html"
+        },
+        {
+          "id": "notifications_02",
+          "title": "교토 여행 출발 7일 전입니다.",
+          "subtitle": "여행 일정 · trip_kyoto_202608",
+          "updated": "오늘 09:00",
+          "status": "확인",
+          "href": "trips.html"
+        },
+        {
+          "id": "notifications_03",
+          "title": "저장한 방콕 호텔 요금이 내려갔습니다.",
+          "subtitle": "가격 알림 · -12%",
+          "updated": "어제",
+          "status": "새 알림",
+          "href": "hotel-detail.html"
+        },
+        {
+          "id": "notifications_04",
+          "title": "결제 취소 환불이 완료되었습니다.",
+          "subtitle": "결제 · HNG-PAY-88014",
+          "updated": "07.21",
+          "status": "완료",
+          "href": "booking-cancel-complete.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "my.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "coupons.html": {
+      "route": "coupons.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "쿠폰 지갑",
+      "purpose": "발급·사용·만료 쿠폰",
+      "parent": "my.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 발급·사용·만료 쿠폰.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "4",
+          "회원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "coupons_01",
+          "title": "해외 호텔 첫 예약 10%",
+          "subtitle": "최대 50,000원 · HNGWELCOME",
+          "updated": "2026.09.30",
+          "status": "사용 가능",
+          "href": "hotels.html"
+        },
+        {
+          "id": "coupons_02",
+          "title": "다낭 여름 특가 30,000원",
+          "subtitle": "500,000원 이상 예약",
+          "updated": "2026.08.31",
+          "status": "사용 가능",
+          "href": "hotels.html"
+        },
+        {
+          "id": "coupons_03",
+          "title": "앱 전용 5% 할인",
+          "subtitle": "앱 결제 시 자동 적용",
+          "updated": "2026.07.31",
+          "status": "사용 가능",
+          "href": "checkout.html"
+        },
+        {
+          "id": "coupons_04",
+          "title": "친구 초대 리워드",
+          "subtitle": "초대 회원 첫 예약 완료 후",
+          "updated": "2026.12.31",
+          "status": "대기",
+          "href": "my.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "my.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "payment-methods.html": {
+      "route": "payment-methods.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "결제수단 목록",
+      "purpose": "카드·간편결제 관리",
+      "parent": "account-settings.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 카드·간편결제 관리.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "회원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "payment-methods_01",
+          "title": "현대카드 •••• 4268",
+          "subtitle": "본인 명의 · 해외결제 가능",
+          "updated": "2026.07.20",
+          "status": "기본 결제수단",
+          "href": "payment-methods.html"
+        },
+        {
+          "id": "payment-methods_02",
+          "title": "카카오페이",
+          "subtitle": "휴대전화 010-12••-56••",
+          "updated": "2026.06.10",
+          "status": "사용 가능",
+          "href": "payment-methods.html"
+        },
+        {
+          "id": "payment-methods_03",
+          "title": "Visa •••• 1109",
+          "subtitle": "만료 09/29",
+          "updated": "2026.05.04",
+          "status": "사용 가능",
+          "href": "payment-methods.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "account-settings.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "account-settings.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "travelers.html": {
+      "route": "travelers.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "여행자 목록",
+      "purpose": "예약자·동반자 관리",
+      "parent": "account-settings.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 예약자·동반자 관리.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "회원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "travelers_01",
+          "title": "김지호 · KIM JIHO",
+          "subtitle": "대한민국 · 여권 M12••••45",
+          "updated": "2031.04.03",
+          "status": "대표 여행자",
+          "href": "traveler-edit.html"
+        },
+        {
+          "id": "travelers_02",
+          "title": "김하나 · KIM HANA",
+          "subtitle": "대한민국 · 여권 M87••••20",
+          "updated": "2029.11.18",
+          "status": "동행자",
+          "href": "traveler-edit.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "account-settings.html",
+          "position": "head"
+        },
+        {
+          "label": "여행자 추가",
+          "href": "traveler-edit.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "account-settings.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "traveler-edit.html": {
+      "route": "traveler-edit.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "여행자 등록·수정",
+      "purpose": "여권·국적 기본값",
+      "parent": "travelers.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 여권·국적 기본값.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "koreanName",
+          "label": "한글 이름",
+          "type": "text",
+          "required": true,
+          "value": "김지호"
+        },
+        {
+          "name": "passportName",
+          "label": "여권 영문 이름",
+          "type": "text",
+          "required": true,
+          "value": "KIM JIHO"
+        },
+        {
+          "name": "nationality",
+          "label": "국적",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "KR",
+              "label": "대한민국 (KR)"
+            },
+            {
+              "value": "JP",
+              "label": "일본 (JP)"
+            },
+            {
+              "value": "US",
+              "label": "미국 (US)"
+            },
+            {
+              "value": "VN",
+              "label": "베트남 (VN)"
+            }
+          ]
+        },
+        {
+          "name": "birthDate",
+          "label": "생년월일",
+          "type": "date",
+          "required": true,
+          "value": "1992-05-14"
+        },
+        {
+          "name": "passportNumber",
+          "label": "여권번호",
+          "type": "password",
+          "placeholder": "저장 시 마스킹 처리",
+          "help": "PMS 회원과 합치지 않으며 향후 예약 시 일치 후보 판단 키로만 사용합니다."
+        },
+        {
+          "name": "passportExpiresOn",
+          "label": "여권 만료일",
+          "type": "date",
+          "value": "2031-04-03"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "travelers.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "travelers.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "privacy-request.html": {
+      "route": "privacy-request.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "회원",
+      "title": "개인정보 요청",
+      "purpose": "열람·정정·삭제 요청",
+      "parent": "account-settings.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "회원의 여행 준비 기본값과 개인 데이터를 안전하게 관리합니다. 열람·정정·삭제 요청.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "requestType",
+          "label": "요청 유형",
+          "type": "select",
+          "required": true,
+          "options": [
+            "개인정보 열람",
+            "개인정보 정정",
+            "다운로드",
+            "회원 탈퇴 및 삭제"
+          ]
+        },
+        {
+          "name": "reason",
+          "label": "요청 사유",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "confirm",
+          "label": "본인 요청 확인",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "요청 처리 결과는 회원 이메일과 알림 센터에 안내됩니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "account-settings.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "account-settings.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "support.html": {
+      "route": "support.html",
+      "realm": "B2C_PUBLIC",
+      "group": "고객지원",
+      "title": "고객센터 홈",
+      "purpose": "FAQ·문의·분쟁 진입",
+      "parent": "index.html",
+      "priority": "높음",
+      "kind": "support",
+      "section": "",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. FAQ·문의·분쟁 진입.",
+      "status": "확인 완료",
+      "items": [
+        {
+          "title": "예약·변경·취소",
+          "subtitle": "예약 상태, 일정 변경, 취소 및 환불",
+          "href": "faq.html"
+        },
+        {
+          "title": "결제·환불",
+          "subtitle": "결제 실패, 승인 취소, 환불 예정일",
+          "href": "faq.html"
+        },
+        {
+          "title": "회원·개인정보",
+          "subtitle": "로그인, 여행자 정보, 개인정보 요청",
+          "href": "faq.html"
+        },
+        {
+          "title": "1:1 문의",
+          "subtitle": "내 문의를 작성하고 답변 상태 확인",
+          "href": "inquiries.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "index.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "index.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "faq.html": {
+      "route": "faq.html",
+      "realm": "B2C_PUBLIC",
+      "group": "고객지원",
+      "title": "자주 묻는 질문",
+      "purpose": "검색 가능한 FAQ",
+      "parent": "support.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. 검색 가능한 FAQ.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "4",
+          "고객지원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "faq_01",
+          "title": "호텔 예약을 변경하려면 어떻게 하나요?",
+          "subtitle": "예약 상세에서 변경 가능 조건을 먼저 확인하세요.",
+          "updated": "예약",
+          "status": "정상",
+          "href": "booking-change.html"
+        },
+        {
+          "id": "faq_02",
+          "title": "해외 결제가 실패했어요.",
+          "subtitle": "카드 해외결제 설정과 한도를 확인한 뒤 재시도하세요.",
+          "updated": "결제",
+          "status": "정상",
+          "href": "payment-failed.html"
+        },
+        {
+          "id": "faq_03",
+          "title": "여권 정보는 PMS 회원과 공유되나요?",
+          "subtitle": "HotelNGo 회원은 독립이며 예약 전송에 필요한 값만 공급자에게 전달됩니다.",
+          "updated": "회원",
+          "status": "정상",
+          "href": "privacy.html"
+        },
+        {
+          "id": "faq_04",
+          "title": "파트너 입점 심사는 얼마나 걸리나요?",
+          "subtitle": "서류가 완전한 경우 영업일 기준 3~5일이 기준입니다.",
+          "updated": "파트너",
+          "status": "정상",
+          "href": "partner-onboarding.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "support.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "support.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "inquiries.html": {
+      "route": "inquiries.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "고객지원",
+      "title": "문의 목록",
+      "purpose": "내 문의 상태",
+      "parent": "support.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. 내 문의 상태.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "고객지원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "inquiries_01",
+          "title": "환불 예정일을 확인하고 싶어요",
+          "subtitle": "HNG-INQ-2026-0041 · 결제·환불",
+          "updated": "오늘 11:20",
+          "status": "답변 대기",
+          "href": "inquiry-detail.html"
+        },
+        {
+          "id": "inquiries_02",
+          "title": "체크인 시간 변경 요청",
+          "subtitle": "HNG-INQ-2026-0038 · 예약",
+          "updated": "07.22",
+          "status": "답변 완료",
+          "href": "inquiry-detail.html"
+        },
+        {
+          "id": "inquiries_03",
+          "title": "여행 일정 공유 권한 문의",
+          "subtitle": "HNG-INQ-2026-0027 · 내 여행",
+          "updated": "07.18",
+          "status": "답변 완료",
+          "href": "inquiry-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "support.html",
+          "position": "head"
+        },
+        {
+          "label": "문의 작성",
+          "href": "inquiry-create.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "support.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "inquiry-create.html": {
+      "route": "inquiry-create.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "고객지원",
+      "title": "문의 작성",
+      "purpose": "예약·결제 문의 접수",
+      "parent": "inquiries.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. 예약·결제 문의 접수.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "type",
+          "label": "문의 유형",
+          "type": "select",
+          "required": true,
+          "options": [
+            "예약",
+            "결제·환불",
+            "회원",
+            "여행 일정",
+            "기타"
+          ]
+        },
+        {
+          "name": "orderId",
+          "label": "예약·주문번호",
+          "type": "text",
+          "value": "HNG-O-2026-00014"
+        },
+        {
+          "name": "subject",
+          "label": "제목",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "message",
+          "label": "문의 내용",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "attachment",
+          "label": "첨부 파일",
+          "type": "file",
+          "full": true,
+          "accept": ".jpg,.jpeg,.png,.pdf"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "inquiries.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "inquiries.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "inquiry-detail.html": {
+      "route": "inquiry-detail.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "고객지원",
+      "title": "문의 상세",
+      "purpose": "답변·첨부·추가 문의",
+      "parent": "inquiries.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. 답변·첨부·추가 문의.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "INQUIRY-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "고객지원"
+        ],
+        [
+          "처리 목적",
+          "답변·첨부·추가 문의"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "inquiries.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "inquiries.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "reviews.html": {
+      "route": "reviews.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "후기",
+      "title": "내 후기 목록",
+      "purpose": "작성·수정 가능 후기",
+      "parent": "my.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "실제 예약 경험을 바탕으로 후기를 작성하고 관리합니다. 작성·수정 가능 후기.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "후기 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "reviews_01",
+          "title": "다낭 오션 리조트",
+          "subtitle": "2026.05.04–05.07 · 예약 확인",
+          "updated": "07.20",
+          "status": "수정 가능",
+          "href": "review-edit.html"
+        },
+        {
+          "id": "reviews_02",
+          "title": "교토 기온 호텔",
+          "subtitle": "2026.03.12–03.14 · 평점 4.8",
+          "updated": "03.20",
+          "status": "발행 완료",
+          "href": "review-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my.html",
+          "position": "head"
+        },
+        {
+          "label": "후기 작성",
+          "href": "review-edit.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "my.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "review-detail.html": {
+      "route": "review-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "후기",
+      "title": "후기 상세",
+      "purpose": "검증 예약·신고",
+      "parent": "hotel-detail.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "실제 예약 경험을 바탕으로 후기를 작성하고 관리합니다. 검증 예약·신고.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "REVIEW-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "후기"
+        ],
+        [
+          "처리 목적",
+          "검증 예약·신고"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "hotel-detail.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "hotel-detail.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "review-edit.html": {
+      "route": "review-edit.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "후기",
+      "title": "후기 수정",
+      "purpose": "작성 후기 편집",
+      "parent": "reviews.html",
+      "priority": "중",
+      "kind": "form",
+      "section": "",
+      "description": "실제 예약 경험을 바탕으로 후기를 작성하고 관리합니다. 작성 후기 편집.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "rating",
+          "label": "평점",
+          "type": "select",
+          "required": true,
+          "options": [
+            "5점",
+            "4점",
+            "3점",
+            "2점",
+            "1점"
+          ],
+          "value": "5점"
+        },
+        {
+          "name": "stayType",
+          "label": "여행 유형",
+          "type": "select",
+          "options": [
+            "가족 여행",
+            "커플 여행",
+            "친구 여행",
+            "혼자 여행",
+            "출장"
+          ]
+        },
+        {
+          "name": "title",
+          "label": "후기 제목",
+          "type": "text",
+          "required": true,
+          "value": "해변과 조식이 좋았던 숙소"
+        },
+        {
+          "name": "content",
+          "label": "후기 내용",
+          "type": "textarea",
+          "full": true,
+          "required": true,
+          "value": "객실 상태가 깨끗했고 해변 접근성이 좋았습니다."
+        },
+        {
+          "name": "photo",
+          "label": "여행 사진",
+          "type": "file",
+          "full": true,
+          "accept": "image/*"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "reviews.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "reviews.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "my-stories.html": {
+      "route": "my-stories.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "스토리",
+      "title": "내 스토리",
+      "purpose": "작성·임시저장·발행",
+      "parent": "my.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "여행 장면과 장소를 감성적인 스토리로 구성합니다. 작성·임시저장·발행.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "스토리 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "my-stories_01",
+          "title": "비 오는 교토, 골목의 저녁",
+          "subtitle": "장면 7 · 장소 5 · 사진 12",
+          "updated": "오늘",
+          "status": "임시 저장",
+          "href": "story-edit.html"
+        },
+        {
+          "id": "my-stories_02",
+          "title": "다낭에서 보낸 느린 아침",
+          "subtitle": "장면 9 · 장소 6 · 사진 18",
+          "updated": "07.19",
+          "status": "발행 완료",
+          "href": "story-preview.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my.html",
+          "position": "head"
+        },
+        {
+          "label": "스토리 작성",
+          "href": "story-create.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "my.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "story-create.html": {
+      "route": "story-create.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "스토리",
+      "title": "스토리 작성",
+      "purpose": "장면·장소·태그 작성",
+      "parent": "my-stories.html",
+      "priority": "중",
+      "kind": "editor",
+      "section": "",
+      "description": "여행 장면과 장소를 감성적인 스토리로 구성합니다. 장면·장소·태그 작성.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "title",
+          "label": "스토리 제목",
+          "type": "text",
+          "required": true,
+          "value": "비 오는 교토, 골목의 저녁"
+        },
+        {
+          "name": "scene",
+          "label": "첫 장면",
+          "type": "textarea",
+          "full": true,
+          "required": true,
+          "value": "기온의 낮은 처마 아래 빗소리와 노란 등불이 이어집니다."
+        },
+        {
+          "name": "place",
+          "label": "연결 장소",
+          "type": "text",
+          "required": true,
+          "value": "교토 기온"
+        },
+        {
+          "name": "tags",
+          "label": "태그",
+          "type": "text",
+          "value": "교토, 골목, 저녁, 감성여행"
+        },
+        {
+          "name": "cover",
+          "label": "대표 이미지",
+          "type": "file",
+          "full": true,
+          "accept": "image/*"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my-stories.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "story-preview.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "story-edit.html": {
+      "route": "story-edit.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "스토리",
+      "title": "스토리 편집",
+      "purpose": "블록 편집",
+      "parent": "my-stories.html",
+      "priority": "중",
+      "kind": "editor",
+      "section": "",
+      "description": "여행 장면과 장소를 감성적인 스토리로 구성합니다. 블록 편집.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "title",
+          "label": "스토리 제목",
+          "type": "text",
+          "required": true,
+          "value": "비 오는 교토, 골목의 저녁"
+        },
+        {
+          "name": "scene",
+          "label": "첫 장면",
+          "type": "textarea",
+          "full": true,
+          "required": true,
+          "value": "기온의 낮은 처마 아래 빗소리와 노란 등불이 이어집니다."
+        },
+        {
+          "name": "place",
+          "label": "연결 장소",
+          "type": "text",
+          "required": true,
+          "value": "교토 기온"
+        },
+        {
+          "name": "tags",
+          "label": "태그",
+          "type": "text",
+          "value": "교토, 골목, 저녁, 감성여행"
+        },
+        {
+          "name": "cover",
+          "label": "대표 이미지",
+          "type": "file",
+          "full": true,
+          "accept": "image/*"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "my-stories.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "story-preview.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "story-preview.html": {
+      "route": "story-preview.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "스토리",
+      "title": "스토리 미리보기",
+      "purpose": "발행 전 확인",
+      "parent": "story-edit.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "여행 장면과 장소를 감성적인 스토리로 구성합니다. 발행 전 확인.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "STORY-PREVIEW"
+        ],
+        [
+          "업무 구분",
+          "스토리"
+        ],
+        [
+          "처리 목적",
+          "발행 전 확인"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "story-edit.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "story-edit.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "trip-create.html": {
+      "route": "trip-create.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "여행",
+      "title": "여행 생성",
+      "purpose": "여행 기본 정보 생성",
+      "parent": "trips.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "저장한 장소와 예약을 날짜별 여행 일정으로 연결합니다. 여행 기본 정보 생성.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "title",
+          "label": "여행 이름",
+          "type": "text",
+          "required": true,
+          "value": "다낭 바다와 미식 4일"
+        },
+        {
+          "name": "destination",
+          "label": "주요 여행지",
+          "type": "text",
+          "required": true,
+          "value": "다낭"
+        },
+        {
+          "name": "startDate",
+          "label": "시작일",
+          "type": "date",
+          "value": "2026-08-14"
+        },
+        {
+          "name": "endDate",
+          "label": "종료일",
+          "type": "date",
+          "value": "2026-08-17"
+        },
+        {
+          "name": "visibility",
+          "label": "공유 범위",
+          "type": "select",
+          "options": [
+            "나만 보기",
+            "초대받은 사람",
+            "링크가 있는 사람"
+          ]
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "trips.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "trip-editor.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "trip-editor.html": {
+      "route": "trip-editor.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "여행",
+      "title": "일정 편집기",
+      "purpose": "날짜·장소·예약 편집",
+      "parent": "trips.html",
+      "priority": "최상",
+      "kind": "editor",
+      "section": "",
+      "description": "저장한 장소와 예약을 날짜별 여행 일정으로 연결합니다. 날짜·장소·예약 편집.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "day1",
+          "label": "1일차 · 도착과 체크인",
+          "type": "textarea",
+          "full": true,
+          "value": "15:00 다낭 오션 리조트 체크인\n18:30 미케비치 선셋 산책"
+        },
+        {
+          "name": "day2",
+          "label": "2일차 · 호이안",
+          "type": "textarea",
+          "full": true,
+          "value": "10:00 호이안 올드타운\n17:00 투본강 보트"
+        },
+        {
+          "name": "day3",
+          "label": "3일차 · 자유 일정",
+          "type": "textarea",
+          "full": true,
+          "value": "09:30 스파\n12:00 비치 키친"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "trips.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "trips.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "shared-trips.html": {
+      "route": "shared-trips.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "여행",
+      "title": "공유 여행 목록",
+      "purpose": "받은 공유·협업 일정",
+      "parent": "trips.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "",
+      "description": "저장한 장소와 예약을 날짜별 여행 일정으로 연결합니다. 받은 공유·협업 일정.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "여행 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "shared-trips_01",
+          "title": "방콕 미식 주말",
+          "subtitle": "초대자 박서연 · 편집 가능",
+          "updated": "오늘",
+          "status": "공동 편집",
+          "href": "trip-editor.html"
+        },
+        {
+          "id": "shared-trips_02",
+          "title": "오사카 가족 여행",
+          "subtitle": "초대자 김하나 · 보기 전용",
+          "updated": "07.20",
+          "status": "수락 대기",
+          "href": "trip-invite.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "trips.html",
+          "position": "head"
+        },
+        {
+          "label": "새 여행",
+          "href": "trip-create.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "trips.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "trip-invite.html": {
+      "route": "trip-invite.html",
+      "realm": "HOTELNGO_B2C",
+      "group": "여행",
+      "title": "여행 초대 수락",
+      "purpose": "초대 토큰·권한 확인",
+      "parent": "shared-trips.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "",
+      "description": "저장한 장소와 예약을 날짜별 여행 일정으로 연결합니다. 초대 토큰·권한 확인.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "inviteToken",
+          "label": "초대 코드",
+          "type": "text",
+          "required": true,
+          "value": "HNG-TRIP-7K2M"
+        },
+        {
+          "name": "permission",
+          "label": "참여 권한",
+          "type": "select",
+          "options": [
+            "일정 보기",
+            "장소 추가",
+            "공동 편집"
+          ]
+        },
+        {
+          "name": "accept",
+          "label": "초대 수락",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "공동 편집 이력에 회원 이름과 변경 시각이 기록됩니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "shared-trips.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "shared-trips.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "map.html": {
+      "route": "map.html",
+      "realm": "B2C_PUBLIC",
+      "group": "지도",
+      "title": "전체 지도",
+      "purpose": "목록·지도 동기화",
+      "parent": "hotels.html",
+      "priority": "높음",
+      "kind": "map",
+      "section": "",
+      "description": "호텔과 현지 장소를 지도와 목록에서 함께 탐색합니다. 목록·지도 동기화.",
+      "status": "확인 완료",
+      "items": [
+        {
+          "title": "다낭 오션 리조트",
+          "subtitle": "1박 328,500원",
+          "meta": "호텔 · 최근 확인 3분 전",
+          "href": "hotel-detail.html",
+          "x": 24,
+          "y": 38
+        },
+        {
+          "title": "짜오 비치 키친",
+          "subtitle": "18:00 예약 가능",
+          "meta": "다이닝 · 2.1km",
+          "href": "restaurant-detail.html",
+          "x": 58,
+          "y": 55
+        },
+        {
+          "title": "미케비치",
+          "subtitle": "선셋 산책",
+          "meta": "랜드마크 · 저장 2.4만",
+          "href": "place-detail.html",
+          "x": 76,
+          "y": 31
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "hotels.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "hotels.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "flight-detail.html": {
+      "route": "flight-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "항공 상세",
+      "purpose": "운임·수하물·환불 조건",
+      "parent": "flights.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 운임·수하물·환불 조건.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "FLIGHT-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "운항 구간",
+          "인천(ICN) → 다낭(DAD)"
+        ],
+        [
+          "운임 조건",
+          "일반석 · 위탁수하물 23kg"
+        ],
+        [
+          "변경·환불",
+          "출발 7일 전 수수료 80,000원"
+        ],
+        [
+          "처리 목적",
+          "운임·수하물·환불 조건"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "flights.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "flights.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "package-detail.html": {
+      "route": "package-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "패키지 상세",
+      "purpose": "구성 상품·일정·가격",
+      "parent": "packages.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 구성 상품·일정·가격.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PACKAGE-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "구성",
+          "왕복 항공 + 호텔 3박 + 공항 픽업"
+        ],
+        [
+          "여행 일정",
+          "2026.08.14–08.17 · 3박 4일"
+        ],
+        [
+          "가격",
+          "1인 1,248,000원부터"
+        ],
+        [
+          "처리 목적",
+          "구성 상품·일정·가격"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "packages.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "packages.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "golf.html": {
+      "route": "golf.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "골프 목록",
+      "purpose": "티타임 검색",
+      "parent": "places.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 티타임 검색.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "상품 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "golf_01",
+          "title": "다낭 힐스 골프 클럽",
+          "subtitle": "Ocean 18홀 · 07:10 · 캐디·카트 포함",
+          "updated": "오늘",
+          "status": "KRW 168,000",
+          "href": "golf-detail.html"
+        },
+        {
+          "id": "golf_02",
+          "title": "몽고메리 링크스 베트남",
+          "subtitle": "18홀 · 10:40 · 공항 픽업 선택",
+          "updated": "오늘",
+          "status": "KRW 192,000",
+          "href": "golf-detail.html"
+        },
+        {
+          "id": "golf_03",
+          "title": "발리 뉴 쿠타 골프",
+          "subtitle": "Ocean 코스 · 08:20 · 2인 가능",
+          "updated": "12분 전",
+          "status": "USD 142",
+          "href": "golf-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "places.html",
+          "position": "head"
+        },
+        {
+          "label": "티타임 보기",
+          "href": "golf-detail.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "places.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "golf-detail.html": {
+      "route": "golf-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "골프 상세",
+      "purpose": "코스·티타임·요금",
+      "parent": "golf.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 코스·티타임·요금.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "GOLF-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "코스",
+          "Ocean 18홀 · Par 72"
+        ],
+        [
+          "티타임",
+          "07:10 · 잔여 4명"
+        ],
+        [
+          "포함 사항",
+          "그린피 · 캐디피 · 카트"
+        ],
+        [
+          "처리 목적",
+          "코스·티타임·요금"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "golf.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "golf.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "restaurants.html": {
+      "route": "restaurants.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "다이닝 목록",
+      "purpose": "지역·시간·좌석 검색",
+      "parent": "places.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 지역·시간·좌석 검색.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "상품 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "restaurants_01",
+          "title": "짜오 비치 키친",
+          "subtitle": "다낭 · 해산물 · 18:00 8석",
+          "updated": "5분 전",
+          "status": "예약 가능",
+          "href": "restaurant-detail.html"
+        },
+        {
+          "id": "restaurants_02",
+          "title": "교토 기온 우메",
+          "subtitle": "가이세키 · 19:30 2석",
+          "updated": "8분 전",
+          "status": "요청 예약",
+          "href": "restaurant-detail.html"
+        },
+        {
+          "id": "restaurants_03",
+          "title": "방콕 리버 테이블",
+          "subtitle": "태국 현대식 · 강변석",
+          "updated": "12분 전",
+          "status": "예약 가능",
+          "href": "restaurant-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "places.html",
+          "position": "head"
+        },
+        {
+          "label": "다이닝 보기",
+          "href": "restaurant-detail.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "places.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "restaurant-detail.html": {
+      "route": "restaurant-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "다이닝 상세",
+      "purpose": "메뉴·좌석·예약 방식",
+      "parent": "restaurants.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 메뉴·좌석·예약 방식.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "RESTAURANT-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "다이닝",
+          "짜오 비치 키친"
+        ],
+        [
+          "예약 시간",
+          "18:00 · 잔여 8석"
+        ],
+        [
+          "예약 방식",
+          "즉시 예약 · 현장 결제"
+        ],
+        [
+          "처리 목적",
+          "메뉴·좌석·예약 방식"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "restaurants.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "restaurants.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "spas.html": {
+      "route": "spas.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "스파 목록",
+      "purpose": "테라피·시간 검색",
+      "parent": "places.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 테라피·시간 검색.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "상품 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "spas_01",
+          "title": "Bangkok Riverside Spa",
+          "subtitle": "아로마 90분 · 커플룸",
+          "updated": "4분 전",
+          "status": "THB 1,800",
+          "href": "spa-detail.html"
+        },
+        {
+          "id": "spas_02",
+          "title": "다낭 라온 스파",
+          "subtitle": "한국어 가능 · 호텔 픽업",
+          "updated": "6분 전",
+          "status": "KRW 42,000",
+          "href": "spa-detail.html"
+        },
+        {
+          "id": "spas_03",
+          "title": "발리 우붓 포레스트 테라피",
+          "subtitle": "120분 · 숲 전망",
+          "updated": "9분 전",
+          "status": "IDR 890,000",
+          "href": "spa-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "places.html",
+          "position": "head"
+        },
+        {
+          "label": "프로그램 보기",
+          "href": "spa-detail.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "places.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "spa-detail.html": {
+      "route": "spa-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "스파 상세",
+      "purpose": "프로그램·테라피스트",
+      "parent": "spas.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 프로그램·테라피스트.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "SPA-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "프로그램",
+          "아로마 테라피 90분"
+        ],
+        [
+          "가능 시간",
+          "15:00 · 16:30 · 18:00"
+        ],
+        [
+          "조건",
+          "2시간 전 무료 취소"
+        ],
+        [
+          "처리 목적",
+          "프로그램·테라피스트"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "spas.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "spas.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "vehicles.html": {
+      "route": "vehicles.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "차량 목록",
+      "purpose": "차종·구간·기사 검색",
+      "parent": "places.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 차종·구간·기사 검색.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "상품 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "vehicles_01",
+          "title": "다낭 공항 픽업 세단",
+          "subtitle": "3인 · 수하물 2개 · 기사 포함",
+          "updated": "2분 전",
+          "status": "KRW 24,000",
+          "href": "vehicle-detail.html"
+        },
+        {
+          "id": "vehicles_02",
+          "title": "방콕 공항 픽업 밴",
+          "subtitle": "7인 · 수하물 6개 · 톨비 포함",
+          "updated": "5분 전",
+          "status": "THB 1,150",
+          "href": "vehicle-detail.html"
+        },
+        {
+          "id": "vehicles_03",
+          "title": "교토 일일 대절 밴",
+          "subtitle": "8시간 · 영어 기사 · 보험 포함",
+          "updated": "8분 전",
+          "status": "JPY 48,000",
+          "href": "vehicle-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "places.html",
+          "position": "head"
+        },
+        {
+          "label": "차량 보기",
+          "href": "vehicle-detail.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "places.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "vehicle-detail.html": {
+      "route": "vehicle-detail.html",
+      "realm": "B2C_PUBLIC",
+      "group": "상품",
+      "title": "차량 상세",
+      "purpose": "차량·기사·보험 조건",
+      "parent": "vehicles.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 차량·기사·보험 조건.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "VEHICLE-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "차량",
+          "세단 · 3인 · 수하물 2개"
+        ],
+        [
+          "구간",
+          "다낭 공항 → 시내 호텔"
+        ],
+        [
+          "포함 사항",
+          "기사 · 보험 · 공항 대기 60분"
+        ],
+        [
+          "처리 목적",
+          "차량·기사·보험 조건"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 접수",
+          "오늘 10:12"
+        ],
+        [
+          "정보 확인",
+          "오늘 10:13"
+        ],
+        [
+          "상태 갱신",
+          "오늘 10:14"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "vehicles.html",
+          "position": "head"
+        },
+        {
+          "label": "저장",
+          "action": "저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "vehicles.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "payment-pending.html": {
+      "route": "payment-pending.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "결제 처리 중",
+      "purpose": "PG 승인 대기",
+      "parent": "checkout.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. PG 승인 대기.",
+      "status": "처리 중",
+      "details": [
+        [
+          "화면 식별",
+          "PAYMENT-PENDING"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "결제 거래",
+          "HNG-PAY-2026-88014"
+        ],
+        [
+          "금액",
+          "617,200 KRW"
+        ],
+        [
+          "PG 상태",
+          "승인 완료 · 환불 없음"
+        ],
+        [
+          "처리 목적",
+          "PG 승인 대기"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "checkout.html",
+          "position": "head"
+        },
+        {
+          "label": "결제 상태 다시 확인",
+          "action": "결제 재조회",
+          "tone": "primary",
+          "position": "state"
+        },
+        {
+          "label": "예약 내역",
+          "href": "bookings.html",
+          "position": "state"
+        }
+      ],
+      "successUrl": "checkout.html",
+      "tone": "warn",
+      "icon": "…",
+      "nextLabel": "상태 이력 확인"
+    },
+    "payment-failed.html": {
+      "route": "payment-failed.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "결제 실패",
+      "purpose": "실패 사유·재시도",
+      "parent": "checkout.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 실패 사유·재시도.",
+      "status": "확인 필요",
+      "details": [
+        [
+          "화면 식별",
+          "PAYMENT-FAILED"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "결제 거래",
+          "HNG-PAY-2026-88014"
+        ],
+        [
+          "금액",
+          "617,200 KRW"
+        ],
+        [
+          "PG 상태",
+          "승인 완료 · 환불 없음"
+        ],
+        [
+          "처리 목적",
+          "실패 사유·재시도"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "checkout.html",
+          "position": "head"
+        },
+        {
+          "label": "다시 결제",
+          "href": "checkout.html",
+          "tone": "primary",
+          "position": "state"
+        },
+        {
+          "label": "결제수단 관리",
+          "href": "payment-methods.html",
+          "position": "state"
+        }
+      ],
+      "successUrl": "checkout.html",
+      "tone": "danger",
+      "icon": "!",
+      "nextLabel": "상태 이력 확인"
+    },
+    "booking-hold-expired.html": {
+      "route": "booking-hold-expired.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "Hold 만료",
+      "purpose": "재고 재검증·복귀",
+      "parent": "booking-review.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 재고 재검증·복귀.",
+      "status": "만료",
+      "details": [
+        [
+          "화면 식별",
+          "BOOKING-HOLD-EXPIRED"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "재고 재검증·복귀"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "booking-review.html",
+          "position": "head"
+        },
+        {
+          "label": "재고 다시 검색",
+          "href": "hotels.html",
+          "tone": "primary",
+          "position": "state"
+        },
+        {
+          "label": "카트로 돌아가기",
+          "href": "cart.html",
+          "position": "state"
+        }
+      ],
+      "successUrl": "booking-review.html",
+      "tone": "warn",
+      "icon": "⌛",
+      "nextLabel": "상태 이력 확인"
+    },
+    "booking-change-complete.html": {
+      "route": "booking-change-complete.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "예약 변경 완료",
+      "purpose": "공급자 최종 상태",
+      "parent": "booking-change.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 공급자 최종 상태.",
+      "status": "완료",
+      "details": [
+        [
+          "화면 식별",
+          "BOOKING-CHANGE-COMPLETE"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "공급자 최종 상태"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "booking-change.html",
+          "position": "head"
+        },
+        {
+          "label": "변경된 예약 보기",
+          "href": "booking-detail.html",
+          "tone": "primary",
+          "position": "state"
+        }
+      ],
+      "successUrl": "booking-change.html",
+      "tone": "success",
+      "icon": "✓",
+      "nextLabel": "상태 이력 확인"
+    },
+    "booking-cancel-complete.html": {
+      "route": "booking-cancel-complete.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "예약 취소 완료",
+      "purpose": "환불·공급자 상태",
+      "parent": "booking-cancel.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 환불·공급자 상태.",
+      "status": "완료",
+      "details": [
+        [
+          "화면 식별",
+          "BOOKING-CANCEL-COMPLETE"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "환불·공급자 상태"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "booking-cancel.html",
+          "position": "head"
+        },
+        {
+          "label": "예약 내역 보기",
+          "href": "orders.html",
+          "tone": "primary",
+          "position": "state"
+        }
+      ],
+      "successUrl": "booking-cancel.html",
+      "tone": "success",
+      "icon": "✓",
+      "nextLabel": "상태 이력 확인"
+    },
+    "booking-recovery.html": {
+      "route": "booking-recovery.html",
+      "realm": "B2C/BOOKING",
+      "group": "예약",
+      "title": "예약 오류 복구",
+      "purpose": "대사 필요·고객 안내",
+      "parent": "booking-detail.html",
+      "priority": "최상",
+      "kind": "state",
+      "section": "",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 대사 필요·고객 안내.",
+      "status": "확인 필요",
+      "details": [
+        [
+          "화면 식별",
+          "BOOKING-RECOVERY"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "대사 필요·고객 안내"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "booking-detail.html",
+          "position": "head"
+        },
+        {
+          "label": "상태 다시 확인",
+          "action": "대사 재조회",
+          "tone": "primary",
+          "position": "state"
+        },
+        {
+          "label": "고객센터",
+          "href": "support.html",
+          "position": "state"
+        }
+      ],
+      "successUrl": "booking-detail.html",
+      "tone": "danger",
+      "icon": "!",
+      "nextLabel": "상태 이력 확인"
+    },
+    "partner-email-verification.html": {
+      "route": "partner-email-verification.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "계정",
+      "title": "파트너 이메일 인증",
+      "purpose": "업무 이메일 확인",
+      "parent": "partner-signup.html",
+      "priority": "최상",
+      "kind": "form",
+      "section": "application",
+      "description": "파트너 이메일 인증 기능을 화면에서 처리합니다. 업무 이메일 확인.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "email",
+          "label": "인증 이메일",
+          "type": "email",
+          "required": true,
+          "value": "owner@oceanresort.test"
+        },
+        {
+          "name": "verificationCode",
+          "label": "6자리 인증번호",
+          "type": "text",
+          "required": true,
+          "value": "260723",
+          "help": "Mock 인증번호는 260723입니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-signup.html",
+          "position": "head"
+        },
+        {
+          "label": "인증 확인",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-onboarding-business.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-onboarding-business.html": {
+      "route": "partner-onboarding-business.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "입점",
+      "title": "사업자 정보 단계",
+      "purpose": "법인·사업자 식별",
+      "parent": "partner-onboarding.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "application",
+      "description": "파트너 입점에 필요한 정보를 단계별로 제출하고 검토 상태를 확인합니다. 법인·사업자 식별.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "legalName",
+          "label": "법인·상호명",
+          "type": "text",
+          "required": true,
+          "value": "Ocean Resort Da Nang"
+        },
+        {
+          "name": "registrationNumber",
+          "label": "사업자등록번호",
+          "type": "text",
+          "required": true,
+          "value": "VN-0402-2026-001"
+        },
+        {
+          "name": "country",
+          "label": "등록 국가",
+          "type": "select",
+          "required": true,
+          "options": [
+            "베트남",
+            "일본",
+            "태국",
+            "대한민국",
+            "인도네시아"
+          ]
+        },
+        {
+          "name": "representative",
+          "label": "대표자",
+          "type": "text",
+          "required": true,
+          "value": "Nguyen Minh"
+        },
+        {
+          "name": "businessType",
+          "label": "업종",
+          "type": "select",
+          "required": true,
+          "options": [
+            "호텔·리조트",
+            "골프장",
+            "차량·픽업",
+            "음식점·카페",
+            "마사지·스파",
+            "투어·체험"
+          ]
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-onboarding.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-onboarding-documents.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-onboarding-documents.html": {
+      "route": "partner-onboarding-documents.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "입점",
+      "title": "증빙 제출 단계",
+      "purpose": "문서 업로드·검증",
+      "parent": "partner-onboarding.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "application",
+      "description": "파트너 입점에 필요한 정보를 단계별로 제출하고 검토 상태를 확인합니다. 문서 업로드·검증.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "registration",
+          "label": "사업자등록 증빙",
+          "type": "file",
+          "required": true,
+          "accept": ".pdf,.jpg,.png"
+        },
+        {
+          "name": "license",
+          "label": "영업허가·업종 증빙",
+          "type": "file",
+          "required": true,
+          "accept": ".pdf,.jpg,.png"
+        },
+        {
+          "name": "representativeId",
+          "label": "대표자 신원 확인",
+          "type": "file",
+          "accept": ".pdf,.jpg,.png"
+        },
+        {
+          "name": "certify",
+          "label": "원본 확인",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "제출 문서가 현재 유효한 원본과 일치함을 확인합니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-onboarding.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-onboarding-settlement.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-onboarding-settlement.html": {
+      "route": "partner-onboarding-settlement.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "입점",
+      "title": "정산 정보 단계",
+      "purpose": "계좌·세금 정보",
+      "parent": "partner-onboarding.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "application",
+      "description": "파트너 입점에 필요한 정보를 단계별로 제출하고 검토 상태를 확인합니다. 계좌·세금 정보.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "bankCountry",
+          "label": "은행 국가",
+          "type": "select",
+          "required": true,
+          "options": [
+            "베트남",
+            "일본",
+            "태국",
+            "대한민국",
+            "인도네시아"
+          ]
+        },
+        {
+          "name": "bankName",
+          "label": "은행명",
+          "type": "text",
+          "required": true,
+          "value": "Vietcombank"
+        },
+        {
+          "name": "accountHolder",
+          "label": "예금주",
+          "type": "text",
+          "required": true,
+          "value": "OCEAN RESORT DA NANG"
+        },
+        {
+          "name": "accountNumber",
+          "label": "계좌번호",
+          "type": "password",
+          "required": true,
+          "value": "012345678901"
+        },
+        {
+          "name": "currency",
+          "label": "정산 통화",
+          "type": "select",
+          "options": [
+            "VND",
+            "USD",
+            "KRW",
+            "JPY",
+            "THB"
+          ]
+        },
+        {
+          "name": "proof",
+          "label": "계좌 증빙",
+          "type": "file",
+          "full": true,
+          "accept": ".pdf,.jpg,.png"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-onboarding.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-onboarding-terms.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-onboarding-terms.html": {
+      "route": "partner-onboarding-terms.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "입점",
+      "title": "약관 동의 단계",
+      "purpose": "계약·약관 이력",
+      "parent": "partner-onboarding.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "application",
+      "description": "파트너 입점에 필요한 정보를 단계별로 제출하고 검토 상태를 확인합니다. 계약·약관 이력.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "serviceTerms",
+          "label": "파트너 서비스 약관",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "버전 2026.07 · 판매 및 운영 정책"
+        },
+        {
+          "name": "privacyTerms",
+          "label": "개인정보 처리위탁",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "예약자 정보 처리와 보안 의무"
+        },
+        {
+          "name": "settlementTerms",
+          "label": "정산·취소·환불 정책",
+          "type": "checkbox",
+          "full": true,
+          "required": true,
+          "help": "수수료, 지급 주기, 조정 기준"
+        },
+        {
+          "name": "signer",
+          "label": "서명자 이름",
+          "type": "text",
+          "required": true,
+          "value": "Nguyen Minh"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-onboarding.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-application-status.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-properties.html": {
+      "route": "partner-properties.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "사업장",
+      "title": "사업장 목록",
+      "purpose": "다지점 관리",
+      "parent": "partner-dashboard.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "property",
+      "description": "파트너가 운영하는 사업장과 공개 Place를 독립적으로 관리합니다. 다지점 관리.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "사업장 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "partner-properties_01",
+          "title": "다낭 오션 리조트",
+          "subtitle": "HOTEL · Da Nang · prv_hotel_001",
+          "updated": "오늘",
+          "status": "공개 중",
+          "href": "partner-property.html"
+        },
+        {
+          "id": "partner-properties_02",
+          "title": "호이안 리버 빌라",
+          "subtitle": "HOTEL · Hoi An · plc_draft_018",
+          "updated": "07.21",
+          "status": "검토 중",
+          "href": "partner-product-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-dashboard.html",
+          "position": "head"
+        },
+        {
+          "label": "사업장 등록",
+          "href": "partner-property-create.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "partner-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "partner-property-create.html": {
+      "route": "partner-property-create.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "사업장",
+      "title": "사업장 등록",
+      "purpose": "Place 생성 요청",
+      "parent": "partner-properties.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "property",
+      "description": "파트너가 운영하는 사업장과 공개 Place를 독립적으로 관리합니다. Place 생성 요청.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "name",
+          "label": "공개 사업장명",
+          "type": "text",
+          "required": true,
+          "value": "다낭 오션 리조트"
+        },
+        {
+          "name": "businessType",
+          "label": "업종",
+          "type": "select",
+          "required": true,
+          "options": [
+            "호텔·리조트",
+            "골프장",
+            "차량·픽업",
+            "음식점·카페",
+            "마사지·스파",
+            "투어·체험"
+          ]
+        },
+        {
+          "name": "country",
+          "label": "국가",
+          "type": "text",
+          "required": true,
+          "value": "베트남"
+        },
+        {
+          "name": "city",
+          "label": "도시",
+          "type": "text",
+          "required": true,
+          "value": "다낭"
+        },
+        {
+          "name": "address",
+          "label": "주소",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "ownership",
+          "label": "운영 권한 증빙",
+          "type": "file",
+          "full": true,
+          "accept": ".pdf,.jpg,.png"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-properties.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-properties.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-products.html": {
+      "route": "partner-products.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "상품",
+      "title": "상품 목록",
+      "purpose": "업종별 상품 통합 목록",
+      "parent": "partner-dashboard.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "inventory",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 업종별 상품 통합 목록.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "상품 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "partner-products_01",
+          "title": "디럭스 오션뷰 · 조식 포함",
+          "subtitle": "ROOM · 2인 · KRW 328,500",
+          "updated": "오늘",
+          "status": "판매 중",
+          "href": "partner-product-detail.html"
+        },
+        {
+          "id": "partner-products_02",
+          "title": "패밀리 스위트 · 무료 취소",
+          "subtitle": "ROOM · 4인 · KRW 424,000",
+          "updated": "오늘",
+          "status": "판매 중",
+          "href": "partner-product-detail.html"
+        },
+        {
+          "id": "partner-products_03",
+          "title": "공항 픽업 세단",
+          "subtitle": "TRANSFER · 3인 · KRW 38,000",
+          "updated": "07.22",
+          "status": "검토 중",
+          "href": "partner-product-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-dashboard.html",
+          "position": "head"
+        },
+        {
+          "label": "상품 등록",
+          "href": "partner-product-create.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "partner-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "partner-product-create.html": {
+      "route": "partner-product-create.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "상품",
+      "title": "상품 등록",
+      "purpose": "상품·옵션·정책 생성",
+      "parent": "partner-products.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "inventory",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 상품·옵션·정책 생성.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "name",
+          "label": "상품명",
+          "type": "text",
+          "required": true,
+          "value": "디럭스 오션뷰 · 조식 포함"
+        },
+        {
+          "name": "productType",
+          "label": "상품 유형",
+          "type": "select",
+          "required": true,
+          "options": [
+            "객실",
+            "티타임",
+            "예약 슬롯",
+            "차량",
+            "투어"
+          ]
+        },
+        {
+          "name": "price",
+          "label": "기본 판매가",
+          "type": "number",
+          "required": true,
+          "value": "328500"
+        },
+        {
+          "name": "currency",
+          "label": "통화",
+          "type": "select",
+          "options": [
+            "KRW",
+            "USD",
+            "VND",
+            "JPY",
+            "THB"
+          ]
+        },
+        {
+          "name": "policy",
+          "label": "취소·이용 정책",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "publish",
+          "label": "검수 요청",
+          "type": "checkbox",
+          "full": true,
+          "help": "저장 후 플랫폼 검수 큐에 등록합니다."
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-products.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-products.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-product-detail.html": {
+      "route": "partner-product-detail.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "상품",
+      "title": "상품 상세·편집",
+      "purpose": "검수·발행 상태",
+      "parent": "partner-products.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "inventory",
+      "description": "공급 조건과 최신 확인 시각을 비교해 여행 상품을 선택합니다. 검수·발행 상태.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PARTNER-PRODUCT-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "상품"
+        ],
+        [
+          "파트너",
+          "Ocean Resort Da Nang"
+        ],
+        [
+          "파트너 ID",
+          "ptn_001"
+        ],
+        [
+          "계약 상태",
+          "활성 · 2026.08.01 효력"
+        ],
+        [
+          "처리 목적",
+          "검수·발행 상태"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "파트너 입력",
+          "어제 16:20"
+        ],
+        [
+          "자동 검증",
+          "어제 16:22"
+        ],
+        [
+          "운영 검토",
+          "오늘 09:40"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-products.html",
+          "position": "head"
+        },
+        {
+          "label": "변경 저장",
+          "action": "변경 저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "partner-products.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "partner-booking-detail.html": {
+      "route": "partner-booking-detail.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "예약",
+      "title": "예약 상세",
+      "purpose": "공급자 상태·고객 요청",
+      "parent": "partner-bookings.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "bookings",
+      "description": "예약 상태와 공급자 확인 결과를 단계별로 명확하게 안내합니다. 공급자 상태·고객 요청.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PARTNER-BOOKING-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "예약"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "공급자 상태·고객 요청"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "파트너 입력",
+          "어제 16:20"
+        ],
+        [
+          "자동 검증",
+          "어제 16:22"
+        ],
+        [
+          "운영 검토",
+          "오늘 09:40"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-bookings.html",
+          "position": "head"
+        },
+        {
+          "label": "변경 저장",
+          "action": "변경 저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "partner-bookings.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "partner-settlement-detail.html": {
+      "route": "partner-settlement-detail.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "정산",
+      "title": "정산 상세",
+      "purpose": "항목·조정·지급 상태",
+      "parent": "partner-finance.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "finance",
+      "description": "판매 항목과 조정, 지급 상태를 파트너별로 대사합니다. 항목·조정·지급 상태.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PARTNER-SETTLEMENT-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "정산"
+        ],
+        [
+          "파트너",
+          "Ocean Resort Da Nang"
+        ],
+        [
+          "파트너 ID",
+          "ptn_001"
+        ],
+        [
+          "계약 상태",
+          "활성 · 2026.08.01 효력"
+        ],
+        [
+          "처리 목적",
+          "항목·조정·지급 상태"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "파트너 입력",
+          "어제 16:20"
+        ],
+        [
+          "자동 검증",
+          "어제 16:22"
+        ],
+        [
+          "운영 검토",
+          "오늘 09:40"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-finance.html",
+          "position": "head"
+        },
+        {
+          "label": "변경 저장",
+          "action": "변경 저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "partner-finance.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "partner-payout-account.html": {
+      "route": "partner-payout-account.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "정산",
+      "title": "지급 계좌",
+      "purpose": "계좌 인증·변경 이력",
+      "parent": "partner-finance.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "finance",
+      "description": "판매 항목과 조정, 지급 상태를 파트너별로 대사합니다. 계좌 인증·변경 이력.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "bankCountry",
+          "label": "은행 국가",
+          "type": "select",
+          "required": true,
+          "options": [
+            "베트남",
+            "일본",
+            "태국",
+            "대한민국",
+            "인도네시아"
+          ]
+        },
+        {
+          "name": "bankName",
+          "label": "은행명",
+          "type": "text",
+          "required": true,
+          "value": "Vietcombank"
+        },
+        {
+          "name": "accountHolder",
+          "label": "예금주",
+          "type": "text",
+          "required": true,
+          "value": "OCEAN RESORT DA NANG"
+        },
+        {
+          "name": "accountNumber",
+          "label": "계좌번호",
+          "type": "password",
+          "required": true,
+          "value": "012345678901"
+        },
+        {
+          "name": "currency",
+          "label": "정산 통화",
+          "type": "select",
+          "options": [
+            "VND",
+            "USD",
+            "KRW",
+            "JPY",
+            "THB"
+          ]
+        },
+        {
+          "name": "proof",
+          "label": "계좌 증빙",
+          "type": "file",
+          "full": true,
+          "accept": ".pdf,.jpg,.png"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-finance.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-finance.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-member-invite.html": {
+      "route": "partner-member-invite.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "권한",
+      "title": "직원 초대",
+      "purpose": "초대·역할·범위",
+      "parent": "partner-members.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "members",
+      "description": "직원의 역할과 사업장 범위를 최소 권한 원칙으로 관리합니다. 초대·역할·범위.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "email",
+          "label": "업무 이메일",
+          "type": "email",
+          "required": true
+        },
+        {
+          "name": "name",
+          "label": "직원 이름",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "role",
+          "label": "역할",
+          "type": "select",
+          "required": true,
+          "options": [
+            "운영 관리자",
+            "예약 담당",
+            "재고 담당",
+            "정산 조회",
+            "콘텐츠 편집"
+          ]
+        },
+        {
+          "name": "scope",
+          "label": "사업장 범위",
+          "type": "select",
+          "options": [
+            "모든 사업장",
+            "다낭 오션 리조트",
+            "방콕 리버사이드 스파"
+          ]
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-members.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "partner-members.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "partner-member-detail.html": {
+      "route": "partner-member-detail.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "권한",
+      "title": "직원 권한 상세",
+      "purpose": "RBAC·지점 범위",
+      "parent": "partner-members.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "members",
+      "description": "직원의 역할과 사업장 범위를 최소 권한 원칙으로 관리합니다. RBAC·지점 범위.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PARTNER-MEMBER-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "권한"
+        ],
+        [
+          "파트너",
+          "Ocean Resort Da Nang"
+        ],
+        [
+          "파트너 ID",
+          "ptn_001"
+        ],
+        [
+          "계약 상태",
+          "활성 · 2026.08.01 효력"
+        ],
+        [
+          "처리 목적",
+          "RBAC·지점 범위"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "파트너 입력",
+          "어제 16:20"
+        ],
+        [
+          "자동 검증",
+          "어제 16:22"
+        ],
+        [
+          "운영 검토",
+          "오늘 09:40"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-members.html",
+          "position": "head"
+        },
+        {
+          "label": "변경 저장",
+          "action": "변경 저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "partner-members.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "partner-inquiries.html": {
+      "route": "partner-inquiries.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "운영",
+      "title": "리뷰·문의 목록",
+      "purpose": "고객 응대 큐",
+      "parent": "partner-operations.html",
+      "priority": "중",
+      "kind": "list",
+      "section": "operations",
+      "description": "운영 작업의 담당자, 처리 기한, 상태 이력을 관리합니다. 고객 응대 큐.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "운영 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "2",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "partner-inquiries_01",
+          "title": "늦은 체크인 가능 여부",
+          "subtitle": "HNG-INQ-P-1092 · 다낭 오션 리조트",
+          "updated": "18분 전",
+          "status": "답변 대기",
+          "href": "partner-inquiry-detail.html"
+        },
+        {
+          "id": "partner-inquiries_02",
+          "title": "알레르기 조식 요청",
+          "subtitle": "HNG-INQ-P-1088 · 예약 HNG-B-10482",
+          "updated": "2시간 전",
+          "status": "처리 중",
+          "href": "partner-inquiry-detail.html"
+        },
+        {
+          "id": "partner-inquiries_03",
+          "title": "후기 신고 검토",
+          "subtitle": "REV-2026-0911 · 부적절 표현",
+          "updated": "어제",
+          "status": "검토 중",
+          "href": "partner-inquiry-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-operations.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "partner-operations.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "partner-inquiry-detail.html": {
+      "route": "partner-inquiry-detail.html",
+      "realm": "HOTELNGO_PARTNER",
+      "group": "운영",
+      "title": "리뷰·문의 상세",
+      "purpose": "답변·분쟁 이력",
+      "parent": "partner-inquiries.html",
+      "priority": "중",
+      "kind": "detail",
+      "section": "operations",
+      "description": "운영 작업의 담당자, 처리 기한, 상태 이력을 관리합니다. 답변·분쟁 이력.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "PARTNER-INQUIRY-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "운영"
+        ],
+        [
+          "파트너",
+          "Ocean Resort Da Nang"
+        ],
+        [
+          "파트너 ID",
+          "ptn_001"
+        ],
+        [
+          "계약 상태",
+          "활성 · 2026.08.01 효력"
+        ],
+        [
+          "처리 목적",
+          "답변·분쟁 이력"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "파트너 입력",
+          "어제 16:20"
+        ],
+        [
+          "자동 검증",
+          "어제 16:22"
+        ],
+        [
+          "운영 검토",
+          "오늘 09:40"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "partner-inquiries.html",
+          "position": "head"
+        },
+        {
+          "label": "변경 저장",
+          "action": "변경 저장",
+          "tone": "primary",
+          "position": "detail"
+        }
+      ],
+      "successUrl": "partner-inquiries.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-task-detail.html": {
+      "route": "admin-task-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "운영",
+      "title": "작업 큐 상세",
+      "purpose": "유형별 심사·할당",
+      "parent": "admin-review.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "review",
+      "description": "운영 작업의 담당자, 처리 기한, 상태 이력을 관리합니다. 유형별 심사·할당.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-TASK-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "운영"
+        ],
+        [
+          "처리 목적",
+          "유형별 심사·할당"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-review.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-review.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-provider-detail.html": {
+      "route": "admin-provider-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "카탈로그",
+      "title": "Provider 상세",
+      "purpose": "소유권·연결·출처",
+      "parent": "admin-catalog.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "catalog",
+      "description": "Provider와 Place의 출처·소유권·중복·최신성을 검증합니다. 소유권·연결·출처.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-PROVIDER-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "카탈로그"
+        ],
+        [
+          "Provider ID",
+          "prv_hotel_001"
+        ],
+        [
+          "관리 방식",
+          "PARTNER_MANAGED"
+        ],
+        [
+          "소유권",
+          "VERIFIED"
+        ],
+        [
+          "처리 목적",
+          "소유권·연결·출처"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-catalog.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-catalog.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-place-detail.html": {
+      "route": "admin-place-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "카탈로그",
+      "title": "Place 상세·편집",
+      "purpose": "공개 정보·최신성",
+      "parent": "admin-catalog.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "catalog",
+      "description": "Provider와 Place의 출처·소유권·중복·최신성을 검증합니다. 공개 정보·최신성.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-PLACE-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "카탈로그"
+        ],
+        [
+          "Place ID",
+          "plc_hotel_001"
+        ],
+        [
+          "공개 이름",
+          "다낭 오션 리조트"
+        ],
+        [
+          "최종 검증",
+          "2026.07.22 · Partner submitted"
+        ],
+        [
+          "처리 목적",
+          "공개 정보·최신성"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-catalog.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-catalog.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-duplicates.html": {
+      "route": "admin-duplicates.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "카탈로그",
+      "title": "중복 후보",
+      "purpose": "유사 장소 비교",
+      "parent": "admin-catalog.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "catalog",
+      "description": "Provider와 Place의 출처·소유권·중복·최신성을 검증합니다. 유사 장소 비교.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "카탈로그 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "2",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-duplicates_01",
+          "title": "Ubud Forest Resort ↔ Ubud Forest Villas",
+          "subtitle": "유사도 94% · 주소 98%",
+          "updated": "12분 전",
+          "status": "검토 대기",
+          "href": "admin-merge.html"
+        },
+        {
+          "id": "admin-duplicates_02",
+          "title": "Bangkok River Spa ↔ Riverside Wellness",
+          "subtitle": "유사도 87% · 전화 일치",
+          "updated": "1시간 전",
+          "status": "검토 대기",
+          "href": "admin-merge.html"
+        },
+        {
+          "id": "admin-duplicates_03",
+          "title": "Kyoto Gion Walk ↔ Gion Evening Tour",
+          "subtitle": "유사도 79% · 운영자 다름",
+          "updated": "어제",
+          "status": "분리 유지",
+          "href": "admin-place-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-catalog.html",
+          "position": "head"
+        },
+        {
+          "label": "병합 검토",
+          "href": "admin-merge.html",
+          "tone": "primary",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-catalog.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-merge.html": {
+      "route": "admin-merge.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "카탈로그",
+      "title": "중복 병합",
+      "purpose": "관계 이전·감사",
+      "parent": "admin-duplicates.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "catalog",
+      "description": "Provider와 Place의 출처·소유권·중복·최신성을 검증합니다. 관계 이전·감사.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "survivor",
+          "label": "유지할 Place",
+          "type": "select",
+          "required": true,
+          "options": [
+            "plc_0081 · Ubud Forest Resort",
+            "plc_1182 · Ubud Forest Villas"
+          ]
+        },
+        {
+          "name": "moveRelations",
+          "label": "예약·콘텐츠 관계 이전",
+          "type": "checkbox",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "reason",
+          "label": "병합 근거",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "traceId",
+          "label": "감사 추적 ID",
+          "type": "text",
+          "required": true,
+          "value": "TRC-98282830"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-duplicates.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "admin-duplicates.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "admin-import-jobs.html": {
+      "route": "admin-import-jobs.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "카탈로그",
+      "title": "가져오기 작업",
+      "purpose": "CSV 매핑·오류·재시도",
+      "parent": "admin-providers.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "catalog",
+      "description": "Provider와 Place의 출처·소유권·중복·최신성을 검증합니다. CSV 매핑·오류·재시도.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "카탈로그 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-import-jobs_01",
+          "title": "IMP-20260723-041",
+          "subtitle": "Provider CSV · 1,204행",
+          "updated": "11:42",
+          "status": "완료",
+          "href": "admin-task-detail.html"
+        },
+        {
+          "id": "admin-import-jobs_02",
+          "title": "IMP-20260723-039",
+          "subtitle": "Place 다국어 · 340행",
+          "updated": "10:18",
+          "status": "오류 8건",
+          "href": "admin-task-detail.html"
+        },
+        {
+          "id": "admin-import-jobs_03",
+          "title": "IMP-20260722-118",
+          "subtitle": "좌표 정합성 · 892행",
+          "updated": "어제",
+          "status": "완료",
+          "href": "admin-task-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-providers.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-providers.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-partner-detail.html": {
+      "route": "admin-partner-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "파트너",
+      "title": "파트너 상세",
+      "purpose": "계약·업체·심사 이력",
+      "parent": "admin-partners.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "partners",
+      "description": "파트너 계약과 심사, 연결된 사업장 정보를 통합 관리합니다. 계약·업체·심사 이력.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-PARTNER-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "파트너"
+        ],
+        [
+          "파트너",
+          "Ocean Resort Da Nang"
+        ],
+        [
+          "파트너 ID",
+          "ptn_001"
+        ],
+        [
+          "계약 상태",
+          "활성 · 2026.08.01 효력"
+        ],
+        [
+          "처리 목적",
+          "계약·업체·심사 이력"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-partners.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-partners.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-partner-contract.html": {
+      "route": "admin-partner-contract.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "파트너",
+      "title": "계약 관리",
+      "purpose": "계약 버전·서명",
+      "parent": "admin-partner-detail.html",
+      "priority": "높음",
+      "kind": "form",
+      "section": "partners",
+      "description": "파트너 계약과 심사, 연결된 사업장 정보를 통합 관리합니다. 계약 버전·서명.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "version",
+          "label": "계약 버전",
+          "type": "text",
+          "required": true,
+          "value": "HNG-PARTNER-2026.07"
+        },
+        {
+          "name": "commission",
+          "label": "판매 수수료(%)",
+          "type": "number",
+          "required": true,
+          "value": "15"
+        },
+        {
+          "name": "effectiveOn",
+          "label": "효력 시작일",
+          "type": "date",
+          "required": true,
+          "value": "2026-08-01"
+        },
+        {
+          "name": "contract",
+          "label": "서명 계약서",
+          "type": "file",
+          "full": true,
+          "accept": ".pdf"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-partner-detail.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "admin-partner-detail.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "admin-review-detail.html": {
+      "route": "admin-review-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "심사",
+      "title": "심사 상세",
+      "purpose": "변경 전후 비교",
+      "parent": "admin-review.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "review",
+      "description": "변경 전후와 근거를 비교해 승인·반려를 기록합니다. 변경 전후 비교.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-REVIEW-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "심사"
+        ],
+        [
+          "처리 목적",
+          "변경 전후 비교"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-review.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-review.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-review-decision.html": {
+      "route": "admin-review-decision.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "심사",
+      "title": "승인·반려 사유",
+      "purpose": "사유·MFA·감사",
+      "parent": "admin-review-detail.html",
+      "priority": "최상",
+      "kind": "form",
+      "section": "review",
+      "description": "변경 전후와 근거를 비교해 승인·반려를 기록합니다. 사유·MFA·감사.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "decision",
+          "label": "심사 결정",
+          "type": "select",
+          "required": true,
+          "options": [
+            "승인",
+            "보완 요청",
+            "반려"
+          ]
+        },
+        {
+          "name": "reasonCode",
+          "label": "사유 코드",
+          "type": "select",
+          "required": true,
+          "options": [
+            "정보 확인 완료",
+            "증빙 보완 필요",
+            "정책 미충족",
+            "중복 대상"
+          ]
+        },
+        {
+          "name": "reason",
+          "label": "상세 사유",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        },
+        {
+          "name": "mfaCode",
+          "label": "관리자 추가 인증",
+          "type": "text",
+          "required": true,
+          "value": "260723"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-review-detail.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "admin-review-detail.html",
+      "nextLabel": "검토 후 제출"
+    },
+    "admin-order-detail.html": {
+      "route": "admin-order-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "거래",
+      "title": "주문 상세",
+      "purpose": "주문·항목·결제",
+      "parent": "admin-commerce.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "commerce",
+      "description": "주문·예약·결제·공급자 연결 상태를 추적하고 복구합니다. 주문·항목·결제.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-ORDER-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "거래"
+        ],
+        [
+          "처리 목적",
+          "주문·항목·결제"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-commerce.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-commerce.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-booking-detail.html": {
+      "route": "admin-booking-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "거래",
+      "title": "예약 상세",
+      "purpose": "공급자 링크·상태",
+      "parent": "admin-commerce.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "commerce",
+      "description": "주문·예약·결제·공급자 연결 상태를 추적하고 복구합니다. 공급자 링크·상태.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-BOOKING-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "거래"
+        ],
+        [
+          "HotelNGo 예약",
+          "HNG-B-2026-10482"
+        ],
+        [
+          "공급자 상태",
+          "CONFIRMED"
+        ],
+        [
+          "PMS 연결",
+          "PMS-R-88012 · INTERNAL_PMS"
+        ],
+        [
+          "처리 목적",
+          "공급자 링크·상태"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-commerce.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-commerce.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-payment-detail.html": {
+      "route": "admin-payment-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "거래",
+      "title": "결제·환불 상세",
+      "purpose": "PG 거래·환불",
+      "parent": "admin-commerce.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "commerce",
+      "description": "주문·예약·결제·공급자 연결 상태를 추적하고 복구합니다. PG 거래·환불.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-PAYMENT-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "거래"
+        ],
+        [
+          "결제 거래",
+          "HNG-PAY-2026-88014"
+        ],
+        [
+          "금액",
+          "617,200 KRW"
+        ],
+        [
+          "PG 상태",
+          "승인 완료 · 환불 없음"
+        ],
+        [
+          "처리 목적",
+          "PG 거래·환불"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-commerce.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-commerce.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-reconciliation.html": {
+      "route": "admin-reconciliation.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "거래",
+      "title": "대사 작업",
+      "purpose": "차이·재시도·수동 복구",
+      "parent": "admin-commerce.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "commerce",
+      "description": "주문·예약·결제·공급자 연결 상태를 추적하고 복구합니다. 차이·재시도·수동 복구.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-RECONCILIATION"
+        ],
+        [
+          "업무 구분",
+          "거래"
+        ],
+        [
+          "처리 목적",
+          "차이·재시도·수동 복구"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-commerce.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-commerce.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-settlements.html": {
+      "route": "admin-settlements.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "정산",
+      "title": "정산 목록",
+      "purpose": "파트너 지급·조정",
+      "parent": "admin-commerce.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "commerce",
+      "description": "판매 항목과 조정, 지급 상태를 파트너별로 대사합니다. 파트너 지급·조정.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "정산 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-settlements_01",
+          "title": "SET-2026-07-P001",
+          "subtitle": "Ocean Resort · 128건",
+          "updated": "07.22",
+          "status": "지급 예정",
+          "href": "partner-settlement-detail.html"
+        },
+        {
+          "id": "admin-settlements_02",
+          "title": "SET-2026-07-P014",
+          "subtitle": "Kyoto Walks · 42건",
+          "updated": "07.22",
+          "status": "조정 검토",
+          "href": "partner-settlement-detail.html"
+        },
+        {
+          "id": "admin-settlements_03",
+          "title": "SET-2026-06-P009",
+          "subtitle": "Bangkok Wellness · 97건",
+          "updated": "06.30",
+          "status": "지급 완료",
+          "href": "partner-settlement-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-commerce.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-commerce.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-story-editor.html": {
+      "route": "admin-story-editor.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "콘텐츠",
+      "title": "스토리 편집기",
+      "purpose": "블록·출처·번역",
+      "parent": "admin-content.html",
+      "priority": "높음",
+      "kind": "editor",
+      "section": "content",
+      "description": "스토리·랜드마크·미디어의 출처와 발행 상태를 관리합니다. 블록·출처·번역.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "title",
+          "label": "스토리 제목",
+          "type": "text",
+          "required": true,
+          "value": "비 오는 교토, 골목의 저녁"
+        },
+        {
+          "name": "scene",
+          "label": "첫 장면",
+          "type": "textarea",
+          "full": true,
+          "required": true,
+          "value": "기온의 낮은 처마 아래 빗소리와 노란 등불이 이어집니다."
+        },
+        {
+          "name": "place",
+          "label": "연결 장소",
+          "type": "text",
+          "required": true,
+          "value": "교토 기온"
+        },
+        {
+          "name": "tags",
+          "label": "태그",
+          "type": "text",
+          "value": "교토, 골목, 저녁, 감성여행"
+        },
+        {
+          "name": "cover",
+          "label": "대표 이미지",
+          "type": "file",
+          "full": true,
+          "accept": "image/*"
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-content.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "admin-content.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-landmark-editor.html": {
+      "route": "admin-landmark-editor.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "콘텐츠",
+      "title": "랜드마크 편집기",
+      "purpose": "좌표·출처·연결 장소",
+      "parent": "admin-content.html",
+      "priority": "높음",
+      "kind": "editor",
+      "section": "content",
+      "description": "스토리·랜드마크·미디어의 출처와 발행 상태를 관리합니다. 좌표·출처·연결 장소.",
+      "status": "작성 중",
+      "fields": [
+        {
+          "name": "name",
+          "label": "랜드마크명",
+          "type": "text",
+          "required": true,
+          "value": "교토 기온 골목"
+        },
+        {
+          "name": "latitude",
+          "label": "위도",
+          "type": "number",
+          "required": true,
+          "value": "35.0037"
+        },
+        {
+          "name": "longitude",
+          "label": "경도",
+          "type": "number",
+          "required": true,
+          "value": "135.7788"
+        },
+        {
+          "name": "source",
+          "label": "정보 출처 URL",
+          "type": "url",
+          "required": true
+        },
+        {
+          "name": "description",
+          "label": "여행 장면 설명",
+          "type": "textarea",
+          "full": true,
+          "required": true
+        }
+      ],
+      "steps": [
+        "필수 정보 입력",
+        "내용 및 정책 확인",
+        "저장·상태 전이"
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-content.html",
+          "position": "head"
+        },
+        {
+          "label": "저장하고 계속",
+          "submit": true,
+          "tone": "primary",
+          "position": "form"
+        }
+      ],
+      "successUrl": "admin-content.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-media.html": {
+      "route": "admin-media.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "콘텐츠",
+      "title": "미디어 라이브러리",
+      "purpose": "권리·변환·대체 텍스트",
+      "parent": "admin-content.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "content",
+      "description": "스토리·랜드마크·미디어의 출처와 발행 상태를 관리합니다. 권리·변환·대체 텍스트.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "콘텐츠 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-media_01",
+          "title": "danang-ocean-hero-01.jpg",
+          "subtitle": "호텔 대표 · 2400×1600 · 1.8MB",
+          "updated": "오늘",
+          "status": "사용 가능",
+          "href": "admin-place-detail.html"
+        },
+        {
+          "id": "admin-media_02",
+          "title": "kyoto-rain-story-03.jpg",
+          "subtitle": "스토리 · 권리 만료 2027.06",
+          "updated": "07.22",
+          "status": "사용 가능",
+          "href": "admin-story-editor.html"
+        },
+        {
+          "id": "admin-media_03",
+          "title": "bangkok-spa-room.webp",
+          "subtitle": "파트너 업로드 · 대체 텍스트 없음",
+          "updated": "07.21",
+          "status": "검토 필요",
+          "href": "admin-place-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-content.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-content.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-support.html": {
+      "route": "admin-support.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "고객지원",
+      "title": "문의·분쟁",
+      "purpose": "문의·분쟁·SLA",
+      "parent": "admin-dashboard.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "dashboard",
+      "description": "예약과 서비스 이용 중 필요한 도움을 빠르게 찾고 처리합니다. 문의·분쟁·SLA.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "고객지원 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-support_01",
+          "title": "환불 분쟁 · HNG-O-2026-00014",
+          "subtitle": "고객 김지호 · PG 승인 취소 불일치",
+          "updated": "22분 전",
+          "status": "SLA 2시간",
+          "href": "admin-order-detail.html"
+        },
+        {
+          "id": "admin-support_02",
+          "title": "파트너 응답 지연",
+          "subtitle": "예약 HNG-B-10484 · 3시간 경과",
+          "updated": "1시간 전",
+          "status": "처리 중",
+          "href": "admin-booking-detail.html"
+        },
+        {
+          "id": "admin-support_03",
+          "title": "후기 신고",
+          "subtitle": "REV-2026-0911 · 개인정보 노출",
+          "updated": "어제",
+          "status": "검토 대기",
+          "href": "admin-review-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-dashboard.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-ai-run-detail.html": {
+      "route": "admin-ai-run-detail.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "AI",
+      "title": "AI 실행 상세",
+      "purpose": "근거·프롬프트·평가",
+      "parent": "admin-ai.html",
+      "priority": "높음",
+      "kind": "detail",
+      "section": "ai",
+      "description": "AI 실행의 근거, 원천, 평가와 승인 이력을 관리합니다. 근거·프롬프트·평가.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "ADMIN-AI-RUN-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "AI"
+        ],
+        [
+          "실행 ID",
+          "AIRUN-20260723-118"
+        ],
+        [
+          "모델·정책",
+          "여행 추천 Mock · grounded"
+        ],
+        [
+          "근거 문서",
+          "교토 관광청 외 8건"
+        ],
+        [
+          "처리 목적",
+          "근거·프롬프트·평가"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "작업 생성",
+          "오늘 09:12"
+        ],
+        [
+          "담당자 할당",
+          "오늘 09:18"
+        ],
+        [
+          "근거 확인",
+          "오늘 10:04"
+        ],
+        [
+          "현재 상태",
+          "방금 전"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-ai.html",
+          "position": "head"
+        },
+        {
+          "label": "승인",
+          "action": "승인",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "근거와 권한을 확인한 뒤 승인 상태로 변경합니다."
+        },
+        {
+          "label": "보완 요청",
+          "action": "보완 요청",
+          "position": "detail",
+          "confirm": "대상자에게 보완 요청 알림을 전송하는 Mock 상태로 변경합니다."
+        }
+      ],
+      "successUrl": "admin-ai.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "admin-ai-sources.html": {
+      "route": "admin-ai-sources.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "AI",
+      "title": "지식 원천",
+      "purpose": "수집·승인·최신성",
+      "parent": "admin-ai.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "ai",
+      "description": "AI 실행의 근거, 원천, 평가와 승인 이력을 관리합니다. 수집·승인·최신성.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "AI Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-ai-sources_01",
+          "title": "교토 관광청 공식 가이드",
+          "subtitle": "HTML · ko/ja/en · 128문서",
+          "updated": "오늘",
+          "status": "승인",
+          "href": "admin-ai-run-detail.html"
+        },
+        {
+          "id": "admin-ai-sources_02",
+          "title": "HotelNGo 취소 정책",
+          "subtitle": "내부 문서 · 버전 2026.07",
+          "updated": "07.22",
+          "status": "승인",
+          "href": "admin-ai-run-detail.html"
+        },
+        {
+          "id": "admin-ai-sources_03",
+          "title": "파트너 제공 다낭 가이드",
+          "subtitle": "PDF · 18문서 · 출처 검토",
+          "updated": "07.20",
+          "status": "검토 중",
+          "href": "admin-ai-run-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-ai.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-ai.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-roles.html": {
+      "route": "admin-roles.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "보안",
+      "title": "역할·권한",
+      "purpose": "관리자 RBAC",
+      "parent": "admin-system.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "system",
+      "description": "관리자 역할과 감사 기록을 추적 가능한 상태로 유지합니다. 관리자 RBAC.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "보안 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-roles_01",
+          "title": "PLATFORM_ADMIN",
+          "subtitle": "전체 운영 · MFA 필수",
+          "updated": "오늘",
+          "status": "활성",
+          "href": "admin-roles.html"
+        },
+        {
+          "id": "admin-roles_02",
+          "title": "CONTENT_EDITOR",
+          "subtitle": "스토리·랜드마크 편집",
+          "updated": "07.21",
+          "status": "활성",
+          "href": "admin-roles.html"
+        },
+        {
+          "id": "admin-roles_03",
+          "title": "COMMERCE_RECONCILER",
+          "subtitle": "예약·결제 대사 · 승인 분리",
+          "updated": "07.20",
+          "status": "활성",
+          "href": "admin-roles.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-system.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-system.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "admin-audit-log.html": {
+      "route": "admin-audit-log.html",
+      "realm": "HOTELNGO_ADMIN",
+      "group": "보안",
+      "title": "감사 로그",
+      "purpose": "행위·사유·추적 ID",
+      "parent": "admin-system.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "system",
+      "description": "관리자 역할과 감사 기록을 추적 가능한 상태로 유지합니다. 행위·사유·추적 ID.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "보안 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "admin-audit-log_01",
+          "title": "TRC-20260723-1184",
+          "subtitle": "admin.ops · 파트너 승인",
+          "updated": "11:52",
+          "status": "완료",
+          "href": "admin-partner-detail.html"
+        },
+        {
+          "id": "admin-audit-log_02",
+          "title": "TRC-20260723-1179",
+          "subtitle": "editor.12 · 스토리 발행",
+          "updated": "11:31",
+          "status": "완료",
+          "href": "admin-story-editor.html"
+        },
+        {
+          "id": "admin-audit-log_03",
+          "title": "TRC-20260723-1168",
+          "subtitle": "reconcile.bot · 예약 재시도",
+          "updated": "10:54",
+          "status": "확인 필요",
+          "href": "admin-reconciliation.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "admin-system.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "admin-system.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-properties.html": {
+      "route": "channel-properties.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "호텔 공개정보",
+      "purpose": "Tenant 공개 매핑",
+      "parent": "channel-dashboard.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "properties",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. Tenant 공개 매핑.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-properties_01",
+          "title": "Da Nang Ocean Resort",
+          "subtitle": "Tenant tnt_hotel_001 → hotel htl_001",
+          "updated": "3분 전",
+          "status": "매핑됨",
+          "href": "channel-mappings.html"
+        },
+        {
+          "id": "channel-properties_02",
+          "title": "Kyoto Gion Hotel",
+          "subtitle": "Tenant tnt_hotel_014 → hotel htl_014",
+          "updated": "8분 전",
+          "status": "검토 중",
+          "href": "channel-mappings.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-dashboard.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-room-types.html": {
+      "route": "channel-room-types.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "객실유형 매핑",
+      "purpose": "RoomType·Product 매핑",
+      "parent": "channel-mappings.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "room-types",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. RoomType·Product 매핑.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-room-types_01",
+          "title": "Deluxe Ocean View",
+          "subtitle": "RoomType rt_001 → product prd_001",
+          "updated": "3분 전",
+          "status": "매핑됨",
+          "href": "channel-mappings.html"
+        },
+        {
+          "id": "channel-room-types_02",
+          "title": "Family Suite",
+          "subtitle": "RoomType rt_002 → product prd_002",
+          "updated": "3분 전",
+          "status": "매핑됨",
+          "href": "channel-mappings.html"
+        },
+        {
+          "id": "channel-room-types_03",
+          "title": "Pool Villa",
+          "subtitle": "RoomType rt_003 → product prd_003",
+          "updated": "3분 전",
+          "status": "매핑됨",
+          "href": "channel-mappings.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-mappings.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-mappings.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-rates.html": {
+      "route": "channel-rates.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "요금 조회",
+      "purpose": "날짜별 Offer",
+      "parent": "channel-dashboard.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "rates",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. 날짜별 Offer.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-rates_01",
+          "title": "Deluxe Ocean View · 08.14",
+          "subtitle": "Offer off_001 · 조식 포함",
+          "updated": "3분 전",
+          "status": "328,500 KRW",
+          "href": "channel-room-types.html"
+        },
+        {
+          "id": "channel-rates_02",
+          "title": "Family Suite · 08.14",
+          "subtitle": "Offer off_002 · 무료 취소",
+          "updated": "3분 전",
+          "status": "424,000 KRW",
+          "href": "channel-room-types.html"
+        },
+        {
+          "id": "channel-rates_03",
+          "title": "Pool Villa · 08.14",
+          "subtitle": "Offer off_003 · 요청 확정",
+          "updated": "3분 전",
+          "status": "682,000 KRW",
+          "href": "channel-room-types.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-dashboard.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-inventory.html": {
+      "route": "channel-inventory.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "재고 조회",
+      "purpose": "객실유형별 가용 수량",
+      "parent": "channel-dashboard.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "inventory",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. 객실유형별 가용 수량.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-inventory_01",
+          "title": "Deluxe Ocean View · 08.14",
+          "subtitle": "총 12 · 점검 1 · 예약 8",
+          "updated": "2분 전",
+          "status": "가용 3",
+          "href": "channel-room-types.html"
+        },
+        {
+          "id": "channel-inventory_02",
+          "title": "Family Suite · 08.14",
+          "subtitle": "총 6 · 점검 0 · 예약 5",
+          "updated": "2분 전",
+          "status": "가용 1",
+          "href": "channel-room-types.html"
+        },
+        {
+          "id": "channel-inventory_03",
+          "title": "Pool Villa · 08.14",
+          "subtitle": "총 3 · 점검 1 · 예약 2",
+          "updated": "2분 전",
+          "status": "매진",
+          "href": "channel-room-types.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-dashboard.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-reservations.html": {
+      "route": "channel-reservations.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "예약 링크",
+      "purpose": "PmsReservationLink",
+      "parent": "channel-dashboard.html",
+      "priority": "최상",
+      "kind": "list",
+      "section": "reservations",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. PmsReservationLink.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "2",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "2",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-reservations_01",
+          "title": "HNG-B-2026-10482 ↔ PMS-R-88012",
+          "subtitle": "Deluxe Ocean View · 08.14–08.17",
+          "updated": "1분 전",
+          "status": "확정",
+          "href": "channel-reconciliation-detail.html"
+        },
+        {
+          "id": "channel-reservations_02",
+          "title": "HNG-B-2026-10484 ↔ 미연결",
+          "subtitle": "Pool Villa · 공급 응답 대기",
+          "updated": "7분 전",
+          "status": "대사 필요",
+          "href": "channel-reconciliation-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-dashboard.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-dashboard.html",
+      "nextLabel": "항목 선택·상세 확인"
+    },
+    "channel-reconciliation-detail.html": {
+      "route": "channel-reconciliation-detail.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "대사 작업 상세",
+      "purpose": "재시도·수동 복구",
+      "parent": "channel-monitor.html",
+      "priority": "최상",
+      "kind": "detail",
+      "section": "reconciliation",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. 재시도·수동 복구.",
+      "status": "확인 완료",
+      "tabs": [
+        "요약",
+        "상세 정보",
+        "처리 이력"
+      ],
+      "details": [
+        [
+          "화면 식별",
+          "CHANNEL-RECONCILIATION-DETAIL"
+        ],
+        [
+          "업무 구분",
+          "PMS 채널"
+        ],
+        [
+          "공급자",
+          "INTERNAL_PMS · Hotel_PMS"
+        ],
+        [
+          "추적 ID",
+          "REQ-7FA2B140"
+        ],
+        [
+          "신뢰 상태",
+          "Fixture · 최근 확인 3분 전"
+        ],
+        [
+          "처리 목적",
+          "재시도·수동 복구"
+        ],
+        [
+          "데이터 원천",
+          "HotelNGo JSON Mock"
+        ]
+      ],
+      "timeline": [
+        [
+          "요청 수신",
+          "오늘 14:02:31"
+        ],
+        [
+          "PMS Fixture 조회",
+          "오늘 14:02:31"
+        ],
+        [
+          "공개 모델 매핑",
+          "오늘 14:02:32"
+        ],
+        [
+          "응답 기록",
+          "오늘 14:02:32"
+        ]
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-monitor.html",
+          "position": "head"
+        },
+        {
+          "label": "조회 재시도",
+          "action": "재시도",
+          "tone": "primary",
+          "position": "detail",
+          "confirm": "동일 추적 ID를 재사용하지 않고 새 조회 요청을 생성합니다."
+        }
+      ],
+      "successUrl": "channel-monitor.html",
+      "nextLabel": "상태 이력 확인"
+    },
+    "channel-request-logs.html": {
+      "route": "channel-request-logs.html",
+      "realm": "HOTELNGO_CHANNEL",
+      "group": "PMS 채널",
+      "title": "요청 추적 로그",
+      "purpose": "추적 ID·응답·지연",
+      "parent": "channel-monitor.html",
+      "priority": "높음",
+      "kind": "list",
+      "section": "logs",
+      "description": "Hotel_PMS 원천을 변경하지 않고 공개 매핑과 조회·대사 상태를 관제합니다. 추적 ID·응답·지연.",
+      "status": "정상",
+      "tabs": [
+        "전체",
+        "처리 필요",
+        "최근 완료"
+      ],
+      "summary": [
+        [
+          "전체",
+          "3",
+          "PMS 채널 Mock 레코드"
+        ],
+        [
+          "처리 필요",
+          "1",
+          "우선 확인"
+        ],
+        [
+          "오늘 변경",
+          "3",
+          "최근 24시간"
+        ],
+        [
+          "데이터 원천",
+          "JSON",
+          "브라우저 Mock"
+        ]
+      ],
+      "items": [
+        {
+          "id": "channel-request-logs_01",
+          "title": "REQ-7FA2B140",
+          "subtitle": "GET /channel/inventory · 200",
+          "updated": "14:02:31",
+          "status": "182ms",
+          "href": "channel-reconciliation-detail.html"
+        },
+        {
+          "id": "channel-request-logs_02",
+          "title": "REQ-7FA2B128",
+          "subtitle": "GET /channel/rates · 200",
+          "updated": "14:02:28",
+          "status": "241ms",
+          "href": "channel-reconciliation-detail.html"
+        },
+        {
+          "id": "channel-request-logs_03",
+          "title": "REQ-7FA2A992",
+          "subtitle": "GET /channel/inventory · timeout",
+          "updated": "13:58:10",
+          "status": "3,000ms",
+          "href": "channel-reconciliation-detail.html"
+        }
+      ],
+      "actions": [
+        {
+          "label": "이전 화면",
+          "href": "channel-monitor.html",
+          "position": "head"
+        }
+      ],
+      "successUrl": "channel-monitor.html",
+      "nextLabel": "항목 선택·상세 확인"
+    }
+  }
+}

@@ -17,6 +17,17 @@
 11. `10-test-strategy.md` — 단위·계약·통합·E2E·회귀·보안 테스트
 12. `11-requirements-traceability-matrix.md` — 요구사항과 설계·릴리스·테스트의 추적표
 13. `12-design-system.md` — 게이트·위치 핀 로고, 색상 토큰, 반응형·컴포넌트 기준
+14. `13-brand-logo-style-guide.md` — 확정 로고 원본·비율·배경·금지 규칙
+15. `14-ui-prototype-qa.md` — 전체 HTML, 링크, 반응형과 핵심 버튼 흐름 검증 결과
+16. `15-screen-by-screen-review.md` — 제품 화면의 동작·개선·외부 의존 점검표
+17. `16-ai-travel-implementation-report.md` — AI 여행 기반, 현재 Mock 구현과 실제 전환 순서
+18. `17-pms-channel-operations-guide.md` — Hotel_PMS·채널 운영·플랫폼 관리자의 책임과 경로
+19. `18-identity-and-member-boundary.md` — HotelnGo 회원·여행자·관리자와 PMS Guest의 독립 경계
+20. `19-original-plan-gap-and-partner-execution.md` — 원문 계획 대조표와 파트너·업종별 구현/잔여 실행 범위
+21. `20-role-use-cases-and-content-ownership.md` — 여행자·호텔·비호텔 파트너·관리자 유즈케이스와 PMS/B2C 콘텐츠 소유권
+22. `21-role-flow-browser-qa.md` — 호텔·액티비티·회원 일정·관리자 역할 흐름의 브라우저 검증과 외부 미연결 범위
+23. `22-end-to-end-process-validation.md` — 191개 화면·18개 유스케이스·역할 간 상태 전달·AI/PMS/결제 경계의 종합 검증
+24. `HotelNGo_페이지별_구현현황_및_구성도.xlsx` — 전체 화면·메뉴·유스케이스·검증 결과·실서비스 백로그 통합 구성도
 
 ## 문서 사용 규칙
 

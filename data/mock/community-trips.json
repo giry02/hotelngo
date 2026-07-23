@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T18:00:00+09:00",
+  "trips": [
+    {
+      "id": "community_trip_kyoto_evening",
+      "slug": "kyoto-evening-three-nights",
+      "title": "저녁이 좋은 교토 3박 4일",
+      "summary": "관광지를 많이 찍기보다 골목과 강변, 작은 식당에서 오래 머무는 일정입니다.",
+      "author": {"id":"usr_creator_mina","displayName":"미나의 느린 여행","verifiedTrips":7},
+      "cover":"assets/images/landmark-kyoto.jpg",
+      "destination":"교토",
+      "duration":"3박 4일",
+      "companions":"친구 2명",
+      "tags":["골목","저녁산책","로컬맛집"],
+      "saves": 1248,
+      "copies": 386,
+      "status":"PUBLISHED",
+      "publishedAt":"2026-07-20T10:00:00+09:00",
+      "days":[
+        {"day":1,"dateLabel":"도착과 기온의 저녁","items":[
+          {"time":"15:00","type":"HOTEL","title":"The Royal Park Kyoto 체크인","bookingType":"INSTANT","status":"AVAILABLE","note":"산조역 도보 3분"},
+          {"time":"18:20","type":"PLACE","title":"기온 시라카와","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"권장 체류 45분"},
+          {"time":"20:10","type":"RESTAURANT","title":"폰토초 작은 바","bookingType":"REQUEST","status":"CHECK_REQUIRED","note":"마지막 주문 확인 필요"}
+        ]},
+        {"day":2,"dateLabel":"난젠지와 오카자키","items":[
+          {"time":"09:30","type":"PLACE","title":"난젠지와 수로각","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"호텔에서 24분"},
+          {"time":"12:20","type":"RESTAURANT","title":"오카자키 로컬 카페","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"예약 불필요"},
+          {"time":"17:30","type":"TOUR","title":"가모가와 선셋 워크","bookingType":"INSTANT","status":"AVAILABLE","note":"한국어 가이드"}
+        ]},
+        {"day":3,"dateLabel":"오하라 반나절","items":[
+          {"time":"10:00","type":"TOUR","title":"오하라 로컬 버스 투어","bookingType":"REQUEST","status":"AVAILABLE","note":"주말 교통 지연 가능"},
+          {"time":"18:30","type":"PLACE","title":"가모가와 강변","bookingType":"INFORMATION_ONLY","status":"CHECK_REQUIRED","note":"날씨 확인 필요"}
+        ]}
+      ]
+    },
+    {
+      "id": "community_trip_danang_family",
+      "slug": "danang-family-four-nights",
+      "title": "아이와 쉬는 다낭 4박 5일",
+      "summary": "오전에는 짧게 움직이고 가장 더운 시간은 리조트에서 쉬는 가족 일정입니다.",
+      "author": {"id":"usr_creator_joon","displayName":"주니패밀리","verifiedTrips":4},
+      "cover":"assets/images/hero-hotel.jpg",
+      "destination":"다낭",
+      "duration":"4박 5일",
+      "companions":"가족 4명",
+      "tags":["가족","리조트","짧은이동"],
+      "saves": 924,
+      "copies": 211,
+      "status":"PUBLISHED",
+      "publishedAt":"2026-07-18T09:00:00+09:00",
+      "days":[]
+    },
+    {
+      "id": "community_trip_bangkok_food",
+      "slug": "bangkok-five-meals",
+      "title": "방콕에서 꼭 먹을 다섯 끼",
+      "summary": "예약이 필요한 식당과 현장에서 가볍게 들를 장소를 구분한 2박 3일 미식 일정입니다.",
+      "author": {"id":"usr_creator_sora","displayName":"소라의 한입지도","verifiedTrips":11},
+      "cover":"assets/images/landmark-bangkok.jpg",
+      "destination":"방콕",
+      "duration":"2박 3일",
+      "companions":"2명",
+      "tags":["미식","야시장","루프톱"],
+      "saves": 1732,
+      "copies": 542,
+      "status":"PUBLISHED",
+      "publishedAt":"2026-07-15T13:00:00+09:00",
+      "days":[]
+    }
+  ]
+}

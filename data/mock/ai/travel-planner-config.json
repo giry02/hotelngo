@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "plannerVersion": "rules-2026.07.22",
+  "mode": "DETERMINISTIC_MOCK",
+  "preferences": {
+    "pace": ["RELAXED", "BALANCED", "ACTIVE"],
+    "interests": ["LOCAL_FOOD", "CAFE", "LANDMARK", "NATURE", "ART", "SHOPPING"],
+    "party": ["SOLO", "COUPLE", "FRIENDS", "FAMILY"],
+    "budget": ["VALUE", "STANDARD", "PREMIUM"]
+  },
+  "constraints": {
+    "RELAXED": {"maxStopsPerDay":3,"minimumRestMinutes":90},
+    "BALANCED": {"maxStopsPerDay":4,"minimumRestMinutes":60},
+    "ACTIVE": {"maxStopsPerDay":6,"minimumRestMinutes":30}
+  },
+  "supportedDestinations": ["교토", "다낭", "방콕", "발리", "파리"],
+  "toolRegistry": [
+    {"id":"hotel_supply","purpose":"호텔 객실·요금·가용재고","status":"MOCK"},
+    {"id":"place_catalog","purpose":"랜드마크·카페·경험 기본정보","status":"MOCK"},
+    {"id":"route_matrix","purpose":"장소 간 이동시간","status":"ESTIMATE_ONLY"},
+    {"id":"opening_hours","purpose":"운영시간과 휴무일","status":"NOT_CONNECTED"},
+    {"id":"weather","purpose":"여행일 날씨와 대체 일정","status":"NOT_CONNECTED"}
+  ],
+  "disclaimer": "규칙형 Mock 결과입니다. 운영시간·이동시간·가격·재고는 실제 예약 전에 다시 확인해야 합니다."
+}

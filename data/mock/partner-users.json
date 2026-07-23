@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T14:00:00+09:00",
+  "users": [
+    {
+      "id": "pusr_owner_001",
+      "realm": "HOTELNGO_PARTNER",
+      "email": "ops@dananghillsgolf.test",
+      "passwordHash": "4fe049260ab400c4ad1ea025f85a2863b90ad791ddd2241968b7a4296133886d",
+      "name": "Tran Phuc",
+      "displayName": "다낭 힐스 골프 클럽",
+      "partnerId": "ptn_001",
+      "providerId": "prv_golf_011",
+      "businessType": "GOLF",
+      "partnerStatus": "APPROVED",
+      "roles": ["PARTNER_OWNER"]
+    }
+  ]
+}

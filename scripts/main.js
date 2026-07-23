@@ -2,6 +2,8 @@
   const header = document.querySelector('[data-header]');
   const menuTrigger = document.querySelector('[data-menu-trigger]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
+  const menuClose = document.querySelector('[data-menu-close]');
+  const menuScrim = document.querySelector('[data-menu-scrim]');
   const searchForm = document.querySelector('[data-search-form]');
   const searchTabs = [...document.querySelectorAll('[data-search-tab]')];
   const regionTabs = [...document.querySelectorAll('[data-region-tab]')];
@@ -38,6 +40,7 @@
   const closeMenu = () => {
     if (!menuTrigger || !mobileMenu) return;
     mobileMenu.hidden = true;
+    if (menuScrim) menuScrim.hidden = true;
     menuTrigger.setAttribute('aria-expanded', 'false');
     menuTrigger.setAttribute('aria-label', '전체 메뉴 열기');
     document.body.classList.remove('menu-open');
@@ -82,12 +85,15 @@
   menuTrigger?.addEventListener('click', () => {
     const willOpen = menuTrigger.getAttribute('aria-expanded') !== 'true';
     mobileMenu.hidden = !willOpen;
+    if (menuScrim) menuScrim.hidden = !willOpen;
     menuTrigger.setAttribute('aria-expanded', String(willOpen));
     menuTrigger.setAttribute('aria-label', willOpen ? '전체 메뉴 닫기' : '전체 메뉴 열기');
     document.body.classList.toggle('menu-open', willOpen);
   });
 
   mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  menuClose?.addEventListener('click', closeMenu);
+  menuScrim?.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
 
   searchTabs.forEach((tab) => tab.addEventListener('click', () => {
@@ -166,17 +172,45 @@
     showToast(saved ? '여행 스토리를 저장했습니다.' : '저장한 스토리에서 제외했습니다.');
   }));
 
-  document.querySelector('[data-hero-prev]')?.addEventListener('click', () => showHeroSlide(heroIndex - 1, true));
-  document.querySelector('[data-hero-next]')?.addEventListener('click', () => showHeroSlide(heroIndex + 1, true));
-  heroDots.forEach((dot) => dot.addEventListener('click', () => showHeroSlide(Number(dot.dataset.heroDot), true)));
+  document.querySelectorAll('[data-main-follow]').forEach((button) => button.addEventListener('click', () => {
+    const following = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(following));
+    button.textContent = following ? '팔로잉' : '팔로우';
+    showToast(following ? '가이드를 팔로우했습니다.' : '가이드 팔로우를 취소했습니다.');
+  }));
+
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-hero-prev]')) {
+      showHeroSlide(heroIndex - 1, true);
+      return;
+    }
+    if (event.target.closest('[data-hero-next]')) {
+      showHeroSlide(heroIndex + 1, true);
+      return;
+    }
+    const dot = event.target.closest('[data-hero-dot]');
+    if (dot) showHeroSlide(Number(dot.dataset.heroDot), true);
+  });
   heroCarousel?.addEventListener('pointerenter', stopHeroRotation);
   heroCarousel?.addEventListener('pointerleave', startHeroRotation);
   heroCarousel?.addEventListener('focusin', stopHeroRotation);
   heroCarousel?.addEventListener('focusout', startHeroRotation);
 
-  document.querySelector('.more-button')?.addEventListener('click', () => showToast('다음 추천 숙소를 준비하고 있습니다.'));
-  document.querySelectorAll('.reservation-link, .login-button, .member-banner button, .app-actions button').forEach((button) => {
-    button.addEventListener('click', () => showToast(`${button.textContent.trim()} 기능은 다음 구현 단계에서 연결됩니다.`));
+  document.querySelectorAll('.app-actions button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const dialog = document.createElement('dialog');
+      dialog.className = 'app-download-dialog';
+      dialog.innerHTML = `<header><div><small>HOTELNGO MOBILE</small><strong>지금은 모바일 웹에서 그대로 이용하세요</strong></div><button type="button" aria-label="닫기">×</button></header><div class="app-download-body"><span class="app-download-qr" aria-hidden="true">HnG</span><div><p>현재 주소를 휴대전화 브라우저에서 열면 검색, 저장, 내 여행과 예약 조회를 같은 계정으로 확인할 수 있습니다.</p><button class="ui-button primary" type="button" data-copy-mobile-url>현재 주소 복사</button></div></div>`;
+      document.body.append(dialog);
+      dialog.querySelector('header button').addEventListener('click', () => dialog.close());
+      dialog.querySelector('[data-copy-mobile-url]').addEventListener('click', async () => {
+        await navigator.clipboard?.writeText(location.href);
+        showToast('현재 사이트 주소를 복사했습니다.');
+        dialog.close();
+      });
+      dialog.addEventListener('close', () => dialog.remove());
+      dialog.showModal();
+    });
   });
 
   const handleScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 12);

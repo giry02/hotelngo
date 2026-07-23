@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>플랫폼 관리자 로그인 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/admin-auth.js?v=2" defer></script>
+</head>
+<body>
+  <main class="bo-auth-page">
+    <section class="bo-auth-visual">
+      <img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo">
+      <div><h1>독립된 계정과 권한으로<br>플랫폼을 운영합니다</h1><p>HotelnGo 회원, 파트너 직원, PMS 직원과 분리된 관리자 인증 영역입니다.</p></div>
+      <small>HOTELNGO_ADMIN · MOCK AUTH</small>
+    </section>
+    <section class="bo-auth-panel">
+      <div class="bo-auth-card">
+        <a class="bo-auth-brand" href="index.html"><img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo"><span>플랫폼 관리자</span></a>
+        <span class="bo-auth-realm">HOTELNGO_ADMIN</span>
+        <h1>관리자 로그인</h1>
+        <p>B2C 회원이나 Hotel_PMS 직원 계정은 사용할 수 없습니다.</p>
+        <form class="bo-auth-form" data-admin-login-form>
+          <label>관리자 이메일<input required name="email" type="email" value="admin.ops@hotelngo.test" autocomplete="username" placeholder="admin@hotelngo.example"></label>
+          <label>비밀번호<input required name="password" type="password" value="Admin!2026" minlength="8" autocomplete="current-password" placeholder="비밀번호"></label>
+          <p class="bo-auth-feedback" data-admin-feedback role="status" hidden></p>
+          <button class="bo-button primary" type="submit">관리자 로그인</button>
+        </form>
+        <div class="bo-demo-account"><div><strong>Mock 관리자</strong><span>admin.ops@hotelngo.test · Admin!2026</span></div><button class="bo-button" type="button" data-fill-admin-demo>다시 채우기</button></div>
+        <div class="bo-auth-note">현재는 JSON fixture와 별도 Session Storage로 동작합니다. 실제 전환 시 사내 SSO, MFA, 역할 권한, 감사 이벤트를 연결합니다.</div>
+        <nav class="bo-auth-links"><a href="index.html">B2C 홈</a><a href="partner-login.html">파트너 로그인</a></nav>
+      </div>
+    </section>
+  </main>
+  <div class="bo-toast" role="status" aria-live="polite" data-bo-toast></div>
+</body>
+</html>

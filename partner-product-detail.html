@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="골프 상품 상세 편집">
+  <title>골프 상품 상세 · HotelnGo 액티비티 파트너</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <link rel="stylesheet" href="styles/components.css?v=2">
+  <link rel="stylesheet" href="styles/platform-flows.css?v=3">
+  <script src="scripts/mock-api.js?v=7" defer></script>
+  <script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/backoffice-shell.js?v=13" defer></script>
+  <script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body data-app="partner" data-section="products" data-partner-auth-required data-partner-approved-required>
+  <div class="bo-app">
+    <div data-backoffice-shell></div>
+    <main class="bo-main">
+      <header class="bo-page-head">
+        <div>
+          <h1>Ocean Course 18홀</h1>
+          <p>고객이 선택할 코스·홀·포함 서비스·가격과 예약 자원·티타임 연결을 함께 관리합니다.</p>
+        </div>
+        <div class="bo-actions"><a class="bo-button" href="partner-products.html">상품 목록</a></div>
+      </header>
+      <form class="bo-grid two" data-partner-product-edit-form>
+        <section class="bo-card">
+          <div class="bo-card-head"><h2>고객 노출 정보</h2><span class="bo-status">판매 중</span></div>
+          <div class="ops-reply-form">
+            <label>상품명<input name="name" value="Ocean Course 18홀" required></label>
+            <label>코스·홀 정보<input name="course" value="Ocean Course · 18홀 · Par 72 · 6,940yd" required></label>
+            <label>난이도·특징<input name="difficulty" value="중상급 · 바다 전망 · 카트 필수"></label>
+            <label>고객 설명<textarea name="description" required>바다를 따라 이어지는 18홀 코스입니다. 캐디와 2인 1카트가 포함됩니다.</textarea></label>
+            <label>대표 이미지 URL<input name="cover" value="assets/images/landmark-bali.jpg"></label>
+            <label>기본가<input type="number" name="price" value="178000" min="0" required></label>
+            <label>가격 표시<select name="priceType"><option value="FIXED">확정 금액</option><option value="FROM">최저가부터</option><option value="QUOTE">추후 협의·견적</option></select></label>
+            <label>취소 정책<textarea name="policy">이용일 72시간 전까지 무료, 이후 100%</textarea></label>
+          </div>
+        </section>
+        <section class="bo-card">
+          <div class="bo-card-head"><h2>예약·자원·정산 연결</h2><span class="bo-status warn">Mock write</span></div>
+          <div class="ops-reply-form">
+            <label>예약 자원<select name="resourceId"><option value="res_ocean_course">Ocean Course · 티타임당 최대 4명</option><option value="res_mountain_course">Mountain Course · 티타임당 최대 4명</option></select></label>
+            <label>예약 방식<select name="bookingMode"><option value="INSTANT">즉시 확정</option><option value="REQUEST">업체 확인 요청</option><option value="INFORMATION_ONLY">정보만 제공</option></select></label>
+            <label>포함 서비스<textarea name="includes">그린피
+캐디피
+2인 1카트</textarea></label>
+            <label>선택 옵션<textarea name="options">클럽 대여|35000
+골프화 대여|12000
+호텔 픽업|28000</textarea></label>
+            <label>결합 혜택<input name="bundle" value="제휴 호텔 같은 일정이면 1인 18,000원 할인"></label>
+            <label>정산 기준<textarea name="settlement">상품·옵션 실결제액 - 할인 분담액 - 플랫폼 수수료 - 환불·조정액</textarea></label>
+            <button class="bo-button primary" type="submit">변경 저장</button>
+          </div>
+          <div class="bo-actions" style="margin-top:16px">
+            <a class="bo-button" href="partner-resources.html">자원 보기</a>
+            <a class="bo-button" href="partner-schedules.html">티타임 보기</a>
+            <a class="bo-button" href="partner-bundles.html">결합 혜택</a>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+</body>
+</html>

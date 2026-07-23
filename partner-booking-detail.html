@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>골프 예약 상세 · HotelnGo 파트너</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/backoffice-shell.js?v=13" defer></script>
+  <script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body data-app="partner" data-section="bookings" data-partner-auth-required data-partner-approved-required>
+  <div class="bo-app"><div data-backoffice-shell></div><main class="bo-main">
+    <header class="bo-page-head"><div><h1>HNG-G-10482</h1><p>Ocean Course 18홀 · 2026.08.14 07:10 · 성인 2명</p></div><div class="bo-actions"><a class="bo-button" href="partner-bookings.html">목록</a><button class="bo-button" type="button">변경 접수</button><button class="bo-button primary" type="button">예약 확인</button></div></header>
+    <div class="bo-notice"><span><b>고객 계약과 공급 처리 상태를 분리</b> · 공급 확인이 실패하면 고객 화면도 확정으로 표시하지 않습니다.</span><span class="bo-status">CONFIRMED</span></div>
+    <div class="bo-grid two">
+      <section class="bo-card"><div class="bo-card-head"><h2>선택 내역</h2></div><dl class="bo-detail-list">
+        <div><dt>고객</dt><dd>KIM JIHO · 성인 2명 · +82 10-12**-56**</dd></div>
+        <div><dt>상품</dt><dd>Ocean Course 18홀 · Par 72 · 1인 178,000원</dd></div>
+        <div><dt>자원·슬롯</dt><dd>res_ocean_course · 07:10 · 예약 후 잔여 2/4</dd></div>
+        <div><dt>옵션</dt><dd>클럽 대여 2세트 70,000원 · 호텔 왕복 픽업 28,000원</dd></div>
+        <div><dt>요청</dt><dd>왼손 클럽 1세트 · 한국어 진행 안내</dd></div>
+      </dl></section>
+      <section class="bo-card"><div class="bo-card-head"><h2>금액·정산 예상</h2></div><dl class="bo-detail-list">
+        <div><dt>상품·옵션</dt><dd>454,000원</dd></div>
+        <div><dt>호텔 결합 할인</dt><dd>-36,000원 (파트너 -18,000 · 플랫폼 -18,000)</dd></div>
+        <div><dt>고객 결제액</dt><dd><strong>418,000원</strong></dd></div>
+        <div><dt>플랫폼 수수료</dt><dd>-41,800원</dd></div>
+        <div><dt>파트너 지급 예정</dt><dd><strong>358,200원</strong> · 취소·조정 전</dd></div>
+      </dl><a class="bo-button" href="partner-finance.html">정산 원장 보기</a></section>
+    </div>
+    <section class="bo-card"><div class="bo-card-head"><h2>상태 이력</h2></div><div class="bo-table-wrap"><table class="bo-table"><thead><tr><th>시각</th><th>주체</th><th>상태</th><th>근거</th></tr></thead><tbody><tr><td>07.23 10:42:11</td><td>HotelNGo</td><td>결제 승인</td><td>PAY-MOCK-88211</td></tr><tr><td>07.23 10:42:13</td><td>공급 슬롯</td><td>2명 차감</td><td>res_ocean_course / 07:10</td></tr><tr><td>07.23 10:42:14</td><td>파트너</td><td>CONFIRMED</td><td>Mock 자동 확정</td></tr></tbody></table></div></section>
+  </main></div>
+</body>
+</html>

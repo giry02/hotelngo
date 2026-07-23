@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0",
+  "users": [
+    {
+      "id": "husr_danang_001",
+      "realm": "HOTELNGO_HOTEL",
+      "email": "content@dananghotel.test",
+      "passwordHash": "b7cf9dc8c55aa1016e69363b9eb3ff5399fab6ef7a30ccbc85ec42f312caab4b",
+      "name": "Nguyen Lan",
+      "displayName": "다낭 호텔 콘텐츠팀",
+      "hotelId": "hng_hotel_danang_001",
+      "tenantId": "tenant_demo_danang",
+      "status": "APPROVED",
+      "roles": ["HOTEL_CONTENT_OWNER"]
+    }
+  ]
+}

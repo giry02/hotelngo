@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T18:00:00+09:00",
+  "property": {
+    "hotelId": "hng_hotel_danang_001",
+    "tenantId": "tenant_demo_danang",
+    "providerType": "INTERNAL_PMS",
+    "name": "Hyatt Regency Danang Resort",
+    "city": "다낭",
+    "country": "베트남",
+    "mappingStatus": "MAPPED",
+    "publicStatus": "PUBLISHED",
+    "lastPmsSyncAt": "2026-07-23T17:42:00+09:00",
+    "contentUpdatedAt": "2026-07-23T16:10:00+09:00",
+    "contentOwner": "HOTELNGO_HOTEL",
+    "summary": "논느억 비치 앞에서 바다와 정원을 함께 누리는 가족형 리조트",
+    "description": "긴 해변과 다섯 개의 수영장을 품은 리조트입니다. 객실별 실제 공간 사진과 침대·욕실·전망 정보를 확인한 뒤 일정에 맞는 요금제를 선택할 수 있습니다.",
+    "checkIn": "15:00",
+    "checkOut": "11:00",
+    "amenities": ["해변", "수영장 5개", "키즈클럽", "피트니스", "스파", "공항 픽업", "무료 Wi-Fi", "조식 레스토랑", "휠체어 접근"],
+    "policies": ["만 12세 이하 아동 동반 가능", "반려동물 동반 불가", "객실별 취소 조건은 요금제에서 확인"],
+    "media": [
+      {"id":"media_property_01","src":"assets/images/hero-hotel.jpg","alt":"리조트 메인 수영장과 바다","category":"대표","isCover":true},
+      {"id":"media_property_02","src":"assets/images/stay-gangneung.jpg","alt":"바다를 바라보는 야외 수영장","category":"수영장"},
+      {"id":"media_property_03","src":"assets/images/stay-busan.jpg","alt":"오션뷰 객실 내부","category":"객실"},
+      {"id":"media_property_04","src":"assets/images/landmark-bali.jpg","alt":"야자수와 리조트 정원","category":"정원"},
+      {"id":"media_property_05","src":"assets/images/stay-jeju.jpg","alt":"조식 레스토랑 라운지","category":"다이닝"},
+      {"id":"media_property_06","src":"assets/images/landmark-paris.jpg","alt":"석양 시간의 리조트 라운지","category":"라운지"},
+      {"id":"media_property_07","src":"assets/images/landmark-bangkok.jpg","alt":"야간 조명이 켜진 공용 공간","category":"공용공간"},
+      {"id":"media_property_08","src":"assets/images/landmark-kyoto.jpg","alt":"리조트 주변 산책 공간","category":"주변"}
+    ]
+  },
+  "roomTypes": [
+    {
+      "pmsRoomTypeId": "rt_deluxe_ocean",
+      "productId": "product_deluxe_ocean",
+      "name": "디럭스 오션뷰",
+      "contentStatus": "PUBLISHED",
+      "contentCompleteness": 96,
+      "sizeM2": 42,
+      "bed": "킹베드 1",
+      "occupancy": "성인 2명 · 아동 1명",
+      "view": "정면 바다 전망",
+      "bathroom": "레인 샤워 · 독립 욕조",
+      "amenities": ["발코니", "네스프레소", "미니바", "암막 커튼", "무료 Wi-Fi", "목욕 가운"],
+      "highlights": ["2인 조식 포함", "체크인 3일 전까지 무료 취소", "세금·봉사료 포함 총액"],
+      "available": 3,
+      "rate": 186400,
+      "total": 559200,
+      "currency": "KRW",
+      "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
+      "images": [
+        {"src":"assets/images/stay-busan.jpg","alt":"디럭스 오션뷰 침실과 창가"},
+        {"src":"assets/images/hero-hotel.jpg","alt":"디럭스 오션뷰 발코니 전망"},
+        {"src":"assets/images/stay-jeju.jpg","alt":"디럭스 오션뷰 휴식 공간"},
+        {"src":"assets/images/landmark-bali.jpg","alt":"디럭스 오션뷰 욕실과 어메니티"}
+      ]
+    },
+    {
+      "pmsRoomTypeId": "rt_club_ocean",
+      "productId": "product_club_ocean",
+      "name": "리젠시 클럽 오션",
+      "contentStatus": "PUBLISHED",
+      "contentCompleteness": 91,
+      "sizeM2": 48,
+      "bed": "킹베드 1",
+      "occupancy": "성인 2명",
+      "view": "고층 바다 전망",
+      "bathroom": "더블 세면대 · 독립 욕조",
+      "amenities": ["클럽 라운지", "발코니", "무료 미니바", "턴다운", "무료 Wi-Fi", "다림질 세트"],
+      "highlights": ["클럽 라운지·조식 포함", "체크인 7일 전까지 무료 취소", "공항 픽업 편도 포함"],
+      "available": 1,
+      "rate": 262000,
+      "total": 786000,
+      "currency": "KRW",
+      "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
+      "images": [
+        {"src":"assets/images/stay-gangneung.jpg","alt":"리젠시 클럽 오션 침실"},
+        {"src":"assets/images/landmark-bangkok.jpg","alt":"리젠시 클럽 전용 라운지"},
+        {"src":"assets/images/stay-busan.jpg","alt":"리젠시 클럽 오션 발코니"},
+        {"src":"assets/images/landmark-paris.jpg","alt":"리젠시 클럽 오션 욕실"}
+      ]
+    },
+    {
+      "pmsRoomTypeId": "rt_family_suite",
+      "productId": "product_family_suite",
+      "name": "2 베드룸 레지던스",
+      "contentStatus": "NEEDS_REVIEW",
+      "contentCompleteness": 78,
+      "sizeM2": 96,
+      "bed": "킹베드 1 · 싱글베드 2",
+      "occupancy": "성인 4명 · 아동 2명",
+      "view": "정원과 수영장 전망",
+      "bathroom": "욕실 2 · 독립 욕조",
+      "amenities": ["주방", "거실", "세탁기", "냉장고", "전자레인지", "식탁"],
+      "highlights": ["주방·세탁기 포함", "4인 조식 포함", "예약 후 환불 불가"],
+      "available": 0,
+      "rate": 278000,
+      "total": 834000,
+      "currency": "KRW",
+      "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
+      "images": [
+        {"src":"assets/images/hero-hotel.jpg","alt":"2 베드룸 레지던스 거실"},
+        {"src":"assets/images/stay-jeju.jpg","alt":"2 베드룸 레지던스 주방과 식탁"},
+        {"src":"assets/images/landmark-kyoto.jpg","alt":"2 베드룸 레지던스 마스터 침실"},
+        {"src":"assets/images/stay-gapyeong.jpg","alt":"2 베드룸 레지던스 두 번째 침실"},
+        {"src":"assets/images/landmark-bali.jpg","alt":"2 베드룸 레지던스 욕실"}
+      ]
+    }
+  ],
+  "reviewSummary": {
+    "score": 9.2,
+    "count": 3410,
+    "label": "최고예요",
+    "categories": [
+      {"label":"위치","score":9.4},
+      {"label":"청결도","score":9.3},
+      {"label":"서비스","score":9.1},
+      {"label":"편의시설","score":9.0}
+    ]
+  },
+  "reviews": [
+    {
+      "id": "review_danang_001",
+      "score": 9.4,
+      "title": "아이와 함께 머물기 정말 편했어요",
+      "body": "수영장이 여러 곳이라 붐비지 않았고 키즈클럽과 해변을 하루 안에 편하게 이용했습니다. 객실 사진과 실제 모습도 거의 같았습니다.",
+      "author": "김**",
+      "travelerType": "가족",
+      "roomType": "디럭스 오션뷰",
+      "stayDate": "2026.07",
+      "verified": true,
+      "helpful": 48
+    },
+    {
+      "id": "review_danang_002",
+      "score": 9.1,
+      "title": "조용한 해변과 조식이 기억에 남아요",
+      "body": "시내와는 거리가 있지만 리조트에서 쉬는 여행이라면 만족도가 높습니다. 아침 해변 산책과 조식 레스토랑이 특히 좋았습니다.",
+      "author": "박**",
+      "travelerType": "커플",
+      "roomType": "리젠시 클럽 오션",
+      "stayDate": "2026.06",
+      "verified": true,
+      "helpful": 31
+    },
+    {
+      "id": "review_danang_003",
+      "score": 8.8,
+      "title": "가족 일정의 거점으로 무난했습니다",
+      "body": "오행산과 호이안으로 이동하기 좋고 객실이 넓었습니다. 성수기에는 공항 픽업 시간을 미리 확정하는 편이 좋습니다.",
+      "author": "이**",
+      "travelerType": "가족",
+      "roomType": "2 베드룸 레지던스",
+      "stayDate": "2026.05",
+      "verified": true,
+      "helpful": 19
+    },
+    {
+      "id": "review_danang_004",
+      "score": 9.3,
+      "title": "휴양과 업무를 같이 하기 좋았어요",
+      "body": "Wi-Fi가 안정적이고 라운지가 조용했습니다. 오후에는 수영장, 저녁에는 호이안 일정으로 구성하기 좋았습니다.",
+      "author": "최**",
+      "travelerType": "1인 여행",
+      "roomType": "리젠시 클럽 오션",
+      "stayDate": "2026.04",
+      "verified": true,
+      "helpful": 24
+    }
+  ],
+  "ownership": {
+    "pmsReadOnly": ["tenantId", "pmsRoomTypeId", "available", "rate", "inventoryCheckedAt"],
+    "hotelContentEditable": ["summary", "description", "media", "amenities", "policies", "roomTypes.*.images", "roomTypes.*.sizeM2", "roomTypes.*.bed", "roomTypes.*.view", "roomTypes.*.bathroom", "roomTypes.*.amenities"]
+  }
+}

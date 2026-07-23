@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>액티비티 정산·통계 · HotelnGo 파트너</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/backoffice-shell.js?v=13" defer></script>
+  <script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body data-partner-auth-required data-partner-approved-required data-app="partner" data-section="finance">
+  <div class="bo-app"><div data-backoffice-shell></div><main class="bo-main">
+    <header class="bo-page-head"><div><h1>정산·통계</h1><p>예약별 상품·옵션·할인 분담·수수료·환불과 실제 지급 예정액을 추적합니다.</p></div><div class="bo-actions"><a class="bo-button" href="partner-settlement-detail.html">정산 명세서</a><a class="bo-button primary" href="partner-payout-account.html">지급계좌 관리</a></div></header>
+    <div class="bo-notice"><span><b>Mock 정산 원장</b> · 실제 PG·세금계산서·은행 지급과 연결되지 않은 구조 검토용 데이터입니다.</span><span class="bo-status warn">No payment API</span></div>
+    <section class="bo-kpis"><article class="bo-kpi"><small>이번 정산 총 결제</small><strong>₩1,324,000</strong><span>예약 3건</span></article><article class="bo-kpi"><small>할인 파트너 분담</small><strong>₩18,000</strong><span>호텔 결합 1건</span></article><article class="bo-kpi"><small>수수료·환불 조정</small><strong>₩139,800</strong><span>검증 중</span></article><article class="bo-kpi"><small>지급 예정</small><strong>₩1,166,200</strong><span>08.05 예정</span></article></section>
+    <section class="bo-card"><div class="bo-card-head"><h2>예약별 정산 원장</h2><span>상품·옵션 단위</span></div><div class="bo-table-wrap"><table class="bo-table">
+      <thead><tr><th>예약</th><th>상품·옵션</th><th>고객 결제</th><th>할인 분담</th><th>수수료</th><th>환불·조정</th><th>지급 예정</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td><a href="partner-booking-detail.html?id=HNG-G-10482"><strong>HNG-G-10482</strong></a><small>08.14 이용</small></td><td>Ocean 18홀 ×2<small>클럽 2 · 호텔 픽업</small></td><td>₩418,000</td><td>-₩18,000</td><td>-₩41,800</td><td>₩0</td><td><strong>₩358,200</strong></td><td><span class="bo-status">확정</span></td></tr>
+        <tr><td><a href="partner-booking-detail.html?id=HNG-G-10483"><strong>HNG-G-10483</strong></a><small>08.14 이용</small></td><td>Mountain 18홀 ×4<small>골프화 2</small></td><td>₩808,000</td><td>₩0</td><td>-₩80,800</td><td>₩0</td><td><strong>₩727,200</strong></td><td><span class="bo-status warn">예약 검증</span></td></tr>
+        <tr><td><a href="partner-booking-detail.html?id=HNG-G-10477"><strong>HNG-G-10477</strong></a><small>08.10 이용</small></td><td>Ocean Twilight 9홀 ×1</td><td>₩98,000</td><td>₩0</td><td>-₩9,800</td><td>₩0</td><td><strong>₩88,200</strong></td><td><span class="bo-status danger">취소 검토</span></td></tr>
+      </tbody>
+    </table></div></section>
+    <section class="bo-card"><div class="bo-card-head"><h2>정산 처리 순서</h2></div><p>예약 확정 → 이용 완료 확인 → 취소·노쇼·부분 환불 반영 → 호텔 결합 할인 분담 → 플랫폼 수수료 계산 → 파트너 검토 → 지급 확정 순서로 처리합니다.</p></section>
+  </main></div>
+</body>
+</html>

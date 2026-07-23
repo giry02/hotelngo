@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>액티비티 파트너센터 로그인 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script>
+  <script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body>
+  <main class="bo-auth-page">
+    <section class="bo-auth-visual">
+      <img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo">
+      <div><h1>현지의 예약 가능한 경험을<br>상품과 슬롯으로 운영합니다</h1><p>골프장, 차량, 음식점, 마사지·스파, 투어가 상품·자원·운영시간·수용량을 업종별로 관리하는 센터입니다.</p></div>
+      <small>HOTELNGO_PARTNER · INDEPENDENT REALM</small>
+    </section>
+    <section class="bo-auth-panel">
+      <div class="bo-auth-card">
+        <a class="bo-auth-brand" href="index.html"><img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo"><span>액티비티 파트너센터</span></a>
+        <span class="bo-auth-realm">HOTELNGO_PARTNER</span>
+        <h1>파트너 로그인</h1>
+        <p>B2C 회원·플랫폼 관리자·PMS 직원 계정과 분리된 업체 계정입니다.</p>
+        <form class="bo-auth-form" data-partner-login-form>
+          <label>업무 이메일<input required name="email" type="email" value="ops@dananghillsgolf.test" autocomplete="username" placeholder="partner@example.com"></label>
+          <label>비밀번호<input required name="password" type="password" value="Partner!2026" minlength="8" autocomplete="current-password"></label>
+          <p class="bo-auth-feedback" data-partner-feedback role="status" hidden></p>
+          <button class="bo-button primary" type="submit">액티비티 파트너센터 로그인</button>
+        </form>
+        <div class="bo-demo-account"><div><strong>승인된 골프장 Mock</strong><span>ops@dananghillsgolf.test · Partner!2026</span></div><button class="bo-button" type="button" data-fill-partner-demo>다시 채우기</button></div>
+        <div class="bo-auth-note">JSON 계정과 별도 Session Storage로 동작합니다. 신규 업체는 회원가입 후 업종별 심사를 제출해야 운영 화면을 사용할 수 있습니다.</div>
+        <nav class="bo-auth-links"><a href="partner-signup.html">파트너 회원가입</a><a href="hotel-login.html">호텔 콘텐츠센터</a><a href="index.html">B2C 홈</a></nav>
+      </div>
+    </section>
+  </main>
+  <div class="bo-toast" role="status" aria-live="polite" data-bo-toast></div>
+</body>
+</html>

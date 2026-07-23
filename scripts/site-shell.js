@@ -1,4 +1,24 @@
 (() => {
+  if (!document.querySelector('link[data-hotelngo-components]')) {
+    const componentStyles = document.createElement('link');
+    componentStyles.rel = 'stylesheet';
+    componentStyles.href = 'styles/components.css?v=2';
+    componentStyles.dataset.hotelngoComponents = '';
+    document.head.append(componentStyles);
+  }
+  if (!document.querySelector('script[data-hotelngo-ui]')) {
+    const uiScript = document.createElement('script');
+    uiScript.src = 'scripts/ui-components.js?v=1';
+    uiScript.dataset.hotelngoUi = '';
+    document.head.append(uiScript);
+  }
+  if (!document.querySelector('script[data-hotelngo-search]')) {
+    const searchScript = document.createElement('script');
+    searchScript.src = 'scripts/search-autocomplete.js?v=3';
+    searchScript.dataset.hotelngoSearch = '';
+    document.head.append(searchScript);
+  }
+
   const logo = (gradientId, ariaLabel = 'HotelnGo Ocean Route 로고') => `
     <svg class="brand-logo" viewBox="0 0 315 86" role="img" aria-label="${ariaLabel}">
       <defs>
@@ -25,8 +45,10 @@
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
+    ['community', '여행 일정', 'community.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
+    ['places', '현지 장소', 'places.html'],
     ['ai', 'AI 여행', 'ai-travel.html'],
     ['trips', '내 여행', 'trips.html']
   ];
@@ -36,25 +58,29 @@
       <div class="header-inner shell">
         <a class="brand" href="index.html" aria-label="HotelnGo 홈">${logo('hotelngo-ocean-route-shell-header')}</a>
         <nav class="main-nav" aria-label="주요 서비스">
-          ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}">${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
+          ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}"${key === 'trips' ? ' data-member-only' : ''}>${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
         </nav>
         <div class="header-actions">
+          <a class="cart-link" href="cart.html">여행 카트</a>
           <a class="reservation-link" href="bookings.html">예약 조회</a>
           <a class="login-button" href="login.html">로그인</a>
           <button class="menu-button" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" data-menu-trigger><span></span><span></span><span></span></button>
         </div>
       </div>
     </header>
-    <div class="mobile-menu" data-mobile-menu hidden>
-      <nav>${navItems.map(([key, label, href]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
-      <div><a href="bookings.html">비회원 예약 조회</a><a href="login.html">로그인/회원가입</a></div>
-    </div>`;
+    <button class="menu-scrim" type="button" aria-label="메뉴 닫기" data-menu-scrim hidden></button>
+    <aside class="mobile-menu" aria-label="전체 메뉴" data-mobile-menu hidden>
+      <div class="mobile-menu-head"><div><small>HOTELNGO MENU</small><strong>여행을 어디서 이어갈까요?</strong></div><button type="button" aria-label="전체 메뉴 닫기" data-menu-close>×</button></div>
+      <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}${key === 'trips' ? ' data-member-only' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
+      <div class="mobile-menu-actions"><a href="cart.html">여행 카트</a><a href="bookings.html">예약 조회</a><a class="primary" href="login.html">로그인·회원가입</a></div>
+      <p>해외 호텔과 여행 장면을 저장하고 하나의 일정으로 연결하세요.</p>
+    </aside>`;
 
   const footer = () => `
     <footer class="site-footer">
       <div class="shell footer-inner">
         <div class="footer-brand">${logo('hotelngo-ocean-route-shell-footer')}<p>Stay here. Go anywhere.</p></div>
-        <nav aria-label="회사 정보"><a href="#">회사소개</a><a href="#">이용약관</a><a href="#"><strong>개인정보처리방침</strong></a><a href="bookings.html">예약 조회</a><a href="partner-dashboard.html">파트너센터</a></nav>
+        <nav aria-label="회사 정보"><a href="company.html">회사소개</a><a href="support.html">고객센터</a><a href="faq.html">자주 묻는 질문</a><a href="terms.html">이용약관</a><a href="privacy.html"><strong>개인정보처리방침</strong></a><a href="bookings.html">예약 조회</a><a href="hotel-login.html">호텔 콘텐츠센터</a><a href="partner-login.html">액티비티 파트너센터</a></nav>
         <div class="company-info"><p>(주)HotelnGo · 대표 Giry · 사업자등록번호 000-00-00000</p><p>고객센터 1670-0000 · 평일 09:00–18:00</p><p>HotelnGo는 통신판매중개자로서 통신판매의 당사자가 아닙니다.</p></div>
         <p class="copyright">© <span data-year></span> HotelnGo. All rights reserved.</p>
       </div>
@@ -65,7 +91,7 @@
       <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>⌂</span>홈</a>
       <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>⌕</span>검색</a>
       <a class="${active === 'ai' ? 'is-active' : ''}" href="ai-travel.html"><span>✦</span>AI 여행</a>
-      <a class="${active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>◇</span>내 여행</a>
+      <a class="${active === 'trips' ? 'is-active' : ''}" href="trips.html" data-member-only><span>◇</span>내 여행</a>
       <a class="${active === 'my' ? 'is-active' : ''}" href="my.html"><span>○</span>마이</a>
     </nav>`;
 
@@ -81,4 +107,7 @@
   document.querySelectorAll('[data-brand-lockup]').forEach((target, index) => {
     target.innerHTML = logo(`hotelngo-ocean-route-showcase-${index}`);
   });
+  if (!document.querySelector('[data-toast]')) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="toast" role="status" aria-live="polite" data-toast></div>');
+  }
 })();

@@ -42,7 +42,8 @@ Platform Admin ────────┘              │
 
 | 모듈 | 책임 |
 |---|---|
-| Identity | B2C·파트너·관리자 계정, 인증, 세션, 동의 |
+| Identity | B2C·파트너·관리자 독립 계정, 인증, 세션, 동의; PMS 계정 미공유 |
+| Traveler Profile | 국적·여권 영문명·생년월일·암호화 여권 정보와 예약용 기본값 |
 | Partner | 가입, 계약, 멤버, 문서, 권한, 초대 |
 | Provider/Place | 사업자, 지점, 출처, 검수, claim, 병합 |
 | Catalog | Product, Option, Offer, 정책, 공개 상태 |
@@ -110,4 +111,3 @@ Platform Admin ────────┘              │
 - 로그: requestId, actor, tenant, provider, operation, outcome, latency, freshness
 - 지표: adapter 오류·timeout·stale, shadow 불일치, claim 대기, 검수 만료, 예약 대사 큐, AI 검증 실패
 - 장애 시 신규 판매를 중지하고 이미 생성된 예약은 자동 삭제하지 않고 대사한다.
-

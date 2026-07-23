@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "provider": {"id":"provider_hotel_pms","type":"INTERNAL_PMS","name":"Hotel_PMS","sourcePath":"E:\\AI_Project\\Hotel_PMS"},
+  "connection": {"mode":"FIXTURE","channelApi":"NOT_AVAILABLE","lastCheckedAt":"2026-07-22T09:20:00+09:00","trust":"MOCK_ONLY"},
+  "propertyMappings": [
+    {"tenantId":"tenant_demo_danang","hotelId":"hng_hotel_danang_001","tenantName":"Hyatt Regency Danang Resort","status":"MAPPED","lastSyncedAt":"2026-07-22T09:18:00+09:00"}
+  ],
+  "roomTypeMappings": [
+    {"pmsRoomTypeId":"rt_deluxe_ocean","productId":"product_deluxe_ocean","name":"디럭스 오션뷰","available":3,"rate":186400,"currency":"KRW","status":"HEALTHY"},
+    {"pmsRoomTypeId":"rt_club_ocean","productId":"product_club_ocean","name":"리젠시 클럽 오션","available":1,"rate":262000,"currency":"KRW","status":"HEALTHY"},
+    {"pmsRoomTypeId":"rt_family_suite","productId":"product_family_suite","name":"패밀리 스위트","available":0,"rate":278000,"currency":"KRW","status":"SOLD_OUT"}
+  ],
+  "checks": [
+    {"key":"property","label":"호텔 공개정보","status":"PASS","checkedAt":"2026-07-22T09:18:00+09:00"},
+    {"key":"rates","label":"요금 캘린더","status":"PASS","checkedAt":"2026-07-22T09:18:00+09:00"},
+    {"key":"inventory","label":"객실유형별 가용수량","status":"PASS","checkedAt":"2026-07-22T09:18:00+09:00"},
+    {"key":"booking","label":"예약 명령","status":"UNSUPPORTED","checkedAt":"2026-07-22T09:18:00+09:00"}
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T14:00:00+09:00",
+  "businessTypes": [
+    {"code":"HOTEL","label":"호텔·리조트","description":"PMS 미사용 독립 호텔의 객실·요금·재고·예약 관리"},
+    {"code":"GOLF","label":"골프장","description":"코스·티타임·그린피·캐디·카트와 픽업 관리"},
+    {"code":"VEHICLE","label":"렌터카·기사 차량","description":"차량·서비스 지역·배차·공항 픽업 관리"},
+    {"code":"RESTAURANT","label":"음식점·카페","description":"메뉴·운영시간·좌석·예약 슬롯·공지 관리"},
+    {"code":"SPA","label":"마사지·스파","description":"프로그램·룸·치료사 수용량·예약 슬롯 관리"},
+    {"code":"TOUR","label":"투어·체험","description":"출발 일정·가이드·언어·옵션·바우처 관리"}
+  ],
+  "applications": [
+    {"id":"app_kyoto_001","partnerId":"ptn_pending_014","businessType":"TOUR","legalName":"Kyoto Walks Inc.","contactName":"Sato Rina","email":"rina@kyotowalks.test","country":"JP","city":"Kyoto","status":"UNDER_REVIEW","documents":["법인등록증","영업보험"],"submittedAt":"2026-07-23T08:10:00+09:00"},
+    {"id":"app_golf_002","partnerId":"ptn_pending_015","businessType":"GOLF","legalName":"Danang Hills Golf","contactName":"Tran Phuc","email":"ops@dananghillsgolf.test","country":"VN","city":"Da Nang","status":"REVIEW_REQUESTED","documents":["사업자등록증","골프장영업허가"],"submittedAt":"2026-07-23T09:35:00+09:00"}
+  ],
+  "providers": [
+    {"id":"prv_hotel_001","placeId":"plc_hotel_001","name":"다낭 오션 리조트","businessType":"HOTEL","country":"VN","city":"Da Nang","managementType":"PARTNER_MANAGED","ownershipStatus":"VERIFIED","bookingMode":"INSTANT_BOOKING","verificationStatus":"PARTNER_VERIFIED","sourceName":"Partner submitted","lastVerifiedAt":"2026-07-22","partnerId":"ptn_001"},
+    {"id":"prv_golf_011","placeId":"plc_golf_011","name":"다낭 힐스 골프 클럽","businessType":"GOLF","country":"VN","city":"Da Nang","managementType":"PLATFORM_CURATED","ownershipStatus":"UNCLAIMED","bookingMode":"INFORMATION_ONLY","verificationStatus":"BASIC_VERIFIED","sourceName":"Official website","lastVerifiedAt":"2026-06-12","partnerId":null},
+    {"id":"prv_vehicle_021","placeId":"plc_vehicle_021","name":"ABC 다낭 트랜스퍼","businessType":"VEHICLE","country":"VN","city":"Da Nang","managementType":"PLATFORM_CURATED","ownershipStatus":"INVITED","bookingMode":"CONTACT_REQUEST","verificationStatus":"BASIC_VERIFIED","sourceName":"Airport transport directory","lastVerifiedAt":"2026-05-24","partnerId":null},
+    {"id":"prv_restaurant_031","placeId":"plc_restaurant_031","name":"짜오 비치 키친","businessType":"RESTAURANT","country":"VN","city":"Da Nang","managementType":"PLATFORM_CURATED","ownershipStatus":"UNCLAIMED","bookingMode":"PHONE_OR_MESSENGER","verificationStatus":"PLATFORM_VERIFIED","sourceName":"On-site verification","lastVerifiedAt":"2026-07-15","partnerId":null},
+    {"id":"prv_spa_041","placeId":"plc_spa_041","name":"Bangkok Riverside Spa","businessType":"SPA","country":"TH","city":"Bangkok","managementType":"HYBRID_MANAGED","ownershipStatus":"CLAIM_REQUESTED","bookingMode":"REQUEST_BOOKING","verificationStatus":"PLATFORM_VERIFIED","sourceName":"Official social channel","lastVerifiedAt":"2026-06-05","partnerId":null},
+    {"id":"prv_tour_051","placeId":"plc_tour_051","name":"Arashiyama Local Walk","businessType":"TOUR","country":"JP","city":"Kyoto","managementType":"PLATFORM_CURATED","ownershipStatus":"UNCLAIMED","bookingMode":"EXTERNAL_LINK","verificationStatus":"BASIC_VERIFIED","sourceName":"Kyoto tourism board","lastVerifiedAt":"2026-04-18","partnerId":null}
+  ],
+  "claims": [
+    {"id":"clm_001","providerId":"prv_spa_041","providerName":"Bangkok Riverside Spa","partnerId":"ptn_pending_024","requester":"Anong Chai","evidence":["사업자 문서","공식 전화 OTP"],"status":"CLAIM_UNDER_REVIEW","requestedAt":"2026-07-23T11:30:00+09:00"}
+  ]
+}

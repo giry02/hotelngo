@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T20:30:00+09:00",
+  "summary": {
+    "total": 18,
+    "localMockPass": 17,
+    "externalDependency": 1,
+    "blocked": 0
+  },
+  "useCases": [
+    {
+      "id": "UC-B2C-01",
+      "role": "B2C 회원",
+      "name": "회원가입·로그인·여행자 프로필",
+      "pages": [
+        "signup.html",
+        "login.html",
+        "account-settings.html"
+      ],
+      "expected": "PMS 회원과 분리된 HotelNGo 계정을 생성하고 국적·여권 프로필을 유지한다.",
+      "persistence": "users/member profile JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "실서버 인증·MFA·암호화 저장"
+    },
+    {
+      "id": "UC-B2C-02",
+      "role": "B2C 회원",
+      "name": "여행지·호텔명 통합 검색",
+      "pages": [
+        "index.html",
+        "hotels.html",
+        "hotel-detail.html"
+      ],
+      "expected": "여행지와 호텔명을 같은 검색창에서 찾고 호텔 상세·객실 다중 이미지를 본다.",
+      "persistence": "hotel-content/search-index JSON fixtures",
+      "test": "LOCAL_PASS",
+      "externalGap": "PMS 채널 실시간 요금·재고"
+    },
+    {
+      "id": "UC-B2C-03",
+      "role": "B2C 회원",
+      "name": "복수 업종 카트·예약자 입력 유지",
+      "pages": [
+        "cart.html",
+        "booking-guests.html",
+        "booking-review.html",
+        "checkout.html"
+      ],
+      "expected": "선택한 상품·옵션·시간·투숙객 정보가 다음 단계와 예약 상세에 유지된다.",
+      "persistence": "checkout JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "실제 hold·PG 승인"
+    },
+    {
+      "id": "UC-B2C-04",
+      "role": "B2C 회원",
+      "name": "예약 불가·대안 선택",
+      "pages": [
+        "booking-detail.html",
+        "booking-recovery.html",
+        "support.html"
+      ],
+      "expected": "예약 불가 사유와 대안을 확인하고 변경 또는 문의를 선택한다.",
+      "persistence": "bookings/inquiries JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "공급자 실시간 대안 슬롯"
+    },
+    {
+      "id": "UC-B2C-05",
+      "role": "B2C 회원",
+      "name": "취소·변경 요청",
+      "pages": [
+        "booking-cancel.html",
+        "booking-change.html",
+        "booking-detail.html"
+      ],
+      "expected": "예상 수수료를 보고 요청하며 상태 이력에서 결과를 확인한다.",
+      "persistence": "bookings/audit-events JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "PMS·외부 공급자 modify/cancel API"
+    },
+    {
+      "id": "UC-B2C-06",
+      "role": "B2C 회원",
+      "name": "공개 여행 저장·복사·재편집",
+      "pages": [
+        "community.html",
+        "trip-guide-detail.html",
+        "trip-editor.html",
+        "trips.html"
+      ],
+      "expected": "다른 사람의 일정을 저장하거나 독립 사본으로 복사한 뒤 항목을 교체·삭제한다.",
+      "persistence": "saved-items/trips JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "서버 동기화·충돌 해결"
+    },
+    {
+      "id": "UC-B2C-07",
+      "role": "B2C 회원",
+      "name": "여행 스토리 작성·공유·일정 담기",
+      "pages": [
+        "story-create.html",
+        "my-stories.html",
+        "story.html",
+        "trip-editor.html"
+      ],
+      "expected": "회원 또는 가이드가 스토리를 작성·공유하고 독자가 찜·일정 담기를 한다.",
+      "persistence": "stories/saved-items/trips JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "미디어 업로드·운영 검수"
+    },
+    {
+      "id": "UC-AI-01",
+      "role": "B2C 회원",
+      "name": "AI 여행 후보 랭킹·대안 교체",
+      "pages": [
+        "ai-travel.html",
+        "trip-editor.html"
+      ],
+      "expected": "선호 태그로 랜드마크를 점수화하고 근거·신뢰상태를 보며 다른 후보로 교체한다.",
+      "persistence": "travel-knowledge/trips JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "LLM·RAG·지도 이동시간·실시간 영업정보"
+    },
+    {
+      "id": "UC-SUPPORT-01",
+      "role": "고객센터",
+      "name": "문의 접수·예약 맥락 확인·답변",
+      "pages": [
+        "inquiry-create.html",
+        "inquiries.html",
+        "admin-support.html",
+        "admin-inquiry-detail.html"
+      ],
+      "expected": "고객 문의와 예약 상태를 함께 보고 답변하며 고객이 같은 문의에서 확인한다.",
+      "persistence": "inquiries/bookings JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "메일·알림 발송"
+    },
+    {
+      "id": "UC-HOTEL-01",
+      "role": "호텔",
+      "name": "호텔 가입·PMS 연결·B2C 콘텐츠 보강",
+      "pages": [
+        "hotel-signup.html",
+        "hotel-pms-mapping.html",
+        "hotel-dashboard.html",
+        "hotel-rooms.html"
+      ],
+      "expected": "PMS 운영 데이터와 분리해 B2C 이미지·객실 설명·부대시설을 관리한다.",
+      "persistence": "hotel-content JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "Hotel_PMS /api/v1/channel 실연동"
+    },
+    {
+      "id": "UC-PARTNER-01",
+      "role": "액티비티 업체",
+      "name": "입점 신청·승인·사업장 인수",
+      "pages": [
+        "partner-signup.html",
+        "partner-application-status.html",
+        "admin-partners.html",
+        "partner-claim.html"
+      ],
+      "expected": "업종·서류·담당자를 제출하고 플랫폼 승인 후 사업장을 운영한다.",
+      "persistence": "partner-platform JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "실명·사업자·계좌 검증"
+    },
+    {
+      "id": "UC-PARTNER-02",
+      "role": "골프장",
+      "name": "코스·홀·티타임·옵션 등록",
+      "pages": [
+        "partner-products.html",
+        "partner-resources.html",
+        "partner-schedules.html"
+      ],
+      "expected": "18홀/9홀, 캐디·카트, 인원, 티타임과 금액을 관리한다.",
+      "persistence": "partner-catalog JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "실시간 티시트 API"
+    },
+    {
+      "id": "UC-PARTNER-03",
+      "role": "렌터카",
+      "name": "차종·차량·배차·픽업 등록",
+      "pages": [
+        "partner-products.html",
+        "partner-resources.html",
+        "partner-bookings.html"
+      ],
+      "expected": "차종·정원·수하물·보험·기사·픽업 정보를 예약과 연결한다.",
+      "persistence": "partner-catalog/bookings JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "차량 관제·배차 API"
+    },
+    {
+      "id": "UC-PARTNER-04",
+      "role": "음식점·스파·투어",
+      "name": "메뉴·프로그램·가이드·예약 슬롯 관리",
+      "pages": [
+        "partner-products.html",
+        "partner-resources.html",
+        "partner-schedules.html",
+        "partner-booking-detail.html"
+      ],
+      "expected": "업종별 판매 단위와 이미지·가격·미정/협의 가격·예약 가능 상태를 관리한다.",
+      "persistence": "partner-catalog/bookings JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "업체 시스템별 Adapter"
+    },
+    {
+      "id": "UC-PARTNER-05",
+      "role": "업체",
+      "name": "예약 접수·불가·대안·취소 관리",
+      "pages": [
+        "partner-bookings.html",
+        "partner-booking-detail.html"
+      ],
+      "expected": "예약을 확정·불가·취소 처리하고 대안 슬롯과 사유를 고객에게 전달한다.",
+      "persistence": "bookings/audit-events JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "실시간 알림"
+    },
+    {
+      "id": "UC-FINANCE-01",
+      "role": "업체·재무 관리자",
+      "name": "거래 원장·정산·조정·지급",
+      "pages": [
+        "partner-finance.html",
+        "admin-settlements.html",
+        "admin-analytics.html"
+      ],
+      "expected": "총매출·수수료·취소·조정·순지급액을 예약 단위로 추적한다.",
+      "persistence": "settlements/bookings JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "PG·세금계산서·실지급"
+    },
+    {
+      "id": "UC-ADMIN-01",
+      "role": "플랫폼 관리자",
+      "name": "전환·취소·불가·SLA·정산 통계",
+      "pages": [
+        "admin-dashboard.html",
+        "admin-analytics.html",
+        "admin-process-tests.html"
+      ],
+      "expected": "역할별 전환과 운영 위험을 KPI 및 유스케이스 커버리지로 본다.",
+      "persistence": "bookings/inquiries/settlements/process-use-cases JSON Mock state",
+      "test": "LOCAL_PASS",
+      "externalGap": "데이터웨어하우스·실시간 이벤트 파이프라인"
+    },
+    {
+      "id": "UC-PMS-01",
+      "role": "PMS 채널",
+      "name": "호텔·객실유형·요금·가용재고 조회",
+      "pages": [
+        "channel-dashboard.html",
+        "channel-properties.html",
+        "channel-inventory.html"
+      ],
+      "expected": "Tenant·RoomType·Rate·Inventory를 공개 계약으로 변환하되 호실·Folio는 노출하지 않는다.",
+      "persistence": "PMS 독립 fixture",
+      "test": "EXTERNAL_DEPENDENCY",
+      "externalGap": "Hotel_PMS 실제 서버 /api/v1/channel"
+    }
+  ]
+}

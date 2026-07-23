@@ -7,11 +7,11 @@
   <title>HotelnGo 웹 스타일 가이드</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png" type="image/png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
-  <link rel="stylesheet" href="styles/main.css?v=20">
-  <link rel="stylesheet" href="styles/pages.css?v=3">
-  <script src="scripts/site-shell.js?v=2" defer></script>
-  <script src="scripts/main.js?v=8" defer></script>
-  <script src="scripts/pages.js?v=1" defer></script>
+  <link rel="stylesheet" href="styles/main.css?v=27">
+  <link rel="stylesheet" href="styles/pages.css?v=14">
+  <script src="scripts/site-shell.js?v=11" defer></script>
+  <script src="scripts/main.js?v=13" defer></script>
+  <script src="scripts/pages.js?v=8" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -58,7 +58,7 @@
           <div class="type-row"><small>Display · 38/48 · 760</small><div style="font-size:38px;font-weight:760;line-height:1.25;letter-spacing:-.035em">다음 여행의 장면을 먼저 만나보세요</div></div>
           <div class="type-row"><small>Section · 21/28 · 720</small><div style="font-size:21px;font-weight:720;line-height:1.35">지금 예약하기 좋은 해외 호텔</div></div>
           <div class="type-row"><small>Body · 14/24 · 400</small><div style="font-size:14px;line-height:1.7;color:#4b5351">가격과 재고는 마지막 확인 시각을 함께 보여주며, 확인되지 않은 상태를 판매 가능처럼 표현하지 않습니다.</div></div>
-          <div class="type-row"><small>Meta · 10/16 · 680</small><div style="font-size:10px;font-weight:680;color:#848b89">API VERIFIED · 2026.07.22 18:40 KST</div></div>
+          <div class="type-row"><small>Meta · 11/17 · 680</small><div style="font-size:11px;font-weight:680;color:#848b89">API VERIFIED · 2026.07.22 18:40 KST</div></div>
         </div>
       </div>
     </section>
@@ -68,9 +68,10 @@
         <h2>04. 핵심 컴포넌트</h2>
         <p>버튼, 태그, 공급 상태, 데이터 확인 시각은 모든 검색·상세 화면에서 같은 의미로 사용합니다.</p>
         <div class="component-showcase">
-          <div class="component-card"><strong>Buttons</strong><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="ui-button primary">요금 확인</button><button class="ui-button">내 여행에 담기</button><button class="ui-button soft">지도 보기</button><button class="ui-button" disabled>예약 준비중</button></div></div>
+          <div class="component-card"><strong>Buttons</strong><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="ui-button primary">요금 확인</button><button class="ui-button">내 여행에 담기</button><button class="ui-button soft">지도 보기</button><button class="ui-button" disabled>사용할 수 없음</button></div></div>
           <div class="component-card"><strong>Status & tags</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><span class="status-chip">실시간 확인</span><span class="status-chip warning">오래된 캐시</span><span class="status-chip muted">정보형</span><span class="tag-chip">무료 취소</span><span class="tag-chip">조식 포함</span></div></div>
           <div class="component-card"><strong>Data confidence</strong><p class="data-note">PMS Mock · 3분 전 확인</p><div class="supplier-notice">실시간 공급 연결 전에는 예약 완료처럼 표현하지 않습니다. 조회 결과와 예약 명령의 상태를 분리합니다.</div></div>
+          <div class="component-card"><strong>Shared select</strong><label class="form-field" style="margin-top:10px"><span>여행 인원</span><select aria-label="스타일 가이드 여행 인원"><option>성인 2명</option><option>성인 1명</option><option>성인 3명</option><option>성인 4명</option></select></label><p class="data-note">공개 웹과 백오피스에서 같은 Popover·포커스·키보드 규칙을 사용합니다.</p></div>
           <div class="component-card"><strong>Spacing scale</strong><div class="spacing-scale"><div style="width:8px;height:8px">8</div><div style="width:12px;height:12px">12</div><div style="width:16px;height:16px">16</div><div style="width:24px;height:24px">24</div><div style="width:32px;height:32px">32</div><div style="width:48px;height:48px">48</div></div></div>
         </div>
       </div>
@@ -101,12 +102,15 @@
     <section class="guide-section" id="pages">
       <div class="shell">
         <h2>07. 페이지 인벤토리</h2>
-        <p>현재 구현된 정적 프로토타입의 전체 진입점입니다. 예약·결제·실인증·PMS 쓰기 기능은 준비 상태로만 표현합니다.</p>
+        <p>현재 구현된 77개 제품 화면의 진입점입니다. B2C·파트너·관리자는 서로 다른 JSON Mock 세션으로 동작하며, 실제 거래·서버 인증·PMS 쓰기 API는 연결하지 않았습니다.</p>
         <div class="component-showcase">
-          <div class="component-card"><strong>B2C 탐색·거래</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="index.html">홈</a><a class="ui-button" href="search.html">통합검색</a><a class="ui-button" href="discover.html">여행 발견</a><a class="ui-button" href="story.html">스토리</a><a class="ui-button" href="landmark.html">랜드마크</a><a class="ui-button" href="hotels.html">호텔 검색</a><a class="ui-button" href="hotel-detail.html">호텔 상세</a><a class="ui-button" href="experiences.html">즐길거리</a><a class="ui-button" href="experience-detail.html">경험 상세</a><a class="ui-button" href="flights.html">항공</a><a class="ui-button" href="packages.html">패키지</a></div></div>
-          <div class="component-card"><strong>B2C 개인화</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="ai-travel.html">AI 여행</a><a class="ui-button" href="trips.html">내 여행</a><a class="ui-button" href="saved.html">저장</a><a class="ui-button" href="bookings.html">예약 조회</a><a class="ui-button" href="my.html">마이</a><a class="ui-button" href="login.html">로그인</a></div></div>
-          <div class="component-card"><strong>파트너센터</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="partner-dashboard.html">대시보드</a><a class="ui-button" href="partner-property.html">업체 정보</a><a class="ui-button" href="partner-inventory.html">가격·재고</a><a class="ui-button" href="partner-bookings.html">예약 운영</a></div></div>
-          <div class="component-card"><strong>플랫폼 관리자</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="admin-dashboard.html">대시보드</a><a class="ui-button" href="admin-catalog.html">카탈로그</a><a class="ui-button" href="admin-review.html">심사·클레임</a><a class="ui-button" href="admin-content.html">콘텐츠</a></div></div>
+          <div class="component-card"><strong>B2C 탐색·거래</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="index.html">홈</a><a class="ui-button" href="search.html">통합검색</a><a class="ui-button" href="discover.html">여행 발견</a><a class="ui-button" href="story.html">스토리</a><a class="ui-button" href="landmark.html">랜드마크</a><a class="ui-button" href="hotels.html">호텔 검색</a><a class="ui-button" href="hotel-detail.html">호텔 상세</a><a class="ui-button" href="places.html">현지 업체·장소</a><a class="ui-button" href="place-detail.html">업체·장소 상세</a><a class="ui-button" href="experiences.html">즐길거리</a><a class="ui-button" href="experience-detail.html">경험 상세</a><a class="ui-button" href="flights.html">항공</a><a class="ui-button" href="packages.html">패키지</a></div></div>
+          <div class="component-card"><strong>B2C 예약·결제</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="cart.html">여행 카트</a><a class="ui-button" href="booking-guests.html">예약자 입력</a><a class="ui-button" href="booking-review.html">최종 확인</a><a class="ui-button" href="checkout.html">결제</a><a class="ui-button" href="booking-complete.html">접수 완료</a><a class="ui-button" href="booking-detail.html">예약 상세</a><a class="ui-button" href="booking-change.html">예약 변경</a><a class="ui-button" href="booking-cancel.html">예약 취소</a><a class="ui-button" href="orders.html">주문 목록</a><a class="ui-button" href="review-write.html">후기 작성</a></div></div>
+          <div class="component-card"><strong>B2C 계정·정책</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="ai-travel.html">AI 여행</a><a class="ui-button" href="trips.html">내 여행</a><a class="ui-button" href="saved.html">저장</a><a class="ui-button" href="bookings.html">비회원 조회</a><a class="ui-button" href="my.html">마이</a><a class="ui-button" href="account-settings.html">계정·여행자 설정</a><a class="ui-button" href="login.html">로그인</a><a class="ui-button" href="signup.html">회원가입</a><a class="ui-button" href="password-reset.html">비밀번호 찾기</a><a class="ui-button" href="password-reset-confirm.html">재설정 확인</a><a class="ui-button" href="password-change.html">비밀번호 변경</a><a class="ui-button" href="benefits.html">혜택</a><a class="ui-button" href="terms.html">약관</a><a class="ui-button" href="privacy.html">개인정보</a></div></div>
+          <div class="component-card"><strong>파트너 계정·입점</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="partner-login.html">로그인</a><a class="ui-button" href="partner-signup.html">회원가입</a><a class="ui-button" href="partner-password-reset.html">비밀번호 재설정</a><a class="ui-button" href="partner-onboarding.html">입점 안내</a><a class="ui-button" href="partner-application.html">입점 신청</a><a class="ui-button" href="partner-application-status.html">신청 상태</a><a class="ui-button" href="partner-claim.html">업체 인수</a></div></div>
+          <div class="component-card"><strong>업종별 파트너센터</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="partner-dashboard.html">대시보드</a><a class="ui-button" href="partner-hotel.html">독립 호텔</a><a class="ui-button" href="partner-golf.html">골프장</a><a class="ui-button" href="partner-vehicle.html">차량·픽업</a><a class="ui-button" href="partner-restaurant.html">음식점·카페</a><a class="ui-button" href="partner-spa.html">마사지·스파</a><a class="ui-button" href="partner-tour.html">투어·체험</a><a class="ui-button" href="partner-operations.html">프로모션·문의</a><a class="ui-button" href="partner-inventory.html">가격·재고</a><a class="ui-button" href="partner-bookings.html">예약 운영</a><a class="ui-button" href="partner-finance.html">정산</a><a class="ui-button" href="partner-members.html">직원·권한</a><a class="ui-button" href="partner-settings.html">연동·설정</a></div></div>
+          <div class="component-card"><strong>플랫폼 관리자</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="admin-login.html">관리자 로그인</a><a class="ui-button" href="admin-dashboard.html">대시보드</a><a class="ui-button" href="admin-members.html">B2C 회원</a><a class="ui-button" href="admin-member-detail.html">회원 상세</a><a class="ui-button" href="admin-partners.html">파트너 가입 심사</a><a class="ui-button" href="admin-providers.html">업체·장소 선등록</a><a class="ui-button" href="admin-provider-claims.html">소유권 요청</a><a class="ui-button" href="admin-catalog.html">카탈로그</a><a class="ui-button" href="admin-review.html">통합 심사</a><a class="ui-button" href="admin-content.html">콘텐츠</a><a class="ui-button" href="admin-commerce.html">예약·거래</a><a class="ui-button" href="admin-ai.html">AI·RAG</a><a class="ui-button" href="admin-system.html">감사·시스템</a></div></div>
+          <div class="component-card"><strong>PMS 채널 운영</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><a class="ui-button" href="channel-login.html">채널 로그인</a><a class="ui-button" href="channel-dashboard.html">연동 대시보드</a><a class="ui-button" href="channel-mappings.html">호텔·객실 매핑</a><a class="ui-button" href="channel-monitor.html">동기화·대사</a></div></div>
         </div>
       </div>
     </section>

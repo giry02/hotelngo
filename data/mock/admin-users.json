@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T10:00:00+09:00",
+  "users": [
+    {
+      "id": "adm_ops_001",
+      "realm": "HOTELNGO_ADMIN",
+      "email": "admin.ops@hotelngo.test",
+      "passwordHash": "57127107cb3c3485963a863fe980010c8c9d112e481313d383864cdc674c9485",
+      "name": "운영 관리자",
+      "displayName": "admin.ops",
+      "roles": ["PLATFORM_ADMIN", "MEMBER_READ"]
+    }
+  ]
+}

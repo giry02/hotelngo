@@ -169,4 +169,9 @@ Place ──< Product ──< Offer ──< Availability
 - claim·merge는 공개 식별자와 관계를 보존해야 한다.
 - AI는 직접 Booking·Payment 상태를 변경할 수 없다.
 - 외부 공급자 결과 불명 상태를 성공 또는 실패로 임의 확정하지 않는다.
+## 10. 회원과 PMS 고객의 독립 경계
 
+- `Member`는 HotelnGo B2C 로그인 주체이며 PMS `Guest`와 다른 엔티티다.
+- `TravelerProfile`은 예약 입력을 위한 재사용 가능한 여행자 기본값이다. 국적·여권 영문명·생년월일을 포함할 수 있지만 로그인 키가 아니다.
+- `PmsGuestLink`는 `providerId + tenantId + travelerProfileId + pmsGuestId`를 연결하는 선택적 참조다. 계정·비밀번호·세션을 병합하지 않는다.
+- PMS로 보낸 예약에는 당시 여행자 정보의 `TravelerSnapshot`을 저장해 이후 프로필 변경이 기존 예약 기록을 바꾸지 않게 한다.

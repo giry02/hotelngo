@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T15:00:00+09:00",
+  "destinations": [
+    {"id":"dst_danang","type":"DESTINATION","name":"다낭","country":"베트남","keywords":["danang","da nang","미케비치","호이안"],"href":"hotels.html?destination=%EB%8B%A4%EB%82%AD"},
+    {"id":"dst_kyoto","type":"DESTINATION","name":"교토","country":"일본","keywords":["kyoto","기온","아라시야마"],"href":"hotels.html?destination=%EA%B5%90%ED%86%A0"},
+    {"id":"dst_bangkok","type":"DESTINATION","name":"방콕","country":"태국","keywords":["bangkok","짜오프라야","수쿰빗"],"href":"hotels.html?destination=%EB%B0%A9%EC%BD%95"},
+    {"id":"dst_bali","type":"DESTINATION","name":"발리","country":"인도네시아","keywords":["bali","우붓","스미냑"],"href":"hotels.html?destination=%EB%B0%9C%EB%A6%AC"},
+    {"id":"dst_osaka","type":"DESTINATION","name":"오사카","country":"일본","keywords":["osaka","난바","우메다"],"href":"hotels.html?destination=%EC%98%A4%EC%82%AC%EC%B9%B4"}
+  ],
+  "hotels": [
+    {"id":"htl_danang_ocean","type":"HOTEL","name":"다낭 오션 리조트","location":"다낭 · 미케비치","rating":4.8,"keywords":["ocean resort","오션리조트","미케비치","다낭"],"href":"hotel-detail.html?hotelId=htl_danang_ocean"},
+    {"id":"htl_kyoto_gion","type":"HOTEL","name":"교토 기온 호텔","location":"교토 · 기온","rating":4.7,"keywords":["kyoto gion hotel","기온호텔","교토"],"href":"hotel-detail.html?hotelId=htl_kyoto_gion"},
+    {"id":"htl_bangkok_river","type":"HOTEL","name":"방콕 리버사이드 호텔","location":"방콕 · 짜오프라야","rating":4.6,"keywords":["bangkok riverside","리버사이드","방콕"],"href":"hotel-detail.html?hotelId=htl_bangkok_river"},
+    {"id":"htl_bali_forest","type":"HOTEL","name":"우붓 포레스트 리조트","location":"발리 · 우붓","rating":4.9,"keywords":["ubud forest resort","우붓","포레스트","발리"],"href":"hotel-detail.html?hotelId=htl_bali_forest"},
+    {"id":"htl_osaka_namba","type":"HOTEL","name":"오사카 난바 시티 호텔","location":"오사카 · 난바","rating":4.5,"keywords":["osaka namba city hotel","난바","오사카"],"href":"hotel-detail.html?hotelId=htl_osaka_namba"}
+  ],
+  "stayHistory": [
+    {"userId":"usr_demo_jiho","hotelId":"htl_kyoto_gion","hotelName":"교토 기온 호텔","location":"교토 · 기온","stayedAt":"2026.03.12–03.14","bookingId":"HNG-B-2026-00912","href":"hotel-detail.html?hotelId=htl_kyoto_gion&from=stay-history"},
+    {"userId":"usr_demo_jiho","hotelId":"htl_danang_ocean","hotelName":"다낭 오션 리조트","location":"다낭 · 미케비치","stayedAt":"2026.05.04–05.07","bookingId":"HNG-B-2026-01387","href":"hotel-detail.html?hotelId=htl_danang_ocean&from=stay-history"}
+  ]
+}

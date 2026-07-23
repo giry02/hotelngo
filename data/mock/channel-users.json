@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T18:00:00+09:00",
+  "users": [
+    {
+      "id": "chn_ops_001",
+      "realm": "HOTELNGO_CHANNEL",
+      "email": "channel.ops@hotelngo.test",
+      "passwordHash": "1f51068b02224f428fa345c811f26771c747323b7909f92b42438933d5d68a30",
+      "name": "PMS 채널 운영자",
+      "displayName": "channel.ops",
+      "roles": [
+        "CHANNEL_READ",
+        "CHANNEL_RECONCILE"
+      ],
+      "tenantScope": [
+        "tnt_hotel_001"
+      ]
+    }
+  ]
+}

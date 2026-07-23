@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>액티비티 파트너 회원가입 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/backoffice.css?v=14">
+  <script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/partner-auth.js?v=4" defer></script>
+</head>
+<body>
+  <main class="bo-auth-page partner-signup-page">
+    <section class="bo-auth-visual"><img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo"><div><h1>상품과 실제 자원을 연결해<br>예약 가능한 업체가 되세요</h1><p>골프장·차량·음식점·마사지·투어의 상품, 자원, 슬롯과 수용량을 업종별로 관리합니다.</p></div><small>ACCOUNT → BUSINESS → RESOURCE → PRODUCT → SALE</small></section>
+    <section class="bo-auth-panel"><div class="bo-auth-card">
+      <a class="bo-auth-brand" href="partner-login.html"><img src="assets/brand/official/hotelngo-logo-primary.png" alt="HotelnGo"><span>액티비티 파트너 회원가입</span></a>
+      <span class="bo-auth-realm">STEP 1 · ACCOUNT</span><h1>업체 유형과 담당자</h1><p>승인된 Provider·Place 범위에서만 상품·자원·슬롯을 운영합니다.</p>
+      <form class="bo-auth-form" data-partner-signup-form>
+        <label>업체 유형<select required name="businessType"><option value="">선택</option><option value="GOLF">골프장</option><option value="VEHICLE">렌터카·기사 차량</option><option value="RESTAURANT">음식점·카페</option><option value="SPA">마사지·스파</option><option value="TOUR">투어·체험</option></select></label>
+        <label>업체명<input required name="businessName" autocomplete="organization" placeholder="공개 예정 업체명"></label>
+        <div class="bo-form-grid"><label class="bo-field"><span>담당자 이름</span><input required name="name" autocomplete="name"></label><label class="bo-field"><span>연락처</span><input required name="phone" autocomplete="tel"></label></div>
+        <label>업무 이메일<input required name="email" type="email" autocomplete="email"></label><label>비밀번호<input required name="password" type="password" minlength="8" autocomplete="new-password"></label>
+        <label class="bo-check-row"><input required type="checkbox"> 파트너 이용약관과 개인정보 수집에 동의합니다.</label>
+        <p class="bo-auth-feedback" data-partner-feedback role="status" hidden></p><button class="bo-button primary" type="submit">계정 만들고 업체 정보 입력</button>
+      </form>
+      <div class="bo-auth-note"><strong>호텔은 별도 영역입니다.</strong> PMS 연계 여부와 관계없이 호텔 사진·객실 설명·시설은 <a href="hotel-signup.html">호텔 콘텐츠센터</a>에서 등록합니다.</div>
+      <nav class="bo-auth-links"><a href="partner-login.html">이미 계정이 있어요</a><a href="places.html">등록된 업체 찾기</a></nav>
+    </div></section>
+  </main>
+</body>
+</html>

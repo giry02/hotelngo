@@ -23,7 +23,7 @@
 6. **친근하지만 가볍지 않게** — 둥근 카드와 선명한 카테고리 색을 사용하되 과도한 캐릭터·장식을 피한다.
 7. **상태를 숨기지 않기** — 최신 가격, 확인 중, 매진, 잔여 수량을 명시하고 확인되지 않은 재고를 판매 가능처럼 표현하지 않는다.
 
-8. **해외 우선 범위** — 펜션, 캠핑, 글램핑, 대실은 1차 메인에서 제외하고 국내 상품은 준비중으로 표현한다.
+8. **해외 우선 범위** — 펜션, 캠핑, 글램핑, 대실과 국내 상품은 1차 내비게이션에서 제외한다.
 9. **결정 정보는 정확하게** — 감성 콘텐츠로 관심을 만든 뒤 쿠폰 금액, 가격, 취소 조건, 잔여 객실과 데이터 확인 시각을 숨김없이 제공한다.
 10. **사람의 취향을 연결** — 테마 가이드에는 크리에이터, 저장·반응, 장소 수, 코스 거리와 순서를 함께 보여주어 소셜 탐색과 예약을 연결한다.
 
@@ -31,7 +31,7 @@
 
 1. 상단 서비스 내비게이션
 2. 추천 여행·이벤트 자동 순환 광고 캐러셀
-3. 해외 숙소 검색과 국내 숙소 준비중 상태
+3. 해외 숙소 검색
 4. 호텔·항공·패키지·투어 핵심 서비스와 4개 보조 테마 탐색
 5. 현지 장면·소리·크리에이터 동선을 결합한 몰입형 테마 가이드
 6. 해외 쿠폰·근거리 해외·글로벌 호텔 특가
@@ -67,6 +67,9 @@
 - 메인 광고 제목: `32px / 700 / 38px`, 자간 `normal`
 - 섹션 제목: `18px / 700 / 20px`, 자간 `normal`
 - 상품명: `16px / 700 / 24px`, 자간 `normal`
+- 실제 정보를 전달하는 텍스트의 최소 크기: `11px`. 배지·메타 정보·사진 수·확인 시각도 이보다 작게 만들지 않는다.
+- 메타·보조 정보: `11~12px`, 카드 본문·필드 라벨: `12~14px`, 일반 버튼: `13px`, 검색·핵심 CTA: `14~16px`
+- 11px 텍스트는 짧은 보조 정보에만 사용하고 두 줄 이상의 설명문은 최소 12px를 사용한다.
 - 전역 `font-variation-settings`로 굵기를 고정하지 않고 각 컴포넌트의 `font-weight`를 사용한다.
 - 검색·프로모션: 7~14px radius
 - 핵심 서비스: 설명이 있는 4열 카드, 블루 선형 아이콘, 작은 영문 인덱스
@@ -90,6 +93,8 @@
 
 - 검색 탭과 지역 탭은 `role=tab`, `aria-selected`를 함께 갱신한다.
 - 메뉴는 `aria-expanded`, `hidden`, Escape 닫기를 지원한다.
+- 단일 선택 메뉴는 공통 `ui-select` 컴포넌트로 변환하고 `listbox`, `option`, `aria-expanded`, 방향키, Home/End, Enter/Space, Escape, 바깥 클릭 닫기를 지원한다.
+- 원래 `<select>`는 폼 값과 접근성 의미를 유지하며, 공통 컴포넌트 선택값과 `change` 이벤트를 양방향 동기화한다.
 - 입력 필드는 시각 제목과 접근 가능한 이름을 함께 제공한다.
 - 할인·잔여 수량은 색상뿐 아니라 텍스트로 표시한다.
 - 모바일 가로 목록은 터치 스크롤과 스냅을 지원한다.
@@ -101,15 +106,36 @@
 - 원본·작업 이력: `assets/brand/source/`, `assets/brand/archive/legacy-svg/`
 - 폰트: `assets/fonts/PretendardVariable.woff2`
 - 토큰: `styles/tokens.css`
+- 공통 선택 메뉴: `styles/components.css`, `scripts/ui-components.js`
 - 레이아웃·컴포넌트: `styles/main.css`
 - 메인 화면: `index.html`
 - B2C 전체 공통 셸: `scripts/site-shell.js` — 메인·하위 페이지 헤더, 푸터, 모바일 하단 탭
 - 파트너·관리자 공통 셸: `scripts/backoffice-shell.js`, `styles/backoffice.css` — 서로 다른 메뉴·인증 경계
 - 하위 페이지 컴포넌트: `styles/pages.css`, `scripts/pages.js`
+- B2C 인증: `scripts/auth.js` — 회원가입, 로그인, 비밀번호 재설정·변경, 독립 B2C Session Mock
+- 관리자 인증: `scripts/admin-auth.js` — `HOTELNGO_ADMIN` 전용 Session Mock과 접근 가드
+- 회원 데이터: `scripts/member-data.js`, `scripts/admin-members.js` — 여행자 기본값, 마스킹 여권, 관리자 회원 목록·상세
+- 예약·결제 프로토타입 동작: `scripts/commerce.js` — 입력 검증, 카트 합계, 정적 단계 전환과 Mock 작업 안내
+- 계획 기준선 공통 화면: `styles/workflow-pages.css`, `scripts/workflow-pages.js`, `data/mock/workflow-pages.json` — 목록·폼·상세·상태·지도·Dialog·Toast를 동일 토큰으로 렌더링
+- 여행지·호텔·숙박내역 통합 검색: `scripts/search-autocomplete.js`, `data/mock/search-catalog.json` — 그룹형 제안, 키보드 탐색, 호텔 상세 직접 진입
 - 시각 스타일 가이드: `style-guide.html`
-- B2C 화면: `search.html`, `discover.html`, `story.html`, `landmark.html`, `hotels.html`, `hotel-detail.html`, `experiences.html`, `experience-detail.html`, `flights.html`, `packages.html`, `ai-travel.html`, `trips.html`, `saved.html`, `bookings.html`, `my.html`, `login.html`
-- 파트너 화면: `partner-dashboard.html`, `partner-property.html`, `partner-inventory.html`, `partner-bookings.html`
-- 관리자 화면: `admin-dashboard.html`, `admin-catalog.html`, `admin-review.html`, `admin-content.html`
+- B2C 탐색 화면: `search.html`, `discover.html`, `story.html`, `landmark.html`, `hotels.html`, `hotel-detail.html`, `experiences.html`, `experience-detail.html`, `flights.html`, `packages.html`, `ai-travel.html`, `trips.html`, `saved.html`, `benefits.html`
+- B2C 거래 화면: `cart.html`, `booking-guests.html`, `booking-review.html`, `checkout.html`, `booking-complete.html`, `booking-detail.html`, `orders.html`, `bookings.html`
+- B2C 계정·정책 화면: `login.html`, `signup.html`, `password-reset.html`, `my.html`, `company.html`, `terms.html`, `privacy.html`
+- 파트너 화면: `partner-login.html`, `partner-dashboard.html`, `partner-onboarding.html`, `partner-property.html`, `partner-inventory.html`, `partner-bookings.html`, `partner-finance.html`, `partner-members.html`, `partner-settings.html`
+- 관리자 화면: `admin-login.html`, `admin-dashboard.html`, `admin-members.html`, `admin-member-detail.html`, `admin-catalog.html`, `admin-review.html`, `admin-content.html`, `admin-commerce.html`, `admin-ai.html`, `admin-system.html`
 - 인터랙션: `scripts/main.js`
 
 호텔 검색 결과, 상세와 Offer 화면에서는 이 기준에 필터, 객실 요금, 취소 조건, 데이터 확인 시각과 공급 상태를 추가한다.
+
+## 9. 파트너·관리자 운영 UI 확장
+
+- 파트너 회원가입과 로그인은 B2C 디자인을 복제하지 않고 운영 도구용 분할 인증 레이아웃을 사용한다.
+- 입점 상태는 원형 단계 표시로 `계정 → 업체 제출 → 플랫폼 심사 → 운영 활성화`를 한 화면에서 읽게 한다.
+- 업종 운영 화면은 공통 KPI·카드·표·폼 토큰을 재사용하되 호텔, 골프, 차량, 음식점, 스파, 투어의 필드 묶음은 서로 분리한다.
+- 다른 업종 화면을 열었을 때는 `READ ONLY` 미리보기 안내와 비활성 편집 버튼으로 권한 범위를 명시한다.
+- 플랫폼 선등록 장소와 파트너 인증 장소는 B2C 카드에서 같은 레이아웃을 사용하되 `정보 제공 장소 / HotelnGo 인증 업체`, 최근 검수일, 예약 방식을 텍스트로 구분한다.
+- 소유권 요청은 기존 관계를 보존한다는 설명을 항상 함께 표시한다. 새 업체 등록과 기존 업체 인수 CTA를 혼합하지 않는다.
+- 960px 이하에서는 운영 사이드바가 Drawer로, 업종 카드가 2열로 바뀌며 600px 이하에서는 단일 열로 바뀐다.
+
+관련 파일은 `partner-*.html`, `admin-partners.html`, `admin-providers.html`, `admin-provider-claims.html`, `places.html`, `place-detail.html`, `scripts/partner-auth.js`, `scripts/partner-portal.js`, `scripts/admin-partner-ops.js`, `scripts/places.js`다.

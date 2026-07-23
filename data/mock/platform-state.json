@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-23T20:30:00+09:00",
+  "bookings": [
+    {
+      "id": "HNG-2026-000001",
+      "memberId": "usr_demo_jiho",
+      "providerId": "prv_hotel_001",
+      "providerType": "HOTEL",
+      "supplierBookingId": null,
+      "status": "PENDING_SUPPLIER",
+      "paymentStatus": "DEMO_AUTHORIZED",
+      "settlementStatus": "NOT_READY",
+      "title": "Hyatt Regency Danang Resort",
+      "product": "디럭스 오션뷰 · 조식 포함",
+      "startAt": "2026-08-14T15:00:00+07:00",
+      "endAt": "2026-08-17T11:00:00+07:00",
+      "amount": 559200,
+      "currency": "KRW",
+      "guest": {
+        "familyName": "KIM",
+        "givenName": "JIHO",
+        "email": "demo@hotelngo.test",
+        "phone": "010-1234-5678",
+        "nationality": "KR"
+      },
+      "cancellation": {
+        "freeUntil": "2026-08-11T23:59:00+07:00",
+        "estimatedFee": 0,
+        "estimatedRefund": 559200
+      },
+      "timeline": [
+        {
+          "at": "2026-07-23T19:04:18+09:00",
+          "status": "RECEIVED",
+          "label": "HotelNGo 예약 접수"
+        },
+        {
+          "at": "2026-07-23T19:04:19+09:00",
+          "status": "DEMO_AUTHORIZED",
+          "label": "결제 Mock 승인"
+        },
+        {
+          "at": "2026-07-23T19:04:20+09:00",
+          "status": "PENDING_SUPPLIER",
+          "label": "PMS 예약 생성 API 대기"
+        }
+      ]
+    },
+    {
+      "id": "HNG-2026-000002",
+      "memberId": "usr_demo_jiho",
+      "providerId": "prv_golf_011",
+      "providerType": "GOLF",
+      "supplierBookingId": "GOLF-8251",
+      "status": "CONFIRMED",
+      "paymentStatus": "DEMO_PAID",
+      "settlementStatus": "SCHEDULED",
+      "title": "다낭 힐스 골프 클럽",
+      "product": "Ocean 18홀 · 캐디·카트 포함",
+      "startAt": "2026-08-15T07:10:00+07:00",
+      "endAt": "2026-08-15T12:10:00+07:00",
+      "amount": 184000,
+      "currency": "KRW",
+      "guest": {
+        "familyName": "KIM",
+        "givenName": "JIHO",
+        "email": "demo@hotelngo.test",
+        "phone": "010-1234-5678",
+        "nationality": "KR"
+      },
+      "cancellation": {
+        "freeUntil": "2026-08-13T07:10:00+07:00",
+        "estimatedFee": 0,
+        "estimatedRefund": 184000
+      },
+      "timeline": [
+        {
+          "at": "2026-07-23T18:01:00+09:00",
+          "status": "CONFIRMED",
+          "label": "업체 예약 확정"
+        }
+      ]
+    },
+    {
+      "id": "HNG-2026-000003",
+      "memberId": "usr_demo_jiho",
+      "providerId": "prv_spa_041",
+      "providerType": "SPA",
+      "supplierBookingId": null,
+      "status": "UNAVAILABLE",
+      "paymentStatus": "NOT_CHARGED",
+      "settlementStatus": "EXCLUDED",
+      "title": "Bangkok Riverside Spa",
+      "product": "아로마 90분",
+      "startAt": "2026-09-18T18:00:00+07:00",
+      "endAt": "2026-09-18T19:30:00+07:00",
+      "amount": 72000,
+      "currency": "KRW",
+      "timeline": [
+        {
+          "at": "2026-07-23T17:10:00+09:00",
+          "status": "REQUESTED",
+          "label": "예약 가능 여부 요청"
+        },
+        {
+          "at": "2026-07-23T17:40:00+09:00",
+          "status": "UNAVAILABLE",
+          "label": "해당 시간 마감 · 대안 제시 필요"
+        }
+      ]
+    }
+  ],
+  "settlements": [
+    {
+      "id": "STL-2026-0701",
+      "providerId": "prv_golf_011",
+      "providerType": "GOLF",
+      "period": "2026-07",
+      "gross": 1840000,
+      "commission": 184000,
+      "refunds": 92000,
+      "adjustments": 0,
+      "net": 1564000,
+      "currency": "KRW",
+      "status": "SCHEDULED",
+      "payoutAt": "2026-08-10"
+    },
+    {
+      "id": "STL-2026-0702",
+      "providerId": "prv_spa_041",
+      "providerType": "SPA",
+      "period": "2026-07",
+      "gross": 720000,
+      "commission": 86400,
+      "refunds": 72000,
+      "adjustments": -10000,
+      "net": 551600,
+      "currency": "KRW",
+      "status": "REVIEW_REQUIRED",
+      "payoutAt": null
+    }
+  ],
+  "inquiries": [
+    {
+      "id": "INQ-2026-0041",
+      "memberId": "usr_demo_jiho",
+      "bookingId": "HNG-2026-000003",
+      "category": "예약 불가",
+      "subject": "스파 예약 불가 시 다른 시간으로 바꿀 수 있나요?",
+      "message": "18시 예약이 마감되었다고 표시됩니다. 같은 날 20시 이후 대안을 확인해 주세요.",
+      "status": "ANSWERED",
+      "priority": "NORMAL",
+      "createdAt": "2026-07-23T17:45:00+09:00",
+      "slaDueAt": "2026-07-24T17:45:00+09:00",
+      "reply": "20:30 또는 다음 날 10:00 이용이 가능합니다. 예약 상세의 대안 선택에서 변경할 수 있습니다.",
+      "answeredAt": "2026-07-23T18:20:00+09:00"
+    },
+    {
+      "id": "INQ-2026-0042",
+      "memberId": "usr_demo_jiho",
+      "bookingId": "HNG-2026-000001",
+      "category": "PMS 확정 지연",
+      "subject": "호텔 예약 확정 번호가 아직 나오지 않았어요",
+      "message": "결제 Mock 이후 공급자 확인 대기 상태입니다.",
+      "status": "OPEN",
+      "priority": "HIGH",
+      "createdAt": "2026-07-23T19:20:00+09:00",
+      "slaDueAt": "2026-07-23T23:20:00+09:00",
+      "reply": null,
+      "answeredAt": null
+    }
+  ],
+  "stories": [
+    {
+      "id": "story_kyoto_twilight",
+      "authorId": "usr_creator_mina",
+      "authorName": "미나의 느린 여행",
+      "authorType": "MEMBER_GUIDE",
+      "title": "기온의 불이 켜지는 시간",
+      "destination": "교토",
+      "summary": "유명한 장면보다 골목이 조용해지는 시간에 맞춘 3박 4일 이야기입니다.",
+      "cover": "assets/images/landmark-kyoto.jpg",
+      "tags": [
+        "골목",
+        "저녁산책",
+        "로컬맛집"
+      ],
+      "status": "PUBLISHED",
+      "visibility": "PUBLIC",
+      "saves": 1248,
+      "copies": 386,
+      "tripTemplateId": "community_trip_kyoto_evening",
+      "publishedAt": "2026-07-20T10:00:00+09:00"
+    }
+  ],
+  "trips": [
+    {
+      "id": "trip_demo_danang",
+      "ownerId": "usr_demo_jiho",
+      "title": "다낭 4박 5일",
+      "destination": "다낭",
+      "status": "DRAFT",
+      "sourceType": "USER_CREATED",
+      "items": [
+        {
+          "id": "trip_item_hotel",
+          "day": 1,
+          "time": "15:00",
+          "type": "HOTEL",
+          "title": "Hyatt Regency Danang Resort",
+          "bookingId": "HNG-2026-000001"
+        },
+        {
+          "id": "trip_item_golf",
+          "day": 2,
+          "time": "07:10",
+          "type": "GOLF",
+          "title": "다낭 힐스 골프 클럽",
+          "bookingId": "HNG-2026-000002"
+        }
+      ],
+      "updatedAt": "2026-07-23T19:05:00+09:00"
+    }
+  ]
+}
