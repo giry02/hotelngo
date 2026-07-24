@@ -2,7 +2,7 @@
   if (!document.querySelector('link[data-hotelngo-components]')) {
     const componentStyles = document.createElement('link');
     componentStyles.rel = 'stylesheet';
-    componentStyles.href = 'styles/components.css?v=2';
+    componentStyles.href = 'styles/components.css?v=3';
     componentStyles.dataset.hotelngoComponents = '';
     document.head.append(componentStyles);
   }

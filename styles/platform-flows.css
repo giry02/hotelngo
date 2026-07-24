@@ -26,7 +26,7 @@
   display: block;
   margin-bottom: 5px;
   color: #2563eb;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: .08em;
 }
@@ -371,7 +371,7 @@
 
 .ops-kpi-grid span {
   color: #7a8798;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ops-grid {
@@ -421,7 +421,7 @@
   grid-template-columns: 145px minmax(0, 1fr) 30px;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ops-bars i {
@@ -483,7 +483,7 @@
 .ops-process-list > article > div:first-child span,
 .ops-process-list small {
   color: #6d7a8b;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -529,7 +529,7 @@
   align-items: center;
   gap: 8px;
   color: #68778a;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ops-filter select {
@@ -628,7 +628,7 @@
 .ai-plan-explanation p {
   margin: 5px 0 0;
   color: #58677b;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.65;
 }
 
@@ -649,7 +649,7 @@
   border-radius: 999px;
   color: #536273;
   background: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-style: normal;
 }
 
@@ -671,7 +671,7 @@
 
 .ai-alternative label > span {
   color: #64748b;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ai-alternative select {

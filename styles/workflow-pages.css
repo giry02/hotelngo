@@ -100,7 +100,7 @@
   display: inline-flex;
   font: inherit;
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 700;
   gap: 7px;
   justify-content: center;
   min-height: 42px;
@@ -196,7 +196,7 @@
   cursor: pointer;
   font: inherit;
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 700;
   margin-bottom: -1px;
   padding: 11px 14px;
   white-space: nowrap;
@@ -416,7 +416,7 @@
 .workflow-field > span {
   color: #344054;
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .workflow-field > small {
@@ -467,7 +467,7 @@
 .workflow-dl dd {
   color: #344054;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 600;
   margin: 0;
 }
 
@@ -694,7 +694,7 @@
 .workflow-map-pin span {
   color: var(--workflow-blue);
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 700;
   margin-top: 3px;
 }
 
@@ -732,7 +732,7 @@
 
 .workflow-dialog header small {
   color: var(--workflow-blue);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: .07em;
   margin-bottom: 4px;
