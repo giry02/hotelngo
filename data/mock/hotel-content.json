@@ -5,7 +5,7 @@
     "hotelId": "hng_hotel_danang_001",
     "tenantId": "tenant_demo_danang",
     "providerType": "INTERNAL_PMS",
-    "name": "Hyatt Regency Danang Resort",
+    "name": "다낭 오션 리조트",
     "city": "다낭",
     "country": "베트남",
     "mappingStatus": "MAPPED",
@@ -20,14 +20,14 @@
     "amenities": ["해변", "수영장 5개", "키즈클럽", "피트니스", "스파", "공항 픽업", "무료 Wi-Fi", "조식 레스토랑", "휠체어 접근"],
     "policies": ["만 12세 이하 아동 동반 가능", "반려동물 동반 불가", "객실별 취소 조건은 요금제에서 확인"],
     "media": [
-      {"id":"media_property_01","src":"assets/images/hero-hotel.jpg","alt":"리조트 메인 수영장과 바다","category":"대표","isCover":true},
-      {"id":"media_property_02","src":"assets/images/stay-gangneung.jpg","alt":"바다를 바라보는 야외 수영장","category":"수영장"},
-      {"id":"media_property_03","src":"assets/images/stay-busan.jpg","alt":"오션뷰 객실 내부","category":"객실"},
-      {"id":"media_property_04","src":"assets/images/landmark-bali.jpg","alt":"야자수와 리조트 정원","category":"정원"},
-      {"id":"media_property_05","src":"assets/images/stay-jeju.jpg","alt":"조식 레스토랑 라운지","category":"다이닝"},
-      {"id":"media_property_06","src":"assets/images/landmark-paris.jpg","alt":"석양 시간의 리조트 라운지","category":"라운지"},
-      {"id":"media_property_07","src":"assets/images/landmark-bangkok.jpg","alt":"야간 조명이 켜진 공용 공간","category":"공용공간"},
-      {"id":"media_property_08","src":"assets/images/landmark-kyoto.jpg","alt":"리조트 주변 산책 공간","category":"주변"}
+      {"id":"media_property_01","src":"assets/images/marketplace/hotel-resort.jpg","alt":"리조트 메인 수영장과 바다","category":"대표","isCover":true},
+      {"id":"media_property_02","src":"assets/images/marketplace/hotel-resort.jpg","alt":"바다를 바라보는 야외 수영장","category":"수영장"},
+      {"id":"media_property_03","src":"assets/images/marketplace/hotel-room.jpg","alt":"오션뷰 객실 내부","category":"객실"},
+      {"id":"media_property_04","src":"assets/images/marketplace/hotel-resort.jpg","alt":"야자수와 리조트 정원","category":"정원"},
+      {"id":"media_property_05","src":"assets/images/marketplace/restaurant-interior.jpg","alt":"조식 레스토랑 라운지","category":"다이닝"},
+      {"id":"media_property_06","src":"assets/images/marketplace/hotel-suite.jpg","alt":"석양 시간의 리조트 라운지","category":"라운지"},
+      {"id":"media_property_07","src":"assets/images/marketplace/hotel-suite.jpg","alt":"야간 조명이 켜진 공용 공간","category":"공용공간"},
+      {"id":"media_property_08","src":"assets/images/marketplace/hotel-resort.jpg","alt":"리조트 주변 산책 공간","category":"주변"}
     ]
   },
   "roomTypes": [
@@ -50,10 +50,10 @@
       "currency": "KRW",
       "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
       "images": [
-        {"src":"assets/images/stay-busan.jpg","alt":"디럭스 오션뷰 침실과 창가"},
-        {"src":"assets/images/hero-hotel.jpg","alt":"디럭스 오션뷰 발코니 전망"},
-        {"src":"assets/images/stay-jeju.jpg","alt":"디럭스 오션뷰 휴식 공간"},
-        {"src":"assets/images/landmark-bali.jpg","alt":"디럭스 오션뷰 욕실과 어메니티"}
+        {"src":"assets/images/marketplace/hotel-room.jpg","alt":"디럭스 오션뷰 침실과 창가"},
+        {"src":"assets/images/marketplace/hotel-resort.jpg","alt":"디럭스 오션뷰 발코니 전망"},
+        {"src":"assets/images/marketplace/hotel-bedroom.jpg","alt":"디럭스 오션뷰 휴식 공간"},
+        {"src":"assets/images/marketplace/hotel-bathroom.jpg","alt":"디럭스 오션뷰 욕실과 어메니티"}
       ]
     },
     {
@@ -75,10 +75,10 @@
       "currency": "KRW",
       "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
       "images": [
-        {"src":"assets/images/stay-gangneung.jpg","alt":"리젠시 클럽 오션 침실"},
-        {"src":"assets/images/landmark-bangkok.jpg","alt":"리젠시 클럽 전용 라운지"},
-        {"src":"assets/images/stay-busan.jpg","alt":"리젠시 클럽 오션 발코니"},
-        {"src":"assets/images/landmark-paris.jpg","alt":"리젠시 클럽 오션 욕실"}
+        {"src":"assets/images/marketplace/hotel-suite.jpg","alt":"리젠시 클럽 오션 침실"},
+        {"src":"assets/images/marketplace/hotel-suite.jpg","alt":"리젠시 클럽 전용 라운지"},
+        {"src":"assets/images/marketplace/hotel-resort.jpg","alt":"리젠시 클럽 오션 발코니"},
+        {"src":"assets/images/marketplace/hotel-bathroom.jpg","alt":"리젠시 클럽 오션 욕실"}
       ]
     },
     {
@@ -100,11 +100,11 @@
       "currency": "KRW",
       "inventoryCheckedAt": "2026-07-23T17:42:00+09:00",
       "images": [
-        {"src":"assets/images/hero-hotel.jpg","alt":"2 베드룸 레지던스 거실"},
-        {"src":"assets/images/stay-jeju.jpg","alt":"2 베드룸 레지던스 주방과 식탁"},
-        {"src":"assets/images/landmark-kyoto.jpg","alt":"2 베드룸 레지던스 마스터 침실"},
-        {"src":"assets/images/stay-gapyeong.jpg","alt":"2 베드룸 레지던스 두 번째 침실"},
-        {"src":"assets/images/landmark-bali.jpg","alt":"2 베드룸 레지던스 욕실"}
+        {"src":"assets/images/marketplace/hotel-suite.jpg","alt":"2 베드룸 레지던스 거실"},
+        {"src":"assets/images/marketplace/hotel-suite.jpg","alt":"2 베드룸 레지던스 주방과 식탁"},
+        {"src":"assets/images/marketplace/hotel-bedroom.jpg","alt":"2 베드룸 레지던스 마스터 침실"},
+        {"src":"assets/images/marketplace/hotel-room.jpg","alt":"2 베드룸 레지던스 두 번째 침실"},
+        {"src":"assets/images/marketplace/hotel-bathroom.jpg","alt":"2 베드룸 레지던스 욕실"}
       ]
     }
   ],

@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-24T12:20:00+09:00",
+  "profiles": {
+    "prv_hotel_001": {
+      "providerId": "prv_hotel_001",
+      "name": "다낭 오션 리조트",
+      "typeLabel": "호텔·리조트",
+      "cover": "assets/images/marketplace/hotel-resort.jpg",
+      "gallery": [
+        "assets/images/marketplace/hotel-resort.jpg",
+        "assets/images/marketplace/hotel-room.jpg",
+        "assets/images/marketplace/hotel-suite.jpg",
+        "assets/images/marketplace/hotel-bedroom.jpg",
+        "assets/images/marketplace/hotel-bathroom.jpg"
+      ],
+      "detailHref": "hotel-detail.html?hotelId=hng_hotel_danang_001",
+      "tagline": "논느억 비치 앞, 가족 휴양과 호이안 이동을 함께 잡는 오션 리조트",
+      "description": "긴 해변과 다섯 개의 수영장, 키즈클럽을 갖춘 가족형 리조트입니다. 객실별 공간·침대·욕실·전망 사진을 확인하고 실제 PMS 재고와 연결된 요금제를 선택할 수 있습니다.",
+      "address": "05 Trường Sa, Ngũ Hành Sơn, Đà Nẵng, Vietnam",
+      "hours": "프런트 24시간 · 체크인 15:00 · 체크아웃 11:00",
+      "contact": "한국어 채팅 09:00–22:00 · 긴급 연락 24시간",
+      "languages": "베트남어 · 영어 · 한국어 지원",
+      "booking": "객실유형별 실시간 요금·재고 확인",
+      "priceLine": "1박 186,400원부터",
+      "nearby": "논느억 비치 도보 1분 · 오행산 차량 7분 · 호이안 차량 30분",
+      "highlights": [
+        "전용 해변과 야외 수영장 5개",
+        "키즈클럽·베이비시팅 요청",
+        "다낭 공항 픽업 및 호이안 셔틀"
+      ],
+      "facilities": [
+        "무료 Wi-Fi",
+        "조식 레스토랑",
+        "피트니스",
+        "스파",
+        "휠체어 접근",
+        "무료 주차"
+      ],
+      "policies": [
+        "객실별 취소 조건은 선택한 요금제에서 확인합니다.",
+        "만 12세 이하 아동 동반이 가능하며 인원별 추가요금이 적용될 수 있습니다.",
+        "반려동물 동반은 지원하지 않습니다."
+      ],
+      "sourceLabel": "HotelNGo 호텔센터와 PMS 연동 정보",
+      "sourceNote": "객실 가격·재고는 PMS 응답을 기준으로 하고, 소개·사진·편의시설은 호텔 콘텐츠 담당자가 관리합니다."
+    },
+    "prv_golf_011": {
+      "providerId": "prv_golf_011",
+      "name": "다낭 힐스 골프 클럽",
+      "typeLabel": "골프장",
+      "cover": "assets/images/marketplace/golf-course.jpg",
+      "gallery": [
+        "assets/images/marketplace/golf-course.jpg",
+        "assets/images/marketplace/golf-green.jpg"
+      ],
+      "detailHref": "golf-detail.html",
+      "tagline": "바다와 산 능선을 조망하는 36홀 코스와 오전·트와일라이트 티타임",
+      "description": "Ocean·Mountain 두 코스와 9홀 트와일라이트 상품을 운영합니다. 홀 수, 난이도, 그린피·캐디·카트 포함 여부와 남은 티타임을 비교할 수 있습니다.",
+      "address": "Bà Nà–Suối Mơ Road, Hòa Vang, Đà Nẵng, Vietnam",
+      "hours": "매일 05:30–19:00 · 마지막 티오프 16:10",
+      "contact": "예약 데스크 06:00–20:00 · 한국어 메시지 응대",
+      "languages": "베트남어 · 영어 · 한국어 예약 지원",
+      "booking": "티타임 요청 후 골프장 확정",
+      "priceLine": "9홀 92,000원 · 18홀 178,000원부터",
+      "nearby": "다낭 시내 차량 35분 · 제휴 호텔 왕복 픽업 선택 가능",
+      "highlights": [
+        "Ocean·Mountain 총 36홀",
+        "Par 71·72, 6,940–7,080yd",
+        "클럽 대여·전용 카트·호텔 픽업"
+      ],
+      "facilities": [
+        "드라이빙 레인지",
+        "락커·샤워",
+        "클럽하우스 레스토랑",
+        "프로숍",
+        "클럽 대여",
+        "무료 주차"
+      ],
+      "policies": [
+        "티타임은 골프장 최종 승인 후 확정됩니다.",
+        "노쇼·당일 취소는 환불되지 않으며 우천 운영 여부는 현장 판단을 따릅니다.",
+        "플레이어 영문명과 핸디캡을 예약 전에 입력해야 합니다."
+      ],
+      "sourceLabel": "골프장 공식 운영정보 확인",
+      "sourceNote": "현재는 요청 예약 방식이며 실시간 티타임 API 연결 전까지 담당자 확인 후 확정합니다."
+    },
+    "prv_vehicle_021": {
+      "providerId": "prv_vehicle_021",
+      "name": "ABC 다낭 트랜스퍼",
+      "typeLabel": "차량·공항 픽업",
+      "cover": "assets/images/marketplace/vehicle-airport-transfer.png",
+      "gallery": [
+        "assets/images/marketplace/vehicle-airport-transfer.png",
+        "assets/images/marketplace/vehicle-sedan.jpg"
+      ],
+      "detailHref": "vehicle-detail.html",
+      "tagline": "다낭 공항부터 호텔·호이안까지, 승객과 수하물에 맞춰 선택하는 기사 포함 차량",
+      "description": "항공편 도착시간을 기준으로 기사 미팅과 무료 대기시간을 제공합니다. 세단·7인승 밴·SUV 대절의 승차 인원과 수하물 수용량, 이동 구간별 요금을 비교할 수 있습니다.",
+      "address": "다낭 국제공항 도착장 미팅 포인트 및 시내 배차센터",
+      "hours": "연중무휴 24시간 · 야간 도착 사전예약 가능",
+      "contact": "배차 채팅 24시간 · 한국어·영어 메시지 응대",
+      "languages": "베트남어 기사 · 영어 기본 응대 · 한국어 상담",
+      "booking": "항공편·구간 입력 후 배차 확정",
+      "priceLine": "공항→시내 세단 32,000원부터",
+      "nearby": "다낭 공항·시내·미케비치·호이안·바나힐 운행",
+      "highlights": [
+        "공항 도착 60분 무료 대기",
+        "세단·7인승 밴·SUV 선택",
+        "카시트·다구간·일일 대절 요청"
+      ],
+      "facilities": [
+        "기사 포함",
+        "기본 보험",
+        "통행료 포함",
+        "생수",
+        "항공편 지연 추적",
+        "유아 카시트 선택"
+      ],
+      "policies": [
+        "배차 확정 전에는 예약 완료로 표시하지 않습니다.",
+        "항공편 변경은 픽업 6시간 전까지 무료로 접수합니다.",
+        "무료 대기시간 이후에는 30분 단위 추가요금이 발생할 수 있습니다."
+      ],
+      "sourceLabel": "배차 운영팀 제공 정보",
+      "sourceNote": "차량 번호와 기사 연락처는 배차 확정 후 예약 상세에서 제공합니다."
+    },
+    "prv_restaurant_031": {
+      "providerId": "prv_restaurant_031",
+      "name": "짜오 비치 키친",
+      "typeLabel": "음식점·카페",
+      "cover": "assets/images/marketplace/restaurant-interior.jpg",
+      "gallery": [
+        "assets/images/marketplace/restaurant-interior.jpg",
+        "assets/images/marketplace/restaurant-dining.jpg"
+      ],
+      "detailHref": "restaurant-detail.html",
+      "tagline": "미케비치 저녁 풍경과 베트남식 해산물 코스를 함께 즐기는 다이닝",
+      "description": "대표 메뉴와 세트 구성을 먼저 확인하고 일반 테이블·창가·프라이빗 룸과 시간을 선택할 수 있습니다. 어린이 식기, 알레르기, 매운맛 조절 요청을 예약에 함께 남길 수 있습니다.",
+      "address": "Võ Nguyên Giáp, Mỹ An, Ngũ Hành Sơn, Đà Nẵng",
+      "hours": "매일 11:30–22:30 · 라스트오더 21:30",
+      "contact": "예약 채팅 10:00–21:00 · 전화·메신저 예약",
+      "languages": "베트남어 · 영어 · 한국어 메뉴",
+      "booking": "테이블 요청 후 30분 이내 확정",
+      "priceLine": "2인 해산물 코스 68,000원부터",
+      "nearby": "미케비치 도보 2분 · 다낭 시내 차량 10분",
+      "highlights": [
+        "선셋 창가 테이블",
+        "2인·4인 해산물 세트",
+        "6–12인 프라이빗 룸"
+      ],
+      "facilities": [
+        "어린이 의자",
+        "에어컨",
+        "프라이빗 룸",
+        "휠체어 접근",
+        "카드 결제",
+        "호텔 픽업 요청"
+      ],
+      "policies": [
+        "창가 좌석은 요청사항이며 확정 좌석은 예약 상세에서 안내합니다.",
+        "알레르기와 채식 요청은 방문 24시간 전까지 접수합니다.",
+        "프라이빗 룸은 보증금 결제 후 확정됩니다."
+      ],
+      "sourceLabel": "현장 확인 및 메뉴판 검수",
+      "sourceNote": "메뉴와 가격은 2026년 7월 현장 확인 기준이며 계절 재료에 따라 일부 변경될 수 있습니다."
+    },
+    "prv_spa_041": {
+      "providerId": "prv_spa_041",
+      "name": "Bangkok Riverside Spa",
+      "typeLabel": "마사지·스파",
+      "cover": "assets/images/marketplace/spa-treatment.jpg",
+      "gallery": [
+        "assets/images/marketplace/spa-treatment.jpg",
+        "assets/images/marketplace/spa-room.jpg"
+      ],
+      "detailHref": "spa-detail.html",
+      "tagline": "차오프라야 강변에서 압과 오일, 싱글·커플룸을 선택하는 웰니스 스파",
+      "description": "타이 마사지와 아로마 테라피, 커플 패키지를 운영합니다. 프로그램 시간, 압 강도, 오일 사용 여부, 룸 유형과 픽업 옵션을 비교해 요청할 수 있습니다.",
+      "address": "Charoen Krung Road, Bang Rak, Bangkok, Thailand",
+      "hours": "매일 11:00–23:00 · 마지막 예약 21:00",
+      "contact": "예약 채팅 10:00–22:00 · 당일 요청 가능",
+      "languages": "태국어 · 영어 · 한국어 예약 지원",
+      "booking": "치료사·룸 확인 후 예약 확정",
+      "priceLine": "타이 마사지 60분 39,000원부터",
+      "nearby": "사판탁신역 차량 7분 · 강변 호텔 픽업 선택 가능",
+      "highlights": [
+        "싱글·커플 리버뷰 룸",
+        "타이·아로마·스크럽 프로그램",
+        "임산부 전용 사전 상담"
+      ],
+      "facilities": [
+        "개별 샤워",
+        "풋배스",
+        "허브티",
+        "개인 락커",
+        "커플룸",
+        "호텔 픽업"
+      ],
+      "policies": [
+        "건강상태와 임신 여부를 예약 전 알려야 합니다.",
+        "치료사 성별 요청은 가능하지만 당일 배정 상황에 따라 달라질 수 있습니다.",
+        "예약 12시간 전까지 무료 취소가 가능합니다."
+      ],
+      "sourceLabel": "공식 운영 채널 및 프로그램표 확인",
+      "sourceNote": "치료사와 룸 수용량을 확인한 뒤 요청 예약을 확정합니다."
+    },
+    "prv_tour_051": {
+      "providerId": "prv_tour_051",
+      "name": "Arashiyama Local Walk",
+      "typeLabel": "투어·체험",
+      "cover": "assets/images/marketplace/tour-kyoto.jpg",
+      "gallery": [
+        "assets/images/marketplace/tour-kyoto.jpg",
+        "assets/images/marketplace/tour-bamboo.jpg"
+      ],
+      "detailHref": "tour-detail.html",
+      "tagline": "붐비기 전 대나무숲과 사가 골목을 걷는 최대 8명의 아침 로컬 워크",
+      "description": "한국어·영어 소규모 가이드 투어와 프라이빗 코스를 운영합니다. 출발 회차, 언어, 인원, 호텔 픽업과 기모노 연결 옵션을 선택할 수 있습니다.",
+      "address": "사가아라시야마역 남쪽 출구 미팅 포인트, Kyoto, Japan",
+      "hours": "매일 07:30–17:00 · 아침 투어 08:00 출발",
+      "contact": "가이드 메시지 07:00–20:00 · 출발 전날 미팅 안내",
+      "languages": "한국어 · 영어 · 일본어",
+      "booking": "회차별 잔여인원 확인 후 확정",
+      "priceLine": "아침 산책 1인 49,000원",
+      "nearby": "JR 사가아라시야마역 도보 4분 · 도게츠교 도보 12분",
+      "highlights": [
+        "최대 8명 소규모 그룹",
+        "대나무숲·사가 골목·차 시음",
+        "프라이빗 1–6명 일정 조정"
+      ],
+      "facilities": [
+        "무선 수신기",
+        "생수",
+        "차 시음",
+        "사진 촬영",
+        "우천용 우산",
+        "호텔 픽업 선택"
+      ],
+      "policies": [
+        "출발 10분 전까지 미팅 포인트에 도착해야 합니다.",
+        "우천 시에도 운영하며 기상특보 발효 시 전액 환불합니다.",
+        "프라이빗 코스 변경은 출발 48시간 전까지 가능합니다."
+      ],
+      "sourceLabel": "가이드 운영팀 및 교토 관광정보 확인",
+      "sourceNote": "현재 외부 가이드 재고 확인 방식이며 회차 승인 후 예약이 확정됩니다."
+    }
+  }
+}

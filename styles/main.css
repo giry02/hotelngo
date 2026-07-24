@@ -70,7 +70,7 @@ img, svg { display: block; max-width: 100%; }
 .hero-copy h1, .hero-copy h2 { margin: 0; font-size: 32px; font-weight: 700; line-height: 38px; letter-spacing: normal; }
 .hero-copy p { margin: 14px 0 19px; color: rgb(255 255 255 / 78%); font-size: 14px; line-height: 1.55; }
 .hero-copy a { display: inline-flex; align-items: center; gap: 9px; padding: 10px 14px; color: #171a19; background: #fff; border-radius: 7px; font-size: 12px; font-weight: 600; }.hero-copy a b { font-size: 15px; }
-.hero-controls { position: absolute; right: 20px; bottom: 18px; z-index: 5; display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: rgb(10 18 17 / 45%); border: 1px solid rgb(255 255 255 / 24%); border-radius: 999px; backdrop-filter: blur(8px); }
+.hero-controls { position: absolute; right: 20px; bottom: 68px; z-index: 9; display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: rgb(10 18 17 / 62%); border: 1px solid rgb(255 255 255 / 34%); border-radius: 999px; box-shadow: 0 6px 18px rgb(0 0 0 / 18%); backdrop-filter: blur(8px); }
 .hero-controls > button { display: grid; place-items: center; width: 23px; height: 23px; padding: 0; border: 0; color: #fff; background: transparent; cursor: pointer; }
 .hero-dots { display: flex; align-items: center; gap: 6px; }.hero-dots button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: rgb(255 255 255 / 48%); cursor: pointer; transition: width .2s ease, background .2s ease; }.hero-dots button.is-active { width: 18px; border-radius: 5px; background: #fff; }
 .search-wrap { position: relative; z-index: 8; margin-top: -49px; }

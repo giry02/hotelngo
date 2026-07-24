@@ -3,55 +3,55 @@
   "updatedAt": "2026-07-23T18:30:00+09:00",
   "products": {
     "GOLF": {
-      "providerId":"prv_golf_011","placeId":"plc_golf_011","name":"다낭 힐스 골프 클럽","location":"베트남 다낭 · 바나힐 인근","cover":"assets/images/landmark-bali.jpg","rating":"9.1","reviews":286,
+      "providerId":"prv_golf_011","placeId":"plc_golf_011","name":"다낭 힐스 골프 클럽","location":"베트남 다낭 · 바나힐 인근","cover":"assets/images/marketplace/golf-course.jpg","rating":"9.1","reviews":286,
       "summary":"바다와 산 능선을 함께 보는 36홀 골프 클럽. 코스·티타임·포함 옵션을 비교해 선택합니다.",
       "options":[
-        {"id":"golf_ocean_18","name":"Ocean Course 18홀","description":"Par 72 · 6,940yd · 중급 · 카트 필수","image":"assets/images/hero-hotel.jpg","priceType":"FIXED_PRICE","price":178000,"unit":"1인","includes":["그린피","캐디피","2인 카트"],"slots":["07:10 · 잔여 4명","08:30 · 잔여 2명","13:20 · 잔여 4명"]},
-        {"id":"golf_mountain_18","name":"Mountain Course 18홀","description":"Par 71 · 7,080yd · 상급 · 고저차 구간","image":"assets/images/landmark-kyoto.jpg","priceType":"FROM_PRICE","price":196000,"unit":"1인부터","includes":["그린피","캐디피","2인 카트"],"slots":["06:50 · 잔여 3명","11:40 · 잔여 4명"]},
-        {"id":"golf_twilight_9","name":"Twilight 9홀","description":"Par 36 · 초보·가족 추천 · 15:30 이후","image":"assets/images/stay-gapyeong.jpg","priceType":"FIXED_PRICE","price":92000,"unit":"1인","includes":["그린피","캐디피"],"slots":["15:30 · 잔여 4명","16:10 · 잔여 2명"]}
+        {"id":"golf_ocean_18","name":"Ocean Course 18홀","description":"Par 72 · 6,940yd · 중급 · 카트 필수","image":"assets/images/marketplace/golf-course.jpg","priceType":"FIXED_PRICE","price":178000,"unit":"1인","includes":["그린피","캐디피","2인 카트"],"slots":["07:10 · 잔여 4명","08:30 · 잔여 2명","13:20 · 잔여 4명"]},
+        {"id":"golf_mountain_18","name":"Mountain Course 18홀","description":"Par 71 · 7,080yd · 상급 · 고저차 구간","image":"assets/images/marketplace/golf-green.jpg","priceType":"FROM_PRICE","price":196000,"unit":"1인부터","includes":["그린피","캐디피","2인 카트"],"slots":["06:50 · 잔여 3명","11:40 · 잔여 4명"]},
+        {"id":"golf_twilight_9","name":"Twilight 9홀","description":"Par 36 · 초보·가족 추천 · 15:30 이후","image":"assets/images/marketplace/golf-course.jpg","priceType":"FIXED_PRICE","price":92000,"unit":"1인","includes":["그린피","캐디피"],"slots":["15:30 · 잔여 4명","16:10 · 잔여 2명"]}
       ],
       "extras":[{"id":"club_rental","name":"클럽 풀세트 대여","price":38000},{"id":"hotel_pickup","name":"다낭 호텔 왕복 픽업","price":24000},{"id":"private_cart","name":"1인 전용 카트","price":31000}],
       "bundle":{"title":"하얏트 리젠시 다낭 투숙객 혜택","description":"Ocean Course 18홀 + 호텔 왕복 픽업 선택 시 1인 18,000원 할인","type":"FIXED_DISCOUNT","value":18000}
     },
     "VEHICLE": {
-      "providerId":"prv_vehicle_021","placeId":"plc_vehicle_021","name":"ABC 다낭 트랜스퍼","location":"베트남 다낭 · 공항·호이안","cover":"assets/images/landmark-bangkok.jpg","rating":"8.8","reviews":412,
+      "providerId":"prv_vehicle_021","placeId":"plc_vehicle_021","name":"ABC 다낭 트랜스퍼","location":"베트남 다낭 · 공항·호이안","cover":"assets/images/marketplace/vehicle-airport-transfer.png","rating":"8.8","reviews":412,
       "summary":"승객 수와 수하물, 이동 구간, 기사 포함 여부를 기준으로 차량을 선택합니다.",
       "options":[
-        {"id":"vehicle_sedan","name":"프리미엄 세단 + 기사","description":"성인 3명 · 수하물 2개 · 공항 대기 60분","image":"assets/images/stay-busan.jpg","priceType":"FIXED_PRICE","price":32000,"unit":"다낭 공항→시내 편도","includes":["기사","기본 보험","통행료"],"slots":["09:00","12:00","15:00","18:00"]},
-        {"id":"vehicle_van","name":"7인승 밴 + 기사","description":"성인 6명 · 수하물 5개 · 카시트 요청 가능","image":"assets/images/hero-hotel.jpg","priceType":"FROM_PRICE","price":54000,"unit":"편도부터","includes":["기사","기본 보험","통행료"],"slots":["08:00","11:00","14:00","20:00"]},
-        {"id":"vehicle_suv_day","name":"SUV 일일 대절","description":"성인 4명 · 10시간 · 120km 포함","image":"assets/images/landmark-kyoto.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"견적 요청","includes":["기사","보험","생수"],"slots":["날짜 선택 후 확인"]}
+        {"id":"vehicle_sedan","name":"프리미엄 세단 + 기사","description":"성인 3명 · 수하물 2개 · 공항 대기 60분","image":"assets/images/marketplace/vehicle-sedan.jpg","priceType":"FIXED_PRICE","price":32000,"unit":"다낭 공항→시내 편도","includes":["기사","기본 보험","통행료"],"slots":["09:00","12:00","15:00","18:00"]},
+        {"id":"vehicle_van","name":"7인승 밴 + 기사","description":"성인 6명 · 수하물 5개 · 카시트 요청 가능","image":"assets/images/marketplace/vehicle-airport-transfer.png","priceType":"FROM_PRICE","price":54000,"unit":"편도부터","includes":["기사","기본 보험","통행료"],"slots":["08:00","11:00","14:00","20:00"]},
+        {"id":"vehicle_suv_day","name":"SUV 일일 대절","description":"성인 4명 · 10시간 · 120km 포함","image":"assets/images/marketplace/vehicle-sedan.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"견적 요청","includes":["기사","보험","생수"],"slots":["날짜 선택 후 확인"]}
       ],
       "extras":[{"id":"child_seat","name":"유아 카시트","price":8000},{"id":"extra_hour","name":"추가 1시간","price":12000},{"id":"hoian_surcharge","name":"호이안 지역 추가","price":18000}],
       "bundle":{"title":"호텔 체크인 연결 혜택","description":"HotelnGo 호텔 예약과 같은 날 공항 픽업을 추가하면 대기 30분 무료 연장","type":"FREE_OPTION","value":"대기 30분"}
     },
     "RESTAURANT": {
-      "providerId":"prv_restaurant_031","placeId":"plc_restaurant_031","name":"짜오 비치 키친","location":"베트남 다낭 · 미케비치","cover":"assets/images/stay-jeju.jpg","rating":"9.0","reviews":638,
+      "providerId":"prv_restaurant_031","placeId":"plc_restaurant_031","name":"짜오 비치 키친","location":"베트남 다낭 · 미케비치","cover":"assets/images/marketplace/restaurant-interior.jpg","rating":"9.0","reviews":638,
       "summary":"메뉴와 식사 구성을 먼저 보고 테이블·룸과 시간을 선택하는 해산물 레스토랑입니다.",
       "options":[
-        {"id":"food_sunset_set","name":"선셋 해산물 2인 코스","description":"그릴 새우, 오늘의 생선, 모닝글로리, 볶음밥, 디저트","image":"assets/images/stay-jeju.jpg","priceType":"FIXED_PRICE","price":68000,"unit":"2인","includes":["창가 테이블 요청","웰컴 드링크"],"slots":["17:30 · 잔여 4테이블","18:00 · 잔여 2테이블","19:30 · 잔여 6테이블"]},
-        {"id":"food_family_set","name":"패밀리 시푸드 세트","description":"칠리크랩, 조개찜, 오징어, 볶음밥, 어린이 음료","image":"assets/images/landmark-bali.jpg","priceType":"FROM_PRICE","price":112000,"unit":"4인부터","includes":["어린이 식기","매운맛 조절"],"slots":["17:00 · 잔여 3테이블","19:00 · 잔여 4테이블"]},
-        {"id":"food_private_room","name":"프라이빗 룸 셰프 코스","description":"계절 재료 7코스 · 알레르기 사전 확인","image":"assets/images/landmark-paris.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"6–12인 견적","includes":["프라이빗 룸","전담 서버"],"slots":["요청 후 24시간 내 확인"]}
+        {"id":"food_sunset_set","name":"선셋 해산물 2인 코스","description":"그릴 새우, 오늘의 생선, 모닝글로리, 볶음밥, 디저트","image":"assets/images/marketplace/restaurant-dining.jpg","priceType":"FIXED_PRICE","price":68000,"unit":"2인","includes":["창가 테이블 요청","웰컴 드링크"],"slots":["17:30 · 잔여 4테이블","18:00 · 잔여 2테이블","19:30 · 잔여 6테이블"]},
+        {"id":"food_family_set","name":"패밀리 시푸드 세트","description":"칠리크랩, 조개찜, 오징어, 볶음밥, 어린이 음료","image":"assets/images/marketplace/restaurant-dining.jpg","priceType":"FROM_PRICE","price":112000,"unit":"4인부터","includes":["어린이 식기","매운맛 조절"],"slots":["17:00 · 잔여 3테이블","19:00 · 잔여 4테이블"]},
+        {"id":"food_private_room","name":"프라이빗 룸 셰프 코스","description":"계절 재료 7코스 · 알레르기 사전 확인","image":"assets/images/marketplace/restaurant-interior.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"6–12인 견적","includes":["프라이빗 룸","전담 서버"],"slots":["요청 후 24시간 내 확인"]}
       ],
       "extras":[{"id":"birthday_cake","name":"미니 생일 케이크","price":18000},{"id":"wine_pairing","name":"와인 페어링 2잔","price":26000},{"id":"pickup","name":"호텔 픽업 요청","price":0}],
       "bundle":{"title":"리조트 투숙객 디너 혜택","description":"제휴 호텔 투숙 인증 시 선셋 코스 웰컴 칵테일 2잔 제공","type":"FREE_OPTION","value":"칵테일 2잔"}
     },
     "SPA": {
-      "providerId":"prv_spa_041","placeId":"plc_spa_041","name":"Bangkok Riverside Spa","location":"태국 방콕 · 차오프라야 강변","cover":"assets/images/landmark-bangkok.jpg","rating":"9.3","reviews":521,
+      "providerId":"prv_spa_041","placeId":"plc_spa_041","name":"Bangkok Riverside Spa","location":"태국 방콕 · 차오프라야 강변","cover":"assets/images/marketplace/spa-treatment.jpg","rating":"9.3","reviews":521,
       "summary":"마사지 기법과 시간, 싱글·커플룸, 픽업 여부를 비교해 프로그램을 선택합니다.",
       "options":[
-        {"id":"spa_aroma_90","name":"아로마 테라피 90분","description":"중간 압 · 오일 3종 선택 · 전신 릴랙싱","image":"assets/images/stay-gangneung.jpg","priceType":"FIXED_PRICE","price":72000,"unit":"1인","includes":["풋배스","허브티","샤워"],"slots":["15:00 · 싱글 3","16:30 · 커플룸 1","18:00 · 싱글 4"]},
-        {"id":"spa_thai_60","name":"타이 마사지 60분","description":"중·강 압 선택 · 오일 미사용 · 스트레칭 중심","image":"assets/images/landmark-kyoto.jpg","priceType":"FIXED_PRICE","price":39000,"unit":"1인","includes":["풋배스","허브티"],"slots":["14:00","15:30","17:00","19:00"]},
-        {"id":"spa_couple_120","name":"커플 리버뷰 패키지 120분","description":"아로마 90분 + 스크럽 30분 · 커플룸","image":"assets/images/hero-hotel.jpg","priceType":"FROM_PRICE","price":168000,"unit":"2인부터","includes":["커플룸","샤워","디저트"],"slots":["13:30 · 잔여 1룸","17:30 · 잔여 2룸"]}
+        {"id":"spa_aroma_90","name":"아로마 테라피 90분","description":"중간 압 · 오일 3종 선택 · 전신 릴랙싱","image":"assets/images/marketplace/spa-treatment.jpg","priceType":"FIXED_PRICE","price":72000,"unit":"1인","includes":["풋배스","허브티","샤워"],"slots":["15:00 · 싱글 3","16:30 · 커플룸 1","18:00 · 싱글 4"]},
+        {"id":"spa_thai_60","name":"타이 마사지 60분","description":"중·강 압 선택 · 오일 미사용 · 스트레칭 중심","image":"assets/images/marketplace/spa-room.jpg","priceType":"FIXED_PRICE","price":39000,"unit":"1인","includes":["풋배스","허브티"],"slots":["14:00","15:30","17:00","19:00"]},
+        {"id":"spa_couple_120","name":"커플 리버뷰 패키지 120분","description":"아로마 90분 + 스크럽 30분 · 커플룸","image":"assets/images/marketplace/spa-room.jpg","priceType":"FROM_PRICE","price":168000,"unit":"2인부터","includes":["커플룸","샤워","디저트"],"slots":["13:30 · 잔여 1룸","17:30 · 잔여 2룸"]}
       ],
       "extras":[{"id":"hotel_pickup","name":"강변 호텔 왕복 픽업","price":12000},{"id":"pregnancy","name":"임산부 전용 상담","price":0},{"id":"extra_30","name":"아로마 30분 연장","price":24000}],
       "bundle":{"title":"HotelnGo 호텔 결합 혜택","description":"방콕 제휴 호텔 예약번호 연결 시 왕복 픽업 50% 할인","type":"PERCENT_DISCOUNT","value":"50%"}
     },
     "TOUR": {
-      "providerId":"prv_tour_051","placeId":"plc_tour_051","name":"Arashiyama Local Walk","location":"일본 교토 · 아라시야마","cover":"assets/images/landmark-kyoto.jpg","rating":"9.5","reviews":173,
+      "providerId":"prv_tour_051","placeId":"plc_tour_051","name":"Arashiyama Local Walk","location":"일본 교토 · 아라시야마","cover":"assets/images/marketplace/tour-kyoto.jpg","rating":"9.5","reviews":173,
       "summary":"출발 회차와 가이드 언어, 픽업, 인원 옵션을 선택하는 소규모 로컬 워크입니다.",
       "options":[
-        {"id":"tour_morning","name":"아라시야마 아침 산책","description":"08:00 출발 · 3시간 · 최대 8명 · 한국어/영어","image":"assets/images/landmark-kyoto.jpg","priceType":"FIXED_PRICE","price":49000,"unit":"1인","includes":["현지 가이드","차 시음"],"slots":["08:00 · 한국어 잔여 3","08:30 · 영어 잔여 5"]},
-        {"id":"tour_private","name":"프라이빗 대나무숲·사가 코스","description":"4시간 · 1–6명 · 출발시간 협의","image":"assets/images/landmark-bali.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"팀 견적","includes":["전담 가이드","사진 촬영"],"slots":["날짜 선택 후 확인"]}
+        {"id":"tour_morning","name":"아라시야마 아침 산책","description":"08:00 출발 · 3시간 · 최대 8명 · 한국어/영어","image":"assets/images/marketplace/tour-bamboo.jpg","priceType":"FIXED_PRICE","price":49000,"unit":"1인","includes":["현지 가이드","차 시음"],"slots":["08:00 · 한국어 잔여 3","08:30 · 영어 잔여 5"]},
+        {"id":"tour_private","name":"프라이빗 대나무숲·사가 코스","description":"4시간 · 1–6명 · 출발시간 협의","image":"assets/images/marketplace/tour-kyoto.jpg","priceType":"REQUEST_QUOTE","price":0,"unit":"팀 견적","includes":["전담 가이드","사진 촬영"],"slots":["날짜 선택 후 확인"]}
       ],
       "extras":[{"id":"hotel_pickup","name":"교토역·호텔 픽업","price":16000},{"id":"kimono","name":"기모노 대여 연결","price":42000}],
       "bundle":{"title":"교토 숙박 결합 혜택","description":"제휴 호텔 2박 이상 예약 시 한국어 아침 산책 10% 할인","type":"PERCENT_DISCOUNT","value":"10%"}
