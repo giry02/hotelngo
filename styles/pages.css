@@ -476,6 +476,18 @@
   .place-market-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
+.discover-context-shell{border-bottom:1px solid #e8edf4;background:#fff}
+.discover-context-shell>.shell{display:grid;grid-template-columns:minmax(280px,1fr) auto;gap:20px;align-items:center;padding-top:18px;padding-bottom:18px}
+.discover-context-copy strong,.discover-context-copy p{display:block}
+.discover-context-copy strong{margin-top:3px;font-size:17px}
+.discover-context-copy p{max-width:720px;margin:5px 0 0;color:#69768a;font-size:12px;line-height:1.5}
+.discover-context-actions,.discover-city-cta{display:flex;gap:6px;flex-wrap:wrap}
+.discover-context-actions a,.discover-city-cta a,.discover-city-cta button{border:1px solid #dce3ed;border-radius:999px;background:#fff;padding:8px 11px;color:#46546a;font-size:11px;font-weight:800;text-decoration:none;cursor:pointer}
+.discover-context-actions a.is-active{border-color:#2f6bff;background:#2f6bff;color:#fff}
+.discover-city-cta{grid-column:1/-1;border-top:1px solid #eef1f5;padding-top:12px}
+.discover-city-cta a:first-child{background:#162a4a;border-color:#162a4a;color:#fff}
+@media(max-width:760px){.discover-context-shell>.shell{grid-template-columns:1fr}.discover-context-actions{justify-content:flex-start}}
+
 @media (max-width: 800px) {
   .page-main { padding-bottom: 40px; }.page-head { align-items: flex-start; flex-direction: column; }
   .compact-search { grid-template-columns: 1fr 1fr; gap: 8px; }.compact-search label,.compact-search label:first-child { padding: 8px 10px; border: 1px solid var(--border-soft); border-radius: 8px; }.compact-search button { grid-column: 1 / -1; margin: 0; }

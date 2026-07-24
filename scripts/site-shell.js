@@ -45,10 +45,9 @@
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
-    ['community', '여행 일정', 'community.html'],
+    ['planner', '여행 일정', 'trip-planner.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
-    ['places', '현지 장소', 'places.html'],
     ['ai', 'AI 여행', 'ai-travel.html'],
     ['trips', '내 여행', 'trips.html']
   ];

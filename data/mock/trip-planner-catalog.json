@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-07-24T18:30:00+09:00",
+  "categories": [
+    {"id":"ALL","label":"전체"},
+    {"id":"STAY","label":"숙소"},
+    {"id":"LANDMARK","label":"랜드마크"},
+    {"id":"FOOD","label":"식사·카페"},
+    {"id":"GOLF","label":"골프"},
+    {"id":"SPA","label":"마사지·스파"},
+    {"id":"TOUR","label":"투어·체험"},
+    {"id":"TRANSPORT","label":"이동"}
+  ],
+  "destinations": [
+    {
+      "id":"danang",
+      "name":"다낭",
+      "country":"베트남",
+      "cover":"assets/images/hero-hotel.jpg",
+      "summary":"바다 휴양, 호이안의 저녁, 골프와 미식을 짧은 이동으로 연결하기 좋은 도시",
+      "recommendedNights":4,
+      "items":[
+        {"id":"danang_hotel_ocean","category":"STAY","title":"다낭 오션 리조트","area":"논느억 비치","image":"assets/images/marketplace/hotel-resort.jpg","description":"해변과 수영장을 갖춘 5성급 리조트. 4박 기준 조식 포함 Mock 요금입니다.","duration":0,"recommendedTime":"15:00","price":612000,"priceLabel":"4박 612,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE"},
+        {"id":"danang_hotel_sala","category":"STAY","title":"살라 다낭 비치 호텔","area":"미케 비치","image":"assets/images/marketplace/hotel-bedroom.jpg","description":"미케 비치 도보 3분, 루프톱 수영장과 시내 이동이 편한 호텔입니다.","duration":0,"recommendedTime":"15:00","price":438000,"priceLabel":"4박 438,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE"},
+        {"id":"danang_mykhe","category":"LANDMARK","title":"미케 비치 아침 산책","area":"미케 비치","image":"assets/images/hero-hotel.jpg","description":"더워지기 전 바다를 걷고 카페에 들르기 좋은 아침 동선입니다.","duration":90,"recommendedTime":"07:30","price":0,"priceLabel":"무료","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"danang_sontra","category":"LANDMARK","title":"선짜 반도 전망 드라이브","area":"선짜 반도","image":"assets/images/stay-jeju.jpg","description":"해안 전망과 영응사를 연결하는 반일 코스. 차량 이동이 필요합니다.","duration":180,"recommendedTime":"09:30","price":0,"priceLabel":"방문 정보","bookingType":"INFORMATION_ONLY","status":"CHECK_REQUIRED"},
+        {"id":"danang_dragon","category":"LANDMARK","title":"용다리와 한강 야경","area":"다낭 시내","image":"assets/images/landmark-bangkok.jpg","description":"저녁 식사 전후로 강변과 야경을 가볍게 걷는 코스입니다.","duration":75,"recommendedTime":"20:00","price":0,"priceLabel":"무료","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"danang_hoian","category":"TOUR","title":"호이안 올드타운 선셋 투어","area":"호이안","image":"assets/images/landmark-kyoto.jpg","description":"호텔 픽업, 올드타운 산책과 야시장 자유시간을 포함한 반일 투어입니다.","duration":240,"recommendedTime":"14:30","price":72000,"priceLabel":"1인 72,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"danang_banahill","category":"TOUR","title":"바나힐 종일 투어","area":"바나힐","image":"assets/images/landmark-bali.jpg","description":"케이블카와 골든브리지를 포함합니다. 하루 전체를 사용하는 일정입니다.","duration":600,"recommendedTime":"07:30","price":118000,"priceLabel":"1인 118,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"},
+        {"id":"danang_food_chao","category":"FOOD","title":"짜오 비치 키친 선셋 디너","area":"미케 비치","image":"assets/images/marketplace/restaurant-dining.jpg","description":"베트남식 해산물 2인 코스와 창가 테이블 요청이 포함됩니다.","duration":120,"recommendedTime":"18:00","price":68000,"priceLabel":"2인 68,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"danang_food_local","category":"FOOD","title":"한시장 로컬 점심","area":"한시장","image":"assets/images/marketplace/restaurant-interior.jpg","description":"쌀국수, 반쎄오와 베트남 커피를 선택하는 가벼운 점심 코스입니다.","duration":75,"recommendedTime":"12:00","price":24000,"priceLabel":"2인 약 24,000원","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"danang_food_hoian","category":"FOOD","title":"호이안 올드타운 저녁","area":"호이안","image":"assets/images/marketplace/restaurant-dining.jpg","description":"까오러우와 화이트로즈를 맛보는 저녁 식사 후보입니다.","duration":90,"recommendedTime":"18:30","price":36000,"priceLabel":"2인 약 36,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"},
+        {"id":"danang_golf_ocean","category":"GOLF","title":"다낭 힐스 Ocean Course 18홀","area":"바나힐 인근","image":"assets/images/marketplace/golf-course.jpg","description":"Par 72, 캐디피와 2인 카트 포함. 호텔 왕복 픽업을 추가할 수 있습니다.","duration":330,"recommendedTime":"07:10","price":178000,"priceLabel":"1인 178,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"danang_golf_twilight","category":"GOLF","title":"다낭 힐스 Twilight 9홀","area":"바나힐 인근","image":"assets/images/marketplace/golf-green.jpg","description":"초보와 가족에게 적합한 오후 9홀. 캐디피가 포함됩니다.","duration":180,"recommendedTime":"15:30","price":92000,"priceLabel":"1인 92,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"danang_spa_aroma","category":"SPA","title":"미케 비치 아로마 스파 90분","area":"미케 비치","image":"assets/images/marketplace/spa-treatment.jpg","description":"전신 아로마 마사지, 풋배스와 샤워가 포함된 휴식 프로그램입니다.","duration":120,"recommendedTime":"16:00","price":54000,"priceLabel":"1인 54,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"},
+        {"id":"danang_transfer_airport","category":"TRANSPORT","title":"다낭 공항→호텔 전용 차량","area":"다낭 공항","image":"assets/images/marketplace/vehicle-airport-transfer.png","description":"성인 3명과 수하물 2개 기준 기사 포함 편도 차량입니다.","duration":45,"recommendedTime":"14:00","price":32000,"priceLabel":"차량 1대 32,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"danang_transfer_hoian","category":"TRANSPORT","title":"다낭↔호이안 왕복 차량","area":"다낭·호이안","image":"assets/images/marketplace/vehicle-sedan.jpg","description":"호이안 반일 일정에 맞춘 기사 포함 왕복 차량입니다.","duration":90,"recommendedTime":"13:00","price":68000,"priceLabel":"차량 1대 68,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"}
+      ],
+      "template":[
+        {"day":1,"time":"14:00","itemId":"danang_transfer_airport"},
+        {"day":1,"time":"15:30","itemId":"danang_hotel_ocean"},
+        {"day":1,"time":"18:30","itemId":"danang_food_chao"},
+        {"day":2,"time":"07:30","itemId":"danang_mykhe"},
+        {"day":2,"time":"12:00","itemId":"danang_food_local"},
+        {"day":2,"time":"16:00","itemId":"danang_spa_aroma"},
+        {"day":2,"time":"20:00","itemId":"danang_dragon"},
+        {"day":3,"time":"07:10","itemId":"danang_golf_ocean"},
+        {"day":3,"time":"14:30","itemId":"danang_food_local"},
+        {"day":4,"time":"12:30","itemId":"danang_transfer_hoian"},
+        {"day":4,"time":"14:30","itemId":"danang_hoian"},
+        {"day":4,"time":"19:00","itemId":"danang_food_hoian"},
+        {"day":5,"time":"09:30","itemId":"danang_sontra"},
+        {"day":5,"time":"14:00","itemId":"danang_transfer_airport"}
+      ]
+    },
+    {
+      "id":"bangkok",
+      "name":"방콕",
+      "country":"태국",
+      "cover":"assets/images/landmark-bangkok.jpg",
+      "summary":"왕궁과 강변, 늦은 밤의 미식과 스파를 한 도시 안에서 조합하는 여행",
+      "recommendedNights":4,
+      "items":[
+        {"id":"bangkok_hotel","category":"STAY","title":"차오프라야 리버 호텔","area":"강변","image":"assets/images/marketplace/hotel-suite.jpg","description":"수상교통과 야경 접근성이 좋은 강변 호텔입니다.","duration":0,"recommendedTime":"15:00","price":548000,"priceLabel":"4박 548,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE"},
+        {"id":"bangkok_palace","category":"LANDMARK","title":"왕궁과 왓포 오전 산책","area":"올드타운","image":"assets/images/landmark-bangkok.jpg","description":"더위와 혼잡을 피해 오전에 둘러보는 대표 랜드마크 동선입니다.","duration":210,"recommendedTime":"08:30","price":22000,"priceLabel":"입장료 약 22,000원","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"bangkok_food","category":"FOOD","title":"차이나타운 야시장 미식","area":"야오와랏","image":"assets/images/marketplace/restaurant-dining.jpg","description":"길거리 음식과 디저트를 여러 곳에서 나눠 먹는 저녁 코스입니다.","duration":180,"recommendedTime":"19:00","price":48000,"priceLabel":"2인 약 48,000원","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"bangkok_spa","category":"SPA","title":"Riverside Aroma 90분","area":"강변","image":"assets/images/marketplace/spa-treatment.jpg","description":"풋배스와 샤워를 포함한 강변 스파 프로그램입니다.","duration":120,"recommendedTime":"16:30","price":72000,"priceLabel":"1인 72,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"bangkok_golf","category":"GOLF","title":"Bangkok Riverside 18홀","area":"방콕 외곽","image":"assets/images/marketplace/golf-course.jpg","description":"호텔 왕복 차량과 캐디·카트를 포함한 오전 라운드입니다.","duration":390,"recommendedTime":"07:00","price":214000,"priceLabel":"1인 214,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"},
+        {"id":"bangkok_boat","category":"TOUR","title":"차오프라야 선셋 보트","area":"강변","image":"assets/images/stay-busan.jpg","description":"강변 사원과 야경을 보는 2시간 보트 투어입니다.","duration":120,"recommendedTime":"17:30","price":42000,"priceLabel":"1인 42,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE"},
+        {"id":"bangkok_transfer","category":"TRANSPORT","title":"수완나품 공항→호텔 차량","area":"수완나품 공항","image":"assets/images/marketplace/vehicle-sedan.jpg","description":"기사 포함 공항 픽업 차량입니다.","duration":75,"recommendedTime":"14:00","price":46000,"priceLabel":"차량 1대 46,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"}
+      ],
+      "template":[
+        {"day":1,"time":"14:00","itemId":"bangkok_transfer"},{"day":1,"time":"15:30","itemId":"bangkok_hotel"},{"day":1,"time":"19:00","itemId":"bangkok_food"},
+        {"day":2,"time":"08:30","itemId":"bangkok_palace"},{"day":2,"time":"17:30","itemId":"bangkok_boat"},
+        {"day":3,"time":"07:00","itemId":"bangkok_golf"},{"day":3,"time":"16:30","itemId":"bangkok_spa"}
+      ]
+    },
+    {
+      "id":"bali",
+      "name":"발리",
+      "country":"인도네시아",
+      "cover":"assets/images/landmark-bali.jpg",
+      "summary":"리조트와 자연, 사원, 스파를 천천히 이어가는 휴식 중심 여행",
+      "recommendedNights":4,
+      "items":[
+        {"id":"bali_hotel","category":"STAY","title":"우붓 포레스트 리조트","area":"우붓","image":"assets/images/marketplace/hotel-resort.jpg","description":"숲과 수영장을 갖춘 우붓 휴양 리조트입니다.","duration":0,"recommendedTime":"15:00","price":624000,"priceLabel":"4박 624,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE"},
+        {"id":"bali_ubud","category":"LANDMARK","title":"우붓 왕궁과 시장","area":"우붓","image":"assets/images/landmark-bali.jpg","description":"왕궁과 시장, 카페를 도보로 연결하는 반일 일정입니다.","duration":180,"recommendedTime":"09:00","price":0,"priceLabel":"방문 정보","bookingType":"INFORMATION_ONLY","status":"VERIFIED"},
+        {"id":"bali_tanahlot","category":"LANDMARK","title":"타나롯 선셋","area":"타나롯","image":"assets/images/stay-jeju.jpg","description":"일몰 시간과 교통을 확인해야 하는 해안 사원 방문입니다.","duration":180,"recommendedTime":"16:00","price":12000,"priceLabel":"입장료 약 12,000원","bookingType":"INFORMATION_ONLY","status":"CHECK_REQUIRED"},
+        {"id":"bali_food","category":"FOOD","title":"우붓 팜투테이블 디너","area":"우붓","image":"assets/images/marketplace/restaurant-interior.jpg","description":"현지 식재료를 사용한 5코스 저녁 식사입니다.","duration":120,"recommendedTime":"18:30","price":84000,"priceLabel":"2인 84,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"bali_spa","category":"SPA","title":"발리니즈 마사지 120분","area":"우붓","image":"assets/images/marketplace/spa-room.jpg","description":"스크럽과 플라워배스를 포함한 2시간 프로그램입니다.","duration":150,"recommendedTime":"15:30","price":92000,"priceLabel":"1인 92,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"bali_golf","category":"GOLF","title":"발리 내셔널 18홀","area":"누사두아","image":"assets/images/marketplace/golf-green.jpg","description":"캐디와 카트를 포함한 오전 18홀입니다.","duration":360,"recommendedTime":"07:20","price":238000,"priceLabel":"1인 238,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED"},
+        {"id":"bali_tour","category":"TOUR","title":"뜨갈랄랑·사원 프라이빗 투어","area":"우붓 북부","image":"assets/images/marketplace/tour-bamboo.jpg","description":"계단식 논과 사원을 차량으로 연결하는 하루 투어입니다.","duration":480,"recommendedTime":"08:30","price":96000,"priceLabel":"차량 1대 96,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"},
+        {"id":"bali_transfer","category":"TRANSPORT","title":"덴파사르 공항→우붓 차량","area":"덴파사르 공항","image":"assets/images/marketplace/vehicle-airport-transfer.png","description":"교통 상황을 반영해 여유 있게 잡는 공항 픽업입니다.","duration":120,"recommendedTime":"13:30","price":42000,"priceLabel":"차량 1대 42,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE"}
+      ],
+      "template":[
+        {"day":1,"time":"13:30","itemId":"bali_transfer"},{"day":1,"time":"15:30","itemId":"bali_hotel"},{"day":1,"time":"18:30","itemId":"bali_food"},
+        {"day":2,"time":"09:00","itemId":"bali_ubud"},{"day":2,"time":"15:30","itemId":"bali_spa"},
+        {"day":3,"time":"07:20","itemId":"bali_golf"},{"day":4,"time":"08:30","itemId":"bali_tour"},{"day":4,"time":"16:00","itemId":"bali_tanahlot"}
+      ]
+    }
+  ]
+}

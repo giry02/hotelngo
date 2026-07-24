@@ -77,6 +77,29 @@
     return `hotels.html?${params.toString()}`;
   };
 
+  const openFullTripPlanner = (destination) => {
+    const text = prompt.value.trim();
+    const durationMatch = text.match(/(\d+)\s*박/);
+    const nights = Math.min(10, Math.max(2, Number(durationMatch?.[1] || 4)));
+    const params = new URLSearchParams({
+      destination: destination.name,
+      nights: String(nights),
+      mode: 'ai',
+      prompt: text
+    });
+    if (/오늘/.test(text)) {
+      const start = new Date();
+      const end = new Date(start);
+      end.setDate(end.getDate() + nights);
+      params.set('startDate', formatDate(start));
+      params.set('endDate', formatDate(end));
+    }
+    location.href = `trip-planner.html?${params.toString()}`;
+  };
+
+  const supportsFullTripPlanner = (destination) =>
+    ['다낭', '방콕', '발리'].includes(destination?.name);
+
   const buildPlan = (destination) => {
     const text = prompt.value.trim();
     const preferences = detectPreferences(text);
@@ -319,6 +342,11 @@
     }
     prompt.removeAttribute('aria-invalid');
     selectedDestinationId = null;
+    const explicitDestination = detectDestination(prompt.value.trim());
+    if (supportsFullTripPlanner(explicitDestination)) {
+      openFullTripPlanner(explicitDestination);
+      return;
+    }
     render();
   });
 
@@ -332,6 +360,11 @@
   output.addEventListener('click', (event) => {
     const destinationButton = event.target.closest('[data-ai-destination]');
     if (destinationButton) {
+      const destination = knowledge.destinations.find((item) => item.id === destinationButton.dataset.aiDestination);
+      if (supportsFullTripPlanner(destination)) {
+        openFullTripPlanner(destination);
+        return;
+      }
       selectedDestinationId = destinationButton.dataset.aiDestination;
       render();
       return;

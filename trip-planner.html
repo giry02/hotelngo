@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="선택한 여행지의 랜드마크, 식사, 골프, 스파, 투어와 이동을 비교하고 일정에 추가하세요.">
-  <title>즐길거리 · HotelnGo</title>
+  <meta name="description" content="목적지와 날짜를 정하고 호텔, 랜드마크, 식사, 골프, 스파와 이동을 날짜별로 조합하는 HotelnGo 여행 일정 편집기">
+  <title>여행 일정 만들기 · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
   <link rel="stylesheet" href="styles/main.css?v=29">
@@ -13,18 +13,18 @@
   <script src="scripts/site-shell.js?v=13" defer></script>
   <script src="scripts/mock-api.js?v=7" defer></script>
   <script src="scripts/auth.js?v=4" defer></script>
-  <script src="scripts/experiences.js?v=1" defer></script>
+  <script src="scripts/trip-planner.js?v=1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
-  <div data-site-header data-active="experiences"></div>
-  <main class="page-main" id="main-content">
-    <div class="shell" data-experience-root>
-      <div class="empty-state"><strong>여행지별 즐길거리를 준비하고 있습니다.</strong></div>
+  <div data-site-header data-active="planner"></div>
+  <main class="page-main trip-planner-page" id="main-content">
+    <div class="shell" data-trip-planner-root>
+      <div class="empty-state"><strong>여행 일정 편집기를 준비하고 있습니다.</strong><p>목적지·날짜와 현지 상품 JSON을 불러오는 중입니다.</p></div>
     </div>
   </main>
   <div data-site-footer></div>
-  <div data-site-mobile-nav data-active="hotels"></div>
+  <div data-site-mobile-nav data-active="trips"></div>
   <div class="toast" role="status" aria-live="polite" data-toast></div>
 </body>
 </html>

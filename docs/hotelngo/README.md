@@ -26,9 +26,10 @@
 20. `19-original-plan-gap-and-partner-execution.md` — 원문 계획 대조표와 파트너·업종별 구현/잔여 실행 범위
 21. `20-role-use-cases-and-content-ownership.md` — 여행자·호텔·비호텔 파트너·관리자 유즈케이스와 PMS/B2C 콘텐츠 소유권
 22. `21-role-flow-browser-qa.md` — 호텔·액티비티·회원 일정·관리자 역할 흐름의 브라우저 검증과 외부 미연결 범위
-23. `22-end-to-end-process-validation.md` — 191개 화면·18개 유스케이스·역할 간 상태 전달·AI/PMS/결제 경계의 종합 검증
+23. `22-end-to-end-process-validation.md` — 전체 화면·유스케이스·역할 간 상태 전달·AI/PMS/결제 경계의 종합 검증
 24. `23-southeast-asia-same-day-user-journey-qa.md` — 오늘 출발 동남아 탐색·선택·Mock 예약 사용자 테스트와 실서비스 차이
-25. `HotelNGo_페이지별_구현현황_및_구성도.xlsx` — 전체 화면·메뉴·유스케이스·검증 결과·실서비스 백로그 통합 구성도
+25. `24-product-menu-identity-and-trip-composer-blueprint.md` — 메뉴별 고객 질문·책임·하위 기능과 다일정 여행 조합 기준선
+26. `HotelNGo_페이지별_구현현황_및_구성도.xlsx` — 193개 화면·메뉴·유스케이스·검증 결과·실서비스 백로그 통합 구성도
 
 ## 문서 사용 규칙
 

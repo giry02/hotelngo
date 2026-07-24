@@ -193,37 +193,21 @@
     if (tripButton) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      if (!session) {
-        location.href = `login.html?returnUrl=${encodeURIComponent(`${route}${location.search}`)}`;
-        return;
-      }
       const title = tripButton.dataset.tripTitle
         || document.querySelector('h1')?.textContent.trim()
         || tripButton.closest('article')?.querySelector('h2, h3, strong')?.textContent.trim()
         || document.title;
-      const trip = await addToTrip({
-        title,
-        type: tripButton.dataset.tripType || 'PLACE',
-        sourceId: tripButton.dataset.tripId || `${route}:${new URLSearchParams(location.search).get('id') || 'page'}`
+      const sourceId = tripButton.dataset.tripId || `${route}:${new URLSearchParams(location.search).get('id') || 'page'}`;
+      let context = {};
+      try { context = JSON.parse(localStorage.getItem('hotelngo.trip.context.v1') || '{}'); } catch {}
+      const next = new URLSearchParams({
+        destination: new URLSearchParams(location.search).get('destination') || context.destination || '다낭',
+        focus: sourceId,
+        candidateTitle: title,
+        candidateType: tripButton.dataset.tripType || 'LANDMARK'
       });
-      tripButton.textContent = '일정에 담김';
-      tripButton.classList.add('soft');
-      tripButton.setAttribute('aria-pressed', 'true');
-      if (tripButton.dataset.landmarkCandidate) {
-        const selectedId = tripButton.dataset.tripId;
-        document.querySelectorAll('[data-landmark-card]').forEach((card) => {
-          card.classList.toggle('is-selected', card.dataset.landmarkCard === selectedId);
-        });
-        const flow = document.querySelector('[data-landmark-flow]');
-        if (flow) {
-          flow.dataset.stage = 'added';
-          const selected = landmarkOptions.find((item) => item.id === selectedId);
-          const status = flow.querySelector('[data-landmark-flow-status]');
-          if (status && selected) status.textContent = `‘${selected.name}’을(를) 내 여행 1일차에 담았습니다. 여행 일정에서 시간과 순서를 바꿀 수 있어요.`;
-        }
-        tripButton.closest('dialog')?.close();
-      }
-      showToast(`‘${trip.title}’ 일정에 추가했습니다.`);
+      if (context.tripId) next.set('tripId', context.tripId);
+      location.href = `trip-planner.html?${next.toString()}`;
       return;
     }
 
@@ -483,7 +467,7 @@
     if (!main || main.querySelector('[data-platform-trip-list]')) return;
     const trips = api.list('trips').filter((item) => item.ownerId === memberId);
     const head = main.querySelector('.page-head, .content-section-head');
-    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIP JSON</span><h2>저장된 나의 여행</h2><p>직접 만든 일정, 공개 가이드에서 복사한 일정, AI가 만든 초안을 같은 구조로 편집합니다.</p></div><a class="ui-button primary" href="trip-editor.html">새 여행 만들기</a></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(trip.sourceType)} · ${trip.items?.length || 0}개 일정 · ${escapeHtml(trip.status)}</small></div><div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(trip.id)}">예약 준비도</a><a class="ui-button primary" href="trip-editor.html?tripId=${encodeURIComponent(trip.id)}">편집</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
+    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIP JSON</span><h2>저장된 나의 여행</h2><p>직접 만든 일정, 공개 가이드에서 복사한 일정, AI가 만든 초안을 같은 구조로 편집합니다.</p></div><a class="ui-button primary" href="trip-planner.html">새 여행 만들기</a></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(trip.sourceType)} · ${trip.items?.length || 0}개 일정 · ${escapeHtml(trip.status)}</small></div><div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(trip.id)}">예약 준비도</a><a class="ui-button primary" href="trip-planner.html?tripId=${encodeURIComponent(trip.id)}">편집</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
     if (head) head.insertAdjacentHTML('afterend', html);
     else main.insertAdjacentHTML('afterbegin', html);
   };
