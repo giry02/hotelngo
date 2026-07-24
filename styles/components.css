@@ -19,12 +19,13 @@
 }
 
 .ui-select__trigger {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  min-height: 42px;
+  min-height: 44px;
   padding: 10px 38px 10px 13px;
   border: 1px solid #d8dde5;
   border-radius: 10px;
@@ -86,6 +87,15 @@
   background: #fff;
   box-shadow: 0 16px 40px rgb(15 23 42 / 16%), 0 3px 10px rgb(15 23 42 / 8%);
   list-style: none;
+}
+
+.ui-select__menu--portal {
+  position: fixed;
+  z-index: 2000;
+  right: auto;
+  top: 0;
+  box-sizing: border-box;
+  overscroll-behavior: contain;
 }
 
 .ui-select__option {

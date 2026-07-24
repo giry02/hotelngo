@@ -4,6 +4,9 @@
 .planner-hero h1{margin:8px 0 10px;font-size:clamp(32px,4vw,52px);line-height:1.13;letter-spacing:-.055em}
 .planner-hero p{max-width:760px;margin:0;color:#596579;font-size:16px;line-height:1.7}
 .planner-hero-actions{display:flex;gap:8px;flex-wrap:wrap;flex:0 0 auto}
+.planner-hero-actions .ui-button{gap:8px}
+.planner-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:18px;height:18px}
+.planner-icon svg{display:block;width:100%;height:100%}
 .planner-setup{background:#fff;border:1px solid #dfe5ef;border-radius:22px;padding:22px;box-shadow:0 14px 36px rgba(19,40,79,.06)}
 .planner-setup-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
 .planner-setup-head h2{margin:0;font-size:21px;letter-spacing:-.035em}
@@ -13,6 +16,7 @@
 .planner-field span{font-size:12px;font-weight:800;color:#5a6679}
 .planner-field input,.planner-field select{width:100%;height:48px;border:1px solid #d8dee8;border-radius:12px;background:#fff;padding:0 13px;font:inherit;font-size:14px;color:#172033}
 .planner-field input:focus,.planner-field select:focus{outline:3px solid rgba(47,107,255,.13);border-color:#2f6bff}
+.planner-field .ui-select__trigger{height:48px;min-height:48px;border-color:#d8dee8;border-radius:12px;font-size:14px}
 .destination-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
 .destination-choice{display:grid;grid-template-columns:92px 1fr;gap:13px;text-align:left;border:1px solid #e0e5ed;border-radius:15px;padding:8px;background:#fff;color:#1d2637;cursor:pointer}
 .destination-choice img{width:92px;height:72px;border-radius:10px;object-fit:cover}
@@ -27,7 +31,8 @@
 .planner-context strong{font-size:17px}
 .planner-context span{margin-top:3px;color:#c7d3e6;font-size:12px}
 .planner-context-links{display:flex;gap:8px;flex-wrap:wrap}
-.planner-context-links a{border:1px solid rgba(255,255,255,.28);border-radius:10px;padding:9px 12px;color:#fff;font-size:12px;font-weight:800;text-decoration:none}
+.planner-context-links a{display:inline-flex;align-items:center;gap:7px;min-height:40px;border:1px solid rgba(255,255,255,.28);border-radius:10px;padding:0 12px;color:#fff;font-size:12px;font-weight:800;text-decoration:none}
+.planner-context-links .planner-icon{width:16px;height:16px}
 .planner-context-links a:hover{background:#fff;color:#172033}
 .planner-workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(340px,.8fr);gap:18px;align-items:start}
 .planner-board,.planner-catalog{background:#fff;border:1px solid #dfe5ef;border-radius:20px}
@@ -36,7 +41,8 @@
 .planner-board-head h2,.planner-catalog-head h2{margin:3px 0 5px;font-size:21px;letter-spacing:-.035em}
 .planner-board-head p,.planner-catalog-head p{margin:0;color:#687488;font-size:12px;line-height:1.5}
 .planner-summary{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
-.planner-summary span{border-radius:999px;background:#f0f4fa;padding:7px 9px;color:#354258;font-size:11px;font-weight:800}
+.planner-summary span{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#f0f4fa;padding:7px 9px;color:#354258;font-size:11px;font-weight:800}
+.planner-summary .planner-icon{width:13px;height:13px}
 .planner-day-tabs{display:flex;gap:7px;overflow:auto;margin:18px -2px 14px;padding:2px 2px 7px}
 .planner-day-tab{min-width:110px;border:1px solid #dde3ec;border-radius:12px;padding:10px 12px;background:#fff;text-align:left;color:#5a6679;cursor:pointer}
 .planner-day-tab strong,.planner-day-tab small{display:block}
@@ -57,9 +63,12 @@
 .planner-stop-copy strong{margin:3px 0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .planner-stop-copy span{color:#768196;font-size:11px}
 .planner-stop-actions{display:flex;gap:6px;align-items:center}
-.planner-stop-actions select{height:34px;border:1px solid #dce2eb;border-radius:8px;background:#fff;font-size:11px}
-.planner-stop-actions button{height:34px;border:1px solid #dce2eb;border-radius:8px;background:#fff;padding:0 9px;color:#465369;font-weight:800;cursor:pointer}
-.planner-stop-actions button:hover{border-color:#e04b5a;color:#c73343}
+.planner-stop-actions .ui-select{flex:0 0 96px;width:96px}
+.planner-stop-actions .ui-select__trigger{min-height:36px;height:36px;padding:0 30px 0 11px;border-radius:9px;font-size:12px;font-weight:800}
+.planner-stop-actions .ui-select__trigger::after{right:12px}
+.planner-stop-actions button[data-remove-item]{display:inline-flex;align-items:center;gap:5px;height:36px;border:1px solid #dce2eb;border-radius:9px;background:#fff;padding:0 10px;color:#465369;font-size:12px;font-weight:800;cursor:pointer}
+.planner-stop-actions button[data-remove-item] .planner-icon{width:15px;height:15px}
+.planner-stop-actions button[data-remove-item]:hover{border-color:#e04b5a;color:#c73343}
 .planner-empty-day{border:1px dashed #cfd7e4;border-radius:14px;padding:30px;text-align:center;color:#6e7b90}
 .planner-empty-day strong,.planner-empty-day span{display:block}
 .planner-empty-day strong{color:#283448;font-size:15px}
@@ -77,9 +86,12 @@
 .planner-cost small{color:#6f7b8d;font-size:11px}
 .planner-cost strong{margin-top:3px;font-size:24px;letter-spacing:-.04em}
 .planner-footer-actions{display:flex;gap:8px;flex-wrap:wrap}
-.planner-catalog{padding:18px;position:sticky;top:84px;max-height:calc(100vh - 104px);overflow:auto}
+.planner-footer-actions .ui-button{gap:8px;min-height:44px;padding-inline:15px}
+.planner-footer-actions .planner-icon{width:17px;height:17px}
+.planner-catalog{padding:18px;position:relative;max-height:none;overflow:visible}
 .planner-category-tabs{display:flex;gap:6px;overflow:auto;margin:15px 0 12px;padding-bottom:4px}
-.planner-category-tabs button{white-space:nowrap;border:1px solid #dfe5ed;border-radius:999px;background:#fff;padding:8px 10px;color:#58657a;font-size:11px;font-weight:800;cursor:pointer}
+.planner-category-tabs button{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border:1px solid #dfe5ed;border-radius:999px;background:#fff;padding:8px 10px;color:#58657a;font-size:11px;font-weight:800;cursor:pointer}
+.planner-category-tabs .planner-icon{width:14px;height:14px}
 .planner-category-tabs button.is-active{background:#172a4a;border-color:#172a4a;color:#fff}
 .planner-catalog-list{display:grid;gap:10px}
 .planner-product{display:grid;grid-template-columns:104px minmax(0,1fr);gap:11px;border:1px solid #e2e7ef;border-radius:14px;padding:8px}
@@ -89,11 +101,15 @@
 .planner-product-copy small,.planner-product-copy strong,.planner-product-copy span{display:block}
 .planner-product-copy small{color:#2f6bff;font-size:10px;font-weight:900}
 .planner-product-copy strong{margin:4px 0;font-size:13px;line-height:1.35}
-.planner-product-copy span{color:#6c788b;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.planner-product-copy>span{display:-webkit-box;overflow:hidden;color:#6c788b;font-size:11px;line-height:1.45;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .planner-product-meta{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:10px;color:#49566b}
-.planner-product-add{display:grid;grid-template-columns:1fr 1fr auto;gap:5px;margin-top:7px}
-.planner-product-add select,.planner-product-add input{min-width:0;height:32px;border:1px solid #dce2eb;border-radius:8px;background:#fff;padding:0 6px;font-size:10px}
-.planner-product-add button{height:32px;border:0;border-radius:8px;background:#2f6bff;color:#fff;padding:0 10px;font-size:10px;font-weight:900;cursor:pointer}
+.planner-product-add{display:grid;grid-column:1/-1;grid-template-columns:minmax(96px,.8fr) minmax(118px,1fr) auto;gap:7px;margin-top:2px;padding-top:9px;border-top:1px solid #edf0f5}
+.planner-product-add .ui-select,.planner-product-add input{min-width:0}
+.planner-product-add .ui-select__trigger,.planner-product-add input{width:100%;min-height:38px;height:38px;border:1px solid #dce2eb;border-radius:9px;background:#fff;padding:0 10px;font-size:12px}
+.planner-product-add .ui-select__trigger{padding-right:30px;font-weight:800}
+.planner-product-add button[data-add-item]{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:58px;height:38px;border:0;border-radius:9px;background:#2f6bff;color:#fff;padding:0 11px;font-size:12px;font-weight:900;cursor:pointer}
+.planner-product-add button[data-add-item]:hover{background:#1f58da}
+.planner-product-add button[data-add-item] .planner-icon{width:15px;height:15px}
 .planner-booking-readiness{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
 .planner-booking-readiness article{border-radius:12px;background:#f4f7fb;padding:12px}
 .planner-booking-readiness span,.planner-booking-readiness strong{display:block}
@@ -101,7 +117,6 @@
 .planner-booking-readiness strong{margin-top:4px;font-size:18px}
 @media(max-width:980px){
   .planner-workspace{grid-template-columns:1fr}
-  .planner-catalog{position:static;max-height:none}
   .planner-fields{grid-template-columns:1fr 1fr}
   .destination-strip{grid-template-columns:1fr}
   .destination-choice{grid-template-columns:82px 1fr}
@@ -115,11 +130,13 @@
   .planner-context-links a{flex:1;text-align:center}
   .planner-summary{justify-content:flex-start}
   .planner-stop{grid-template-columns:54px 4px minmax(0,1fr)}
-  .planner-stop-actions{grid-column:3;justify-content:flex-end}
+  .planner-stop-actions{grid-column:3;justify-content:flex-end;flex-wrap:wrap}
   .planner-product{grid-template-columns:88px minmax(0,1fr)}
   .planner-product img{width:88px;height:96px}
   .planner-product-add{grid-template-columns:1fr 1fr}
-  .planner-product-add button{grid-column:1/-1}
+  .planner-product-add button[data-add-item]{grid-column:1/-1}
+  .planner-footer-actions{width:100%}
+  .planner-footer-actions .ui-button{flex:1}
 }
 .experience-destination-gate{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding:54px 0 26px}
 .experience-destination-gate h1,.experience-catalog-hero h1{margin:8px 0 12px;font-size:clamp(34px,4.4vw,58px);line-height:1.1;letter-spacing:-.06em}

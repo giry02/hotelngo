@@ -23,6 +23,36 @@
     TRANSPORT: ['이동', '#64748b'],
     FREE: ['자유시간', '#94a3b8']
   };
+  const iconPaths = {
+    users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    sparkles: '<path d="m12 3-1.35 3.65L7 8l3.65 1.35L12 13l1.35-3.65L17 8l-3.65-1.35L12 3Z"/><path d="m5 14-.8 2.2L2 17l2.2.8L5 20l.8-2.2L8 17l-2.2-.8L5 14Zm14-2-.8 2.2-2.2.8 2.2.8L19 18l.8-2.2 2.2-.8-2.2-.8L19 12Z"/>',
+    hotel: '<path d="M3 21V5a2 2 0 0 1 2-2h10v18M3 21h18M9 7h2m-2 4h2m-2 4h2m6-6h2a2 2 0 0 1 2 2v10m-4-6h2"/>',
+    compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z"/>',
+    grid: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+    bed: '<path d="M3 20v-8m18 8v-6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2h14M3 16h18M7 12V8a2 2 0 0 0-2-2H3v10"/>',
+    pin: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+    food: '<path d="M6 3v8m3-8v8M4 7h7m-3 4v10M16 3v18m0-18c3 2 4 5 4 8h-4"/>',
+    golf: '<path d="M6 21V4m0 0 9 3-9 3m5 11h8m-4-4 4 4-4 4"/>',
+    spa: '<path d="M12 21c4-2 7-5 7-9-4 0-7 2-7 6 0-4-3-6-7-6 0 4 3 7 7 9Z"/><path d="M12 13c-3-2-4-5-2-9 3 2 4 5 2 9Z"/>',
+    tour: '<path d="M3 6h18v14H3zM8 6V4h8v2M3 11h18M9 11v2h6v-2"/>',
+    car: '<path d="m5 17-2-2 2-6h14l2 6-2 2H5Z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M7 9 9 5h6l2 4"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/>',
+    refresh: '<path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 8A7 7 0 0 1 18 6l2 1M18 16a7 7 0 0 1-12 2l-2-1"/>',
+    save: '<path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-7h8v7"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>'
+  };
+  const categoryIcons = {
+    ALL: 'grid',
+    STAY: 'bed',
+    LANDMARK: 'pin',
+    FOOD: 'food',
+    GOLF: 'golf',
+    SPA: 'spa',
+    TOUR: 'tour',
+    TRANSPORT: 'car',
+    FREE: 'compass'
+  };
+  const icon = (name) => `<span class="planner-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconPaths[name] || iconPaths.grid}</svg></span>`;
   let catalog;
   let state;
   let toastTimer;
@@ -176,7 +206,7 @@
       <section class="planner-hero">
         <div class="planner-hero-row">
           <div><span class="page-eyebrow">${query.get('mode') === 'ai' ? 'AI DRAFT · EDIT EVERYTHING' : 'BUILD ONE COMPLETE JOURNEY'}</span><h1>하나를 고르는 예약이 아니라,<br>여행 전체를 날짜별로 만드세요</h1><p>${query.get('mode') === 'ai' ? 'AI가 만든 다카테고리 초안입니다. 모든 항목을 직접 추가·이동·삭제하고 예약 전에 다시 검증할 수 있습니다.' : '목적지와 기간을 먼저 정하고 숙소·랜드마크·식사·골프·스파·이동을 같은 4박 5일 안에 여러 개 조합합니다.'}</p></div>
-          <div class="planner-hero-actions"><a class="ui-button" href="community.html">다른 여행자 일정</a><a class="ui-button" href="ai-travel.html?prompt=${encodeURIComponent(`${currentDestination.name} ${dayCount() - 1}박 ${dayCount()}일 전체 여행을 짜줘`)}">AI로 처음부터 만들기</a></div>
+          <div class="planner-hero-actions"><a class="ui-button" href="community.html">${icon('users')}<span>다른 여행자 일정</span></a><a class="ui-button" href="ai-travel.html?prompt=${encodeURIComponent(`${currentDestination.name} ${dayCount() - 1}박 ${dayCount()}일 전체 여행을 짜줘`)}">${icon('sparkles')}<span>AI로 처음부터 만들기</span></a></div>
         </div>
       </section>
       <section class="planner-setup" aria-labelledby="planner-setup-title">
@@ -191,30 +221,30 @@
       </section>
       <section class="planner-context">
         <div class="planner-context-main"><span class="planner-context-pin" aria-hidden="true">⌖</span><div><strong>${escapeHtml(currentDestination.name)} · ${dayCount() - 1}박 ${dayCount()}일 · ${escapeHtml(state.travelers)}</strong><span>${escapeHtml(state.startDate)}–${escapeHtml(state.endDate)} · 일정 ${state.items.length}개 · Mock 카탈로그</span></div></div>
-        <div class="planner-context-links"><a href="${hotelHref}">이 날짜의 호텔 찾기</a><a href="${experienceHref}">이 도시의 즐길거리 찾기</a></div>
+        <div class="planner-context-links"><a href="${hotelHref}">${icon('hotel')}<span>이 날짜의 호텔 찾기</span></a><a href="${experienceHref}">${icon('compass')}<span>이 도시의 즐길거리 찾기</span></a></div>
       </section>
       <div class="planner-workspace">
         <section class="planner-board" aria-labelledby="planner-board-title">
-          <div class="planner-board-head"><div><span class="page-eyebrow">2. DAY BY DAY</span><h2 id="planner-board-title">날짜별 여행 일정</h2><p>같은 날에 숙소, 관광, 식사와 활동을 여러 개 배치할 수 있습니다.</p></div><div class="planner-summary">${Object.entries(categoryCounts).map(([category, count]) => `<span>${categoryLabel(category)} ${count}</span>`).join('') || '<span>아직 일정 없음</span>'}</div></div>
+          <div class="planner-board-head"><div><span class="page-eyebrow">2. DAY BY DAY</span><h2 id="planner-board-title">날짜별 여행 일정</h2><p>같은 날에 숙소, 관광, 식사와 활동을 여러 개 배치할 수 있습니다.</p></div><div class="planner-summary">${Object.entries(categoryCounts).map(([category, count]) => `<span>${icon(categoryIcons[category])}${categoryLabel(category)} ${count}</span>`).join('') || '<span>아직 일정 없음</span>'}</div></div>
           <nav class="planner-day-tabs" aria-label="여행 일자">${days.map((day) => `<button class="planner-day-tab${day === state.selectedDay ? ' is-active' : ''}" type="button" data-day="${day}"><strong>DAY ${day}</strong><small>${escapeHtml(dateLabel(day))} · ${state.items.filter((item) => item.day === day).length}개</small></button>`).join('')}</nav>
           <div class="planner-day-title"><strong>DAY ${state.selectedDay} · ${escapeHtml(dateLabel(state.selectedDay))}</strong><span>시간순 자동 정렬</span></div>
           <div class="planner-timeline">${selectedItems.length ? selectedItems.map((item) => `
             <article class="planner-stop" style="--category-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}" data-instance-id="${escapeHtml(item.instanceId)}">
               <time>${escapeHtml(item.time)}</time><span class="planner-stop-line"></span>
               <div class="planner-stop-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`} · ${escapeHtml(item.bookingType)}</span></div>
-              <div class="planner-stop-actions"><select aria-label="${escapeHtml(item.title)} 이동할 일자" data-move-day>${dayOptions(item.day)}</select><button type="button" data-remove-item>삭제</button></div>
+              <div class="planner-stop-actions"><select aria-label="${escapeHtml(item.title)} 이동할 일자" data-move-day>${dayOptions(item.day)}</select><button type="button" data-remove-item>${icon('trash')}<span>삭제</span></button></div>
             </article>`).join('') : '<div class="planner-empty-day"><strong>이 날짜에는 아직 일정이 없습니다.</strong><span>오른쪽 카탈로그에서 숙소·장소·식사·활동을 여러 개 추가하세요.</span></div>'}</div>
           <div class="planner-validation">${warnings().map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
           <div class="planner-booking-readiness"><article><span>즉시예약 Mock</span><strong>${totalsData.instant}</strong></article><article><span>업체 확인 필요</span><strong>${totalsData.request}</strong></article><article><span>방문 정보</span><strong>${totalsData.info}</strong></article></div>
-          <footer class="planner-board-footer"><div class="planner-cost"><small>현재 선택 예상비용 · 실시간 가격 아님</small><strong>${money(totalsData.total)}</strong></div><div class="planner-footer-actions"><button class="ui-button" type="button" data-clear-plan>일정 비우기</button><button class="ui-button" type="button" data-fill-template>추천 일정 다시 채우기</button><button class="ui-button primary" type="button" data-save-plan>이 일정 저장</button></div></footer>
+          <footer class="planner-board-footer"><div class="planner-cost"><small>현재 선택 예상비용 · 실시간 가격 아님</small><strong>${money(totalsData.total)}</strong></div><div class="planner-footer-actions"><button class="ui-button" type="button" data-clear-plan>${icon('trash')}<span>일정 비우기</span></button><button class="ui-button" type="button" data-fill-template>${icon('refresh')}<span>추천 일정 다시 채우기</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>이 일정 저장</span></button></div></footer>
         </section>
         <aside class="planner-catalog" aria-labelledby="planner-catalog-title">
           <div class="planner-catalog-head"><div><span class="page-eyebrow">3. ADD TO YOUR DAYS</span><h2 id="planner-catalog-title">${escapeHtml(currentDestination.name)}에서 무엇을 할까요?</h2><p>추가할 날짜와 시간을 선택하세요. 한 날짜에 여러 항목을 담을 수 있습니다.</p></div></div>
-          <div class="planner-category-tabs">${catalog.categories.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${escapeHtml(category.label)}</button>`).join('')}</div>
+          <div class="planner-category-tabs">${catalog.categories.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>
           <div class="planner-catalog-list">${visibleCatalog.map((item) => `
             <article class="planner-product${focusedItemId === item.id ? ' is-focused' : ''}" data-catalog-item="${escapeHtml(item.id)}">
               <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}">
-              <div class="planner-product-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span><div class="planner-product-meta"><b>${escapeHtml(item.priceLabel)}</b><span>${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`} · ${escapeHtml(item.bookingType)}</span></div><div class="planner-product-add"><select aria-label="${escapeHtml(item.title)} 추가할 일자" data-add-day>${dayOptions(state.selectedDay)}</select><input type="time" aria-label="${escapeHtml(item.title)} 시작 시간" data-add-time value="${escapeHtml(item.recommendedTime)}"><button type="button" data-add-item>추가</button></div></div>
+              <div class="planner-product-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span><div class="planner-product-meta"><b>${escapeHtml(item.priceLabel)}</b><span>${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`} · ${escapeHtml(item.bookingType)}</span></div></div><div class="planner-product-add"><select aria-label="${escapeHtml(item.title)} 추가할 일자" data-add-day>${dayOptions(state.selectedDay)}</select><input type="time" aria-label="${escapeHtml(item.title)} 시작 시간" data-add-time value="${escapeHtml(item.recommendedTime)}"><button type="button" data-add-item>${icon('plus')}<span>추가</span></button></div>
             </article>`).join('')}</div>
         </aside>
       </div>`;

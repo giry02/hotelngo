@@ -8,8 +8,8 @@
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png" type="image/png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
   <link rel="stylesheet" href="styles/main.css?v=30">
-  <link rel="stylesheet" href="styles/pages.css?v=18">
-  <script src="scripts/site-shell.js?v=14" defer></script>
+  <link rel="stylesheet" href="styles/pages.css?v=19">
+  <script src="scripts/site-shell.js?v=15" defer></script>
   <script src="scripts/main.js?v=13" defer></script>
   <script src="scripts/pages.js?v=8" defer></script>
 </head>
@@ -68,10 +68,10 @@
         <h2>04. 핵심 컴포넌트</h2>
         <p>버튼, 태그, 공급 상태, 데이터 확인 시각은 모든 검색·상세 화면에서 같은 의미로 사용합니다.</p>
         <div class="component-showcase">
-          <div class="component-card"><strong>Buttons</strong><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="ui-button primary">요금 확인</button><button class="ui-button">내 여행에 담기</button><button class="ui-button soft">지도 보기</button><button class="ui-button" disabled>사용할 수 없음</button></div></div>
+          <div class="component-card"><strong>Buttons</strong><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="ui-button primary" style="gap:7px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-7h8v7"/></svg>저장</button><button class="ui-button" style="gap:7px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7v5h-5M4 17v-5h5M6.1 8A7 7 0 0 1 18 6l2 1M18 16a7 7 0 0 1-12 2l-2-1"/></svg>다시 채우기</button><button class="ui-button soft" style="gap:7px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>일정 추가</button><button class="ui-button" disabled>사용할 수 없음</button></div><p class="data-note">주요 조작은 44px, 카드 내부 조작은 38px을 사용하며 같은 조작군의 높이를 통일합니다.</p></div>
           <div class="component-card"><strong>Status & tags</strong><div style="display:flex;flex-wrap:wrap;gap:7px"><span class="status-chip">실시간 확인</span><span class="status-chip warning">오래된 캐시</span><span class="status-chip muted">정보형</span><span class="tag-chip">무료 취소</span><span class="tag-chip">조식 포함</span></div></div>
           <div class="component-card"><strong>Data confidence</strong><p class="data-note">PMS Mock · 3분 전 확인</p><div class="supplier-notice">실시간 공급 연결 전에는 예약 완료처럼 표현하지 않습니다. 조회 결과와 예약 명령의 상태를 분리합니다.</div></div>
-          <div class="component-card"><strong>Shared select</strong><label class="form-field" style="margin-top:10px"><span>여행 인원</span><select aria-label="스타일 가이드 여행 인원"><option>성인 2명</option><option>성인 1명</option><option>성인 3명</option><option>성인 4명</option></select></label><p class="data-note">공개 웹과 백오피스에서 같은 Popover·포커스·키보드 규칙을 사용합니다.</p></div>
+          <div class="component-card"><strong>Shared select</strong><label class="form-field" style="margin-top:10px"><span>여행 인원</span><select aria-label="스타일 가이드 여행 인원"><option>성인 2명</option><option>성인 1명</option><option>성인 3명</option><option>성인 4명</option></select></label><p class="data-note">공개 웹과 백오피스에서 같은 Popover·포커스·키보드 규칙을 사용하며 화면 경계에 따라 위·아래 방향을 자동 조절합니다.</p></div>
           <div class="component-card"><strong>Spacing scale</strong><div class="spacing-scale"><div style="width:8px;height:8px">8</div><div style="width:12px;height:12px">12</div><div style="width:16px;height:16px">16</div><div style="width:24px;height:24px">24</div><div style="width:32px;height:32px">32</div><div style="width:48px;height:48px">48</div></div></div>
         </div>
       </div>

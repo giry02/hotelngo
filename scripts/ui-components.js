@@ -16,9 +16,7 @@
   const closeAll = (except = null) => {
     document.querySelectorAll('.ui-select.is-open').forEach((root) => {
       if (root === except) return;
-      root.classList.remove('is-open');
-      root.querySelector('.ui-select__trigger')?.setAttribute('aria-expanded', 'false');
-      root.querySelector('.ui-select__menu')?.setAttribute('hidden', '');
+      root._closeUiSelect?.();
     });
   };
 
@@ -48,6 +46,8 @@
     if (select.getAttribute('aria-label')) trigger.setAttribute('aria-label', select.getAttribute('aria-label'));
 
     let focusedIndex = Math.max(0, select.selectedIndex);
+    let repositionMenu = null;
+    let closeOnViewportChange = null;
 
     const sync = () => {
       const options = [...select.options];
@@ -86,16 +86,55 @@
       closeAll(root);
       root.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
+      document.body.append(menu);
+      menu.classList.add('ui-select__menu--portal');
       menu.hidden = false;
+      repositionMenu = () => {
+        const triggerRect = trigger.getBoundingClientRect();
+        const viewportPadding = 10;
+        const menuWidth = Math.min(
+          Math.max(triggerRect.width, 140),
+          document.documentElement.clientWidth - viewportPadding * 2
+        );
+        menu.style.width = `${menuWidth}px`;
+        menu.style.left = `${Math.max(
+          viewportPadding,
+          Math.min(triggerRect.left, document.documentElement.clientWidth - menuWidth - viewportPadding)
+        )}px`;
+        const availableBelow = window.innerHeight - triggerRect.bottom - viewportPadding;
+        const availableAbove = triggerRect.top - viewportPadding;
+        const preferredHeight = Math.min(menu.scrollHeight || 252, 252);
+        const dropUp = availableBelow < Math.min(preferredHeight, 180) && availableAbove > availableBelow;
+        const available = Math.max(120, dropUp ? availableAbove - 7 : availableBelow - 7);
+        menu.style.maxHeight = `${Math.min(252, available)}px`;
+        const measuredHeight = Math.min(menu.scrollHeight, parseFloat(menu.style.maxHeight));
+        menu.style.top = `${dropUp
+          ? Math.max(viewportPadding, triggerRect.top - measuredHeight - 7)
+          : triggerRect.bottom + 7}px`;
+        root.classList.toggle('is-dropup', dropUp);
+      };
+      repositionMenu();
+      closeOnViewportChange = () => close();
+      window.addEventListener('resize', repositionMenu);
+      document.addEventListener('scroll', closeOnViewportChange, true);
       focusOption(select.selectedIndex);
     };
 
     const close = (restoreFocus = false) => {
       root.classList.remove('is-open');
+      root.classList.remove('is-dropup');
       trigger.setAttribute('aria-expanded', 'false');
       menu.hidden = true;
+      menu.classList.remove('ui-select__menu--portal');
+      menu.removeAttribute('style');
+      root.append(menu);
+      if (repositionMenu) window.removeEventListener('resize', repositionMenu);
+      if (closeOnViewportChange) document.removeEventListener('scroll', closeOnViewportChange, true);
+      repositionMenu = null;
+      closeOnViewportChange = null;
       if (restoreFocus) trigger.focus();
     };
+    root._closeUiSelect = close;
 
     const choose = (index) => {
       const option = select.options[index];

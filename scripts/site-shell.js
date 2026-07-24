@@ -2,13 +2,13 @@
   if (!document.querySelector('link[data-hotelngo-components]')) {
     const componentStyles = document.createElement('link');
     componentStyles.rel = 'stylesheet';
-    componentStyles.href = 'styles/components.css?v=3';
+    componentStyles.href = 'styles/components.css?v=4';
     componentStyles.dataset.hotelngoComponents = '';
     document.head.append(componentStyles);
   }
   if (!document.querySelector('script[data-hotelngo-ui]')) {
     const uiScript = document.createElement('script');
-    uiScript.src = 'scripts/ui-components.js?v=1';
+    uiScript.src = 'scripts/ui-components.js?v=2';
     uiScript.dataset.hotelngoUi = '';
     document.head.append(uiScript);
   }
