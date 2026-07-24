@@ -128,8 +128,14 @@
   searchForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const data = new FormData(searchForm);
+    const destination = String(data.get('destination') || '').trim();
+    if (/동남아|어디|추천|모르겠|미정/.test(destination)) {
+      const promptText = `${destination || '여행지 추천'} 여행을 가고 싶어요. 일정과 취향에 맞는 도시부터 추천해 주세요.`;
+      window.location.href = `ai-travel.html?prompt=${encodeURIComponent(promptText)}`;
+      return;
+    }
     const query = new URLSearchParams({
-      destination: data.get('destination') || '',
+      destination,
       checkIn: data.get('checkIn') || '',
       checkOut: data.get('checkOut') || '',
       guests: data.get('guests') || ''

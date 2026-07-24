@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "1.0",
+  "liveInventoryConnected": false,
+  "currency": "KRW",
+  "origin": {
+    "name": "서울",
+    "code": "ICN"
+  },
+  "destinations": {
+    "다낭": {
+      "country": "베트남",
+      "code": "DAD",
+      "hero": "assets/images/hero-hotel.jpg",
+      "flights": [
+        {
+          "id": "flt_dad_ke",
+          "airline": "Korean Air",
+          "flightNo": "KE 461",
+          "direct": true,
+          "depart": "11:10",
+          "arrive": "14:15",
+          "duration": "5시간 5분",
+          "price": 428000,
+          "baggage": "위탁수하물 23kg",
+          "changeFee": "변경 수수료 공급자 확인"
+        },
+        {
+          "id": "flt_dad_vn",
+          "airline": "Vietnam Airlines",
+          "flightNo": "VN 431",
+          "direct": true,
+          "depart": "10:45",
+          "arrive": "13:50",
+          "duration": "5시간 5분",
+          "price": 356000,
+          "baggage": "위탁수하물 23kg",
+          "changeFee": "운임 등급별 변경 조건"
+        },
+        {
+          "id": "flt_dad_vj",
+          "airline": "VietJet Air",
+          "flightNo": "VJ 875",
+          "direct": true,
+          "depart": "06:15",
+          "arrive": "09:25",
+          "duration": "5시간 10분",
+          "price": 238000,
+          "baggage": "위탁수하물 별도",
+          "changeFee": "특가 운임 환불 제한"
+        }
+      ]
+    },
+    "방콕": {
+      "country": "태국",
+      "code": "BKK",
+      "hero": "assets/images/landmark-bangkok.jpg",
+      "flights": [
+        {
+          "id": "flt_bkk_ke",
+          "airline": "Korean Air",
+          "flightNo": "KE 657",
+          "direct": true,
+          "depart": "09:30",
+          "arrive": "13:30",
+          "duration": "6시간",
+          "price": 512000,
+          "baggage": "위탁수하물 23kg",
+          "changeFee": "변경 수수료 공급자 확인"
+        },
+        {
+          "id": "flt_bkk_tg",
+          "airline": "Thai Airways",
+          "flightNo": "TG 657",
+          "direct": true,
+          "depart": "10:20",
+          "arrive": "14:20",
+          "duration": "6시간",
+          "price": 468000,
+          "baggage": "위탁수하물 23kg",
+          "changeFee": "운임 등급별 변경 조건"
+        },
+        {
+          "id": "flt_bkk_xj",
+          "airline": "Thai AirAsia X",
+          "flightNo": "XJ 701",
+          "direct": true,
+          "depart": "11:15",
+          "arrive": "15:20",
+          "duration": "6시간 5분",
+          "price": 286000,
+          "baggage": "위탁수하물 별도",
+          "changeFee": "특가 운임 환불 제한"
+        }
+      ]
+    },
+    "발리": {
+      "country": "인도네시아",
+      "code": "DPS",
+      "hero": "assets/images/landmark-bali.jpg",
+      "flights": [
+        {
+          "id": "flt_dps_ke",
+          "airline": "Korean Air",
+          "flightNo": "KE 629",
+          "direct": true,
+          "depart": "17:40",
+          "arrive": "23:50",
+          "duration": "7시간 10분",
+          "price": 684000,
+          "baggage": "위탁수하물 23kg",
+          "changeFee": "변경 수수료 공급자 확인"
+        },
+        {
+          "id": "flt_dps_ga",
+          "airline": "Garuda Indonesia",
+          "flightNo": "GA 871",
+          "direct": true,
+          "depart": "11:35",
+          "arrive": "17:45",
+          "duration": "7시간 10분",
+          "price": 622000,
+          "baggage": "위탁수하물 30kg",
+          "changeFee": "운임 등급별 변경 조건"
+        },
+        {
+          "id": "flt_dps_sq",
+          "airline": "Singapore Airlines",
+          "flightNo": "SQ 607",
+          "direct": false,
+          "depart": "09:00",
+          "arrive": "19:20",
+          "duration": "11시간 20분 · 싱가포르 경유",
+          "price": 548000,
+          "baggage": "위탁수하물 25kg",
+          "changeFee": "환승·변경 조건 확인"
+        }
+      ]
+    }
+  }
+}

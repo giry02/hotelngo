@@ -99,7 +99,7 @@
 
   const searchParams = new URLSearchParams(window.location.search);
   const destinationFromQuery = searchParams.get('destination');
-  const hotelSearchForm = document.querySelector('[data-search-page]');
+  const hotelSearchForm = document.querySelector('[data-hotel-search]');
   if (hotelSearchForm && destinationFromQuery) {
     hotelSearchForm.elements.destination.value = destinationFromQuery;
     document.querySelectorAll('[data-search-destination]').forEach((element) => { element.textContent = destinationFromQuery; });
@@ -109,6 +109,27 @@
     const value = searchParams.get(name);
     if (hotelSearchForm?.elements[name] && value) hotelSearchForm.elements[name].value = value;
   });
+  if (hotelSearchForm) {
+    const checkIn = searchParams.get('checkIn') || hotelSearchForm.elements.checkIn?.value || '';
+    const checkOut = searchParams.get('checkOut') || hotelSearchForm.elements.checkOut?.value || '';
+    const summary = document.querySelector('[data-hotel-result-summary]');
+    if (summary && checkIn && checkOut) {
+      summary.textContent = `${checkIn.replaceAll('-', '.')}–${checkOut.replaceAll('-', '.')} · 성인 2명 · 세금 포함 총액 기준`;
+    }
+    const query = new URLSearchParams();
+    if (destinationFromQuery) query.set('destination', destinationFromQuery);
+    if (checkIn) query.set('checkIn', checkIn);
+    if (checkOut) query.set('checkOut', checkOut);
+    document.querySelectorAll('a[href="hotel-detail.html"]').forEach((link) => {
+      link.href = `hotel-detail.html?${query.toString()}`;
+    });
+    const today = new Date();
+    const todayValue = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const resultRegion = document.querySelector('section[aria-labelledby="result-title"]');
+    if (resultRegion && checkIn === todayValue && !resultRegion.querySelector('[data-same-day-hotel-notice]')) {
+      resultRegion.querySelector('.result-toolbar')?.insertAdjacentHTML('afterend', '<div class="supplier-notice ai-urgent-notice" data-same-day-hotel-notice><strong>오늘 체크인 재확인 필요:</strong> 현재 객실 수와 가격은 JSON Mock 예시입니다. 실제 판매 전에는 PMS·공급자 API로 당일 재고와 체크인 가능 시간을 다시 확인해야 합니다.</div>');
+    }
+  }
 
   document.querySelectorAll('[data-add-trip]').forEach((button) => {
     button.addEventListener('click', () => {

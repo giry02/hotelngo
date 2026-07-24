@@ -141,6 +141,7 @@
         placeId: data.placeId,
         productId: button.dataset.addMarketplace,
         name: button.dataset.optionName,
+        image: card.querySelector('img')?.getAttribute('src') || '',
         slot,
         extras,
         price: Number(button.dataset.price),

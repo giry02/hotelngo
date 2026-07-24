@@ -14,6 +14,10 @@
     {
       "id": "dest_kyoto",
       "name": "교토",
+      "country": "일본",
+      "region": "EAST_ASIA",
+      "cover": "assets/images/landmark-kyoto.jpg",
+      "intro": "저녁 골목과 전통 공간을 천천히 걷는 감성 여행",
       "aliases": [
         "kyoto",
         "京都"
@@ -35,6 +39,11 @@
           "bookingType": "INFORMATION_ONLY",
           "confidence": "CATALOG_VERIFIED",
           "reason": "해질 무렵의 골목과 수로 풍경을 천천히 걷기 좋습니다.",
+          "image": "assets/images/landmark-kyoto.jpg",
+          "area": "교토 · 기온",
+          "summary": "시라카와 물길과 버드나무, 전통 마치야가 이어지는 저녁 산책 코스입니다.",
+          "visitTip": "주거지와 영업장이 함께 있으므로 출입구를 막는 촬영은 피하고, 비 온 뒤 돌길에 주의하세요.",
+          "hoursNote": "상시 개방된 공공 산책로 · 인접 매장은 개별 운영",
           "alternatives": [
             "kyoto_pontocho",
             "kyoto_yasaka"
@@ -55,6 +64,11 @@
           "bookingType": "INFORMATION_ONLY",
           "confidence": "CATALOG_VERIFIED",
           "reason": "저녁 식사와 강변 산책을 한 동선에 넣기 좋습니다.",
+          "image": "assets/images/marketplace/tour-kyoto.jpg",
+          "area": "교토 · 가모가와 서쪽",
+          "summary": "가모가와를 따라 작은 식당과 이자카야가 이어지는 교토의 대표적인 저녁 골목입니다.",
+          "visitTip": "저녁 식사 시간에는 대기할 수 있습니다. 식당 방문이 목적이면 사전 예약 여부를 확인하세요.",
+          "hoursNote": "골목은 상시 통행 · 매장별 영업시간 상이",
           "alternatives": [
             "kyoto_gion",
             "kyoto_nishiki"
@@ -75,6 +89,11 @@
           "bookingType": "INFORMATION_ONLY",
           "confidence": "CATALOG_VERIFIED",
           "reason": "기온에서 도보로 이어지며 밤에도 분위기가 살아납니다.",
+          "image": "assets/images/marketplace/tour-bamboo.jpg",
+          "area": "교토 · 기온 동쪽",
+          "summary": "기온 산책과 자연스럽게 이어지는 신사로, 해가 진 뒤에도 등불과 붉은 문이 인상적입니다.",
+          "visitTip": "참배 동선을 지키고 행사 구역은 현장 안내를 따르세요. 봄·가을 저녁에는 혼잡할 수 있습니다.",
+          "hoursNote": "경내 상시 개방 · 행사와 시설은 별도 시간 운영",
           "alternatives": [
             "kyoto_gion",
             "kyoto_pontocho"
@@ -95,6 +114,11 @@
           "bookingType": "INFORMATION_ONLY",
           "confidence": "HOURS_CHECK_REQUIRED",
           "reason": "간단한 점심과 지역 식재료 탐색을 함께 할 수 있습니다.",
+          "image": "assets/images/marketplace/restaurant-interior.jpg",
+          "area": "교토 · 나카교구",
+          "summary": "교토 식재료와 간식, 기념품을 한 동선에서 둘러보기 좋은 낮 시간 중심의 전통 시장입니다.",
+          "visitTip": "통로가 좁아 큰 짐은 피하는 편이 좋습니다. 매장별 휴무와 조기 마감을 방문 전에 확인하세요.",
+          "hoursNote": "대부분 낮 영업 · 매장별 휴무·마감 시간 확인 필요",
           "alternatives": [
             "kyoto_pontocho"
           ]
@@ -104,6 +128,10 @@
     {
       "id": "dest_danang",
       "name": "다낭",
+      "country": "베트남",
+      "region": "SOUTHEAST_ASIA",
+      "cover": "assets/images/hero-hotel.jpg",
+      "intro": "바다 휴양과 호이안 저녁 산책을 함께 즐기기 좋은 도시",
       "aliases": [
         "danang",
         "da nang"
@@ -194,6 +222,10 @@
     {
       "id": "dest_bangkok",
       "name": "방콕",
+      "country": "태국",
+      "region": "SOUTHEAST_ASIA",
+      "cover": "assets/images/landmark-bangkok.jpg",
+      "intro": "도시의 활기, 미식과 야경을 늦은 시간까지 즐기는 여행",
       "aliases": [
         "bangkok"
       ],
@@ -255,6 +287,103 @@
           "alternatives": [
             "bangkok_chinatown",
             "bangkok_wat_arun"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dest_bali",
+      "name": "발리",
+      "country": "인도네시아",
+      "region": "SOUTHEAST_ASIA",
+      "cover": "assets/images/landmark-bali.jpg",
+      "intro": "조용한 자연과 풀빌라, 로컬 미식을 여유롭게 이어가는 휴양",
+      "aliases": [
+        "bali",
+        "인도네시아"
+      ],
+      "landmarks": [
+        {
+          "id": "bali_ulun_danu",
+          "name": "울룬다누 브라딴 사원",
+          "type": "LANDMARK",
+          "tags": [
+            "자연",
+            "사진",
+            "감성"
+          ],
+          "score": 94,
+          "estimatedMinutes": 90,
+          "bestTime": "07:00",
+          "bookingType": "INFORMATION_ONLY",
+          "confidence": "HOURS_CHECK_REQUIRED",
+          "reason": "아침 안개와 호수 풍경을 비교적 한적하게 만날 수 있습니다.",
+          "image": "assets/images/landmark-bali.jpg",
+          "alternatives": [
+            "bali_ubud",
+            "bali_seminyak"
+          ]
+        },
+        {
+          "id": "bali_ubud",
+          "name": "우붓 숲과 마을 산책",
+          "type": "TOUR",
+          "tags": [
+            "자연",
+            "휴양",
+            "감성"
+          ],
+          "score": 92,
+          "estimatedMinutes": 180,
+          "bestTime": "09:00",
+          "bookingType": "REQUEST",
+          "confidence": "TRANSPORT_CHECK_REQUIRED",
+          "reason": "숲과 작은 상점, 카페를 무리 없는 반나절 동선으로 잇기 좋습니다.",
+          "image": "assets/images/marketplace/tour-bamboo.jpg",
+          "alternatives": [
+            "bali_ulun_danu",
+            "bali_seminyak"
+          ]
+        },
+        {
+          "id": "bali_seminyak",
+          "name": "스미냑 선셋 다이닝",
+          "type": "RESTAURANT",
+          "tags": [
+            "바다",
+            "미식",
+            "데이트"
+          ],
+          "score": 91,
+          "estimatedMinutes": 120,
+          "bestTime": "17:30",
+          "bookingType": "REQUEST",
+          "confidence": "INVENTORY_CHECK_REQUIRED",
+          "reason": "바다의 일몰과 저녁 식사를 한 장소에서 여유롭게 즐길 수 있습니다.",
+          "image": "assets/images/marketplace/restaurant-dining.jpg",
+          "alternatives": [
+            "bali_ubud",
+            "bali_ulun_danu"
+          ]
+        },
+        {
+          "id": "bali_uluwatu",
+          "name": "울루와뚜 절벽 산책",
+          "type": "LANDMARK",
+          "tags": [
+            "바다",
+            "자연",
+            "사진"
+          ],
+          "score": 89,
+          "estimatedMinutes": 150,
+          "bestTime": "16:00",
+          "bookingType": "REQUEST",
+          "confidence": "TRANSPORT_CHECK_REQUIRED",
+          "reason": "절벽 해안과 일몰을 중심으로 여행의 마지막 장면을 만들기 좋습니다.",
+          "image": "assets/images/marketplace/hotel-resort.jpg",
+          "alternatives": [
+            "bali_seminyak"
           ]
         }
       ]

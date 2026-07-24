@@ -10,11 +10,13 @@
   let seeds = null;
   let toastTimer;
   let pendingCancellation = null;
+  let landmarkAlternativesState = 'idle';
+  let landmarkOptions = [];
 
   if (!document.querySelector('link[data-platform-flows]')) {
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = 'styles/platform-flows.css?v=2';
+    style.href = 'styles/platform-flows.css?v=3';
     style.dataset.platformFlows = '';
     document.head.append(style);
   }
@@ -80,6 +82,10 @@
     return values;
   };
 
+  const getMainShell = () => document.querySelector('main > .shell')
+    || [...document.querySelectorAll('main .shell')].at(-1)
+    || document.querySelector('main');
+
   const selectedCartItems = () => [...document.querySelectorAll('[data-cart-select]:checked')].map((input, index) => {
     const card = input.closest('.cart-item');
     return {
@@ -87,6 +93,7 @@
       title: card?.querySelector('.cart-copy strong')?.textContent.trim() || input.getAttribute('aria-label') || '선택 상품',
       description: card?.querySelector('.cart-copy small')?.textContent.trim() || '',
       supplier: card?.querySelector('.cart-copy span')?.textContent.trim() || '',
+      image: card?.querySelector('img')?.getAttribute('src') || '',
       amount: Number(input.dataset.price || 0),
       selected: true
     };
@@ -202,6 +209,20 @@
       tripButton.textContent = '일정에 담김';
       tripButton.classList.add('soft');
       tripButton.setAttribute('aria-pressed', 'true');
+      if (tripButton.dataset.landmarkCandidate) {
+        const selectedId = tripButton.dataset.tripId;
+        document.querySelectorAll('[data-landmark-card]').forEach((card) => {
+          card.classList.toggle('is-selected', card.dataset.landmarkCard === selectedId);
+        });
+        const flow = document.querySelector('[data-landmark-flow]');
+        if (flow) {
+          flow.dataset.stage = 'added';
+          const selected = landmarkOptions.find((item) => item.id === selectedId);
+          const status = flow.querySelector('[data-landmark-flow-status]');
+          if (status && selected) status.textContent = `‘${selected.name}’을(를) 내 여행 1일차에 담았습니다. 여행 일정에서 시간과 순서를 바꿀 수 있어요.`;
+        }
+        tripButton.closest('dialog')?.close();
+      }
       showToast(`‘${trip.title}’ 일정에 추가했습니다.`);
       return;
     }
@@ -458,7 +479,7 @@
   const renderTrips = async () => {
     if (route !== 'trips.html') return;
     await seedDomains();
-    const main = document.querySelector('main .shell');
+    const main = getMainShell();
     if (!main || main.querySelector('[data-platform-trip-list]')) return;
     const trips = api.list('trips').filter((item) => item.ownerId === memberId);
     const head = main.querySelector('.page-head, .content-section-head');
@@ -468,12 +489,12 @@
   };
 
   const renderBookingState = async () => {
-    if (!['booking-detail.html', 'booking-complete.html'].includes(route)) return;
+    if (!['booking-detail.html', 'booking-complete.html', 'booking-change.html', 'booking-cancel.html'].includes(route)) return;
     await seedDomains();
     const checkout = api.list('checkout', []).find((item) => item.id === 'active');
     const id = new URLSearchParams(location.search).get('id') || checkout?.bookingId || 'HNG-2026-000001';
     const booking = api.list('bookings').find((item) => item.id === id);
-    const main = document.querySelector('main .shell');
+    const main = getMainShell();
     if (!booking || !main || main.querySelector('[data-live-booking-state]')) return;
     if (route === 'booking-complete.html') {
       const number = main.querySelector('.success-number strong');
@@ -486,8 +507,10 @@
     if (route === 'booking-detail.html') {
       const title = main.querySelector('.page-title');
       const lead = main.querySelector('.page-lead');
+      const breadcrumbParts = [...main.querySelectorAll('.page-breadcrumb > span')];
       if (title) title.textContent = booking.title;
-      if (lead) lead.textContent = `${booking.product || ''} · ${booking.startAt ? new Date(booking.startAt).toLocaleString('ko-KR') : ''}`;
+      if (lead) lead.textContent = [booking.product, booking.startAt ? new Date(booking.startAt).toLocaleString('ko-KR') : ''].filter(Boolean).join(' · ');
+      if (breadcrumbParts.length) breadcrumbParts[breadcrumbParts.length - 1].textContent = booking.id;
       const detailMain = main.querySelector('.checkout-main');
       if (detailMain) {
         detailMain.innerHTML = `
@@ -506,13 +529,58 @@
       if (side) {
         const sideTitle = side.querySelector('.checkout-product strong');
         const sideCopy = side.querySelector('.checkout-product small');
+        const sideImage = side.querySelector('.checkout-product img');
         const price = side.querySelector('.price-lines strong');
+        const firstItem = booking.items?.[0] || {};
+        const categoryHint = `${booking.title} ${booking.product || ''} ${firstItem.supplier || ''}`.toLowerCase();
+        const fallbackImage = categoryHint.includes('vehicle') || categoryHint.includes('세단') || categoryHint.includes('차량')
+          ? 'assets/images/marketplace/vehicle-sedan.jpg'
+          : categoryHint.includes('golf') || categoryHint.includes('골프')
+            ? 'assets/images/marketplace/golf-course.jpg'
+            : categoryHint.includes('spa') || categoryHint.includes('마사지')
+              ? 'assets/images/marketplace/spa-treatment.jpg'
+              : categoryHint.includes('restaurant') || categoryHint.includes('키친') || categoryHint.includes('식당')
+                ? 'assets/images/marketplace/restaurant-dining.jpg'
+                : 'assets/images/hero-hotel.jpg';
         if (sideTitle) sideTitle.textContent = booking.title;
         if (sideCopy) sideCopy.innerHTML = `${escapeHtml(booking.providerType || '공급자')}<br>${escapeHtml(booking.startAt ? new Date(booking.startAt).toLocaleString('ko-KR') : '일정 미정')}`;
+        if (sideImage) {
+          sideImage.src = firstItem.image || fallbackImage;
+          sideImage.alt = booking.title;
+        }
         if (price) price.textContent = `${Number(booking.amount || 0).toLocaleString('ko-KR')}원`;
       }
       main.querySelectorAll('a[href="booking-change.html"]').forEach((link) => { link.href = `booking-change.html?id=${encodeURIComponent(booking.id)}`; });
       main.querySelectorAll('a[href="booking-cancel.html"]').forEach((link) => { link.href = `booking-cancel.html?id=${encodeURIComponent(booking.id)}`; });
+    }
+    if (route === 'booking-change.html') {
+      const title = main.querySelector('.page-title');
+      const lead = main.querySelector('.page-lead');
+      const form = main.querySelector('[data-persist-form]');
+      const formGrid = form?.querySelector('.form-grid');
+      if (title) title.textContent = `${booking.title} 변경 요청`;
+      if (lead) lead.textContent = `${booking.product || '선택 옵션'} · 공급자 확정 전에는 변경 요청만 저장됩니다.`;
+      if (form) form.dataset.persistForm = `booking-change-${booking.id}`;
+      if (formGrid && booking.providerType !== 'HOTEL') {
+        formGrid.innerHTML = `<label class="form-field"><span>희망 이용일</span><input type="date" name="requestedDate" required></label><label class="form-field"><span>희망 시간</span><input type="time" name="requestedTime" required></label><label class="form-field"><span>변경 내용</span><input name="requestedOption" value="${escapeHtml(booking.product || '')}" required></label><label class="form-field"><span>변경 사유</span><select name="reason"><option>여행 일정 변경</option><option>이용 인원 변경</option><option>상품 옵션 변경</option><option>기타</option></select></label>`;
+      }
+      main.querySelectorAll('a[href="booking-detail.html"]').forEach((link) => { link.href = `booking-detail.html?id=${encodeURIComponent(booking.id)}`; });
+    }
+    if (route === 'booking-cancel.html') {
+      const title = main.querySelector('.page-title');
+      const lead = main.querySelector('.page-lead');
+      const form = main.querySelector('[data-persist-form]');
+      const amounts = [...main.querySelectorAll('.price-lines strong')];
+      if (title) title.textContent = `${booking.title} 취소 검토`;
+      if (lead) lead.textContent = `${booking.product || '선택 옵션'} · 공급자 최종 상태와 환불 규칙 확인 전에는 취소 요청으로 저장됩니다.`;
+      if (form) {
+        form.dataset.persistForm = `booking-cancel-${booking.id}`;
+        form.dataset.confirmMessage = `예상 취소 수수료는 0원, 예상 환불액은 ${Number(booking.amount || 0).toLocaleString('ko-KR')}원입니다. 현재 단계에서는 공급자에 취소 명령을 보내지 않고 Mock 요청만 저장합니다.`;
+      }
+      if (amounts[0]) amounts[0].textContent = `${Number(booking.amount || 0).toLocaleString('ko-KR')}원`;
+      if (amounts[1]) amounts[1].textContent = '0원';
+      if (amounts[2]) amounts[2].textContent = `${Number(booking.amount || 0).toLocaleString('ko-KR')}원`;
+      main.querySelectorAll('a[href="booking-detail.html"]').forEach((link) => { link.href = `booking-detail.html?id=${encodeURIComponent(booking.id)}`; });
     }
     main.insertAdjacentHTML('afterbegin', `<section class="platform-booking-strip" data-live-booking-state><div><small>JSON LOCAL API MOCK · ${escapeHtml(booking.id)}</small><strong>${escapeHtml(booking.status)}</strong><span>${escapeHtml(booking.title)} · ${Number(booking.amount || 0).toLocaleString('ko-KR')}원</span></div><div><a class="ui-button" href="inquiry-create.html?bookingId=${encodeURIComponent(booking.id)}">이 예약 문의</a><a class="ui-button" href="booking-detail.html?id=${encodeURIComponent(booking.id)}">상태 새로 보기</a></div></section>`);
   };
@@ -521,8 +589,13 @@
     if (!['booking-guests.html', 'booking-review.html', 'checkout.html'].includes(route)) return;
     const checkout = api.list('checkout', []).find((item) => item.id === 'active');
     if (!checkout) return;
-    const main = document.querySelector('main .shell');
+    const main = getMainShell();
     if (!main) return;
+    const total = (checkout.items || []).reduce((sum, item) => sum + Number(item.amount || 0), 0);
+    const itemRows = (checkout.items || []).map((item) => `<div class="info-row"><strong>${escapeHtml(item.title)}</strong><div>${escapeHtml(item.description || item.supplier || '선택 옵션')}<br>${Number(item.amount || 0).toLocaleString('ko-KR')}원</div></div>`).join('');
+    const itemCards = (checkout.items || []).map((item) => `<article><div><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.description || item.supplier || '선택 옵션')}</small></div><b>${Number(item.amount || 0).toLocaleString('ko-KR')}원</b></article>`).join('');
+    const guestName = `${checkout.guest?.familyName || ''} ${checkout.guest?.givenName || ''}`.trim() || '입력 확인 필요';
+
     if (route === 'booking-guests.html') {
       const form = main.querySelector('[data-flow-form]');
       if (!form || form.dataset.checkoutHydrated) return;
@@ -532,16 +605,64 @@
       if (checkout.guest?.givenName) textInputs[1].value = checkout.guest.givenName;
       if (checkout.guest?.email) form.querySelector('input[type="email"]').value = checkout.guest.email;
       if (checkout.guest?.phone) form.querySelector('input[type="tel"]').value = checkout.guest.phone;
+      const summary = main.querySelector('[data-checkout-summary]');
+      if (summary) {
+        summary.innerHTML = `<div class="checkout-selection-items">${itemCards || '<div class="empty-state"><strong>선택한 상품이 없습니다.</strong><p>카트로 돌아가 상품을 선택해 주세요.</p></div>'}</div><div class="price-lines"><div class="total"><span>예상 총액</span><strong>${Number(total).toLocaleString('ko-KR')}원</strong></div></div>`;
+      }
       return;
     }
+
+    if (route === 'booking-review.html') {
+      const signature = `${checkout.updatedAt || 'checkout'}:${checkout.items?.length || 0}:${total}`;
+      if (main.dataset.checkoutReviewHydrated === signature) return;
+      main.dataset.checkoutReviewHydrated = signature;
+      const banner = main.querySelector('[data-revalidation-banner]');
+      if (banner) {
+        banner.querySelector('strong').textContent = `${(checkout.items || []).length}개 상품의 Mock 가격과 이용 가능 여부를 확인했습니다`;
+        banner.querySelector('p').textContent = `확인 시각 ${new Date().toLocaleString('ko-KR')} · 실제 API 연결 전에는 결제·재고가 확정되지 않습니다.`;
+        banner.querySelector('.status-chip').textContent = checkout.items?.length ? '변경 없음' : '선택 없음';
+      }
+      const selection = main.querySelector('[data-review-selection] .info-list');
+      if (selection) {
+        selection.innerHTML = `${itemRows || '<div class="empty-state"><strong>선택한 상품이 없습니다.</strong><p>카트에서 상품을 선택해 주세요.</p></div>'}<div class="info-row"><strong>예약자</strong><div>${escapeHtml(guestName)}<br>${escapeHtml(checkout.guest?.email || '이메일 미입력')}</div></div><div class="info-row"><strong>공급자 확인</strong><div>각 상품은 공급자별 예약 가능 여부와 취소 조건을 별도로 확인합니다.</div></div>`;
+      }
+      const side = main.querySelector('[data-review-side]');
+      if (side) {
+        const actions = [...side.querySelectorAll('.ui-button')];
+        side.querySelector('.empty-state')?.remove();
+        side.insertAdjacentHTML('afterbegin', `<div class="checkout-selection-items">${itemCards}</div><div class="price-lines"><div><span>상품 ${checkout.items?.length || 0}개</span><span>${Number(total).toLocaleString('ko-KR')}원</span></div><div class="total"><span>예상 결제금액</span><strong>${Number(total).toLocaleString('ko-KR')}원</strong></div></div>`);
+        if (!checkout.items?.length && actions[0]) {
+          actions[0].href = 'cart.html';
+          actions[0].textContent = '카트에서 상품 선택';
+        }
+      }
+      return;
+    }
+
+    if (route === 'checkout.html') {
+      const signature = `${checkout.updatedAt || 'checkout'}:${checkout.items?.length || 0}:${total}`;
+      if (main.dataset.checkoutPaymentHydrated === signature) return;
+      main.dataset.checkoutPaymentHydrated = signature;
+      const side = main.querySelector('[data-payment-side]');
+      if (side) {
+        side.querySelector('.empty-state')?.remove();
+        side.insertAdjacentHTML('afterbegin', `<div class="checkout-selection-items">${itemCards || '<div class="empty-state"><strong>선택한 상품이 없습니다.</strong></div>'}</div><div class="price-lines"><div><span>상품 ${checkout.items?.length || 0}개</span><span>${Number(total).toLocaleString('ko-KR')}원</span></div><div><span>쿠폰</span><span>0원</span></div><div class="total"><span>최종 결제</span><strong>${Number(total).toLocaleString('ko-KR')}원</strong></div></div>`);
+        const payButton = side.querySelector('button[type="submit"]');
+        if (payButton) {
+          payButton.textContent = checkout.items?.length ? `${Number(total).toLocaleString('ko-KR')}원 결제 내용 확인` : '상품을 먼저 선택해 주세요';
+          payButton.disabled = !checkout.items?.length;
+        }
+      }
+      return;
+    }
+
     if (main.querySelector('[data-checkout-state]')) return;
-    const total = (checkout.items || []).reduce((sum, item) => sum + Number(item.amount || 0), 0);
     main.insertAdjacentHTML('afterbegin', `<section class="platform-state-panel" data-checkout-state><header><div><small>CHECKOUT JSON STATE</small><h2>이전 단계에서 유지된 선택</h2></div><strong>${Number(total).toLocaleString('ko-KR')}원</strong></header><div class="platform-checkout-summary"><div><strong>예약자</strong><span>${escapeHtml(`${checkout.guest?.familyName || ''} ${checkout.guest?.givenName || ''}`.trim() || '입력 확인 필요')} · ${escapeHtml(checkout.guest?.email || '-')}</span></div>${(checkout.items || []).map((item) => `<div><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description || '')} · ${Number(item.amount || 0).toLocaleString('ko-KR')}원</span></div>`).join('')}</div></section>`);
   };
 
   const renderRoleState = async () => {
     await seedDomains();
-    const main = document.querySelector('.bo-main, main .shell');
+    const main = document.querySelector('.bo-main') || getMainShell();
     if (!main || main.querySelector('[data-platform-role-state]')) return;
 
     if (['bookings.html', 'orders.html'].includes(route)) {
@@ -591,15 +712,106 @@
 
   const renderLandmarkAlternatives = async () => {
     if (route !== 'landmark.html') return;
-    const main = document.querySelector('main .shell');
-    if (!main || main.querySelector('[data-landmark-alternatives]')) return;
-    const knowledge = await api.get('ai/travel-knowledge.json').catch(() => null);
-    const destination = knowledge?.destinations?.find((item) => item.name === '교토');
-    if (!destination) return;
-    const ranked = [...destination.landmarks].sort((a, b) => b.score - a.score);
-    const hero = main.querySelector('.landmark-hero');
-    hero?.insertAdjacentHTML('afterend', `<section class="landmark-alternatives" data-landmark-alternatives><div class="content-section-head"><div><span class="page-eyebrow">AI LANDMARK OPTIONS · JSON</span><h2>같은 여행지의 다른 장면</h2><p>장소 점수와 취향 태그를 기준으로 정렬했습니다. 운영시간·지도 이동시간은 실제 연결 전까지 재확인 상태입니다.</p></div><a class="ui-button" href="ai-travel.html">AI 일정에서 조합하기</a></div><div>${ranked.map((item, index) => `<article><span>${index + 1}</span><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.reason)}</small><em>${escapeHtml(item.tags.join(' · '))} · ${item.score}점 · ${escapeHtml(item.confidence)}</em></div><button class="ui-button" type="button" data-add-trip data-trip-title="${escapeHtml(item.name)}" data-trip-type="${escapeHtml(item.type)}" data-trip-id="${escapeHtml(item.id)}">이 후보 담기</button></article>`).join('')}</div></section>`);
+    const main = getMainShell();
+    if (!main || main.querySelector('[data-landmark-alternatives]') || landmarkAlternativesState !== 'idle') return;
+    landmarkAlternativesState = 'loading';
+    try {
+      const knowledge = await api.get('ai/travel-knowledge.json');
+      const destination = knowledge?.destinations?.find((item) => item.name === '교토');
+      const hero = main.querySelector('.landmark-hero');
+      if (!destination || !hero) {
+        landmarkAlternativesState = 'idle';
+        return;
+      }
+      landmarkOptions = [...destination.landmarks].sort((a, b) => b.score - a.score);
+      const confidenceLabel = (value) => ({
+        CATALOG_VERIFIED: '기본 정보 확인됨',
+        HOURS_CHECK_REQUIRED: '방문 전 운영시간 확인'
+      }[value] || '정보 확인 필요');
+      hero.insertAdjacentHTML('afterend', `
+        <section class="landmark-alternatives" data-landmark-alternatives data-landmark-flow data-stage="browse">
+          <div class="landmark-choice-heading">
+            <div>
+              <span class="page-eyebrow">KYOTO PLACE OPTIONS</span>
+              <h2>내 일정에 어울리는 교토의 한 장면</h2>
+              <p>사진과 핵심 정보를 비교한 뒤 상세 내용을 확인하고 일정에 담아보세요.</p>
+            </div>
+            <a class="ui-button" href="ai-travel.html">여행 전체를 추천받기</a>
+          </div>
+          <ol class="landmark-choice-steps" aria-label="장소 선택 단계">
+            <li class="is-active"><span>1</span><strong>후보 비교</strong></li>
+            <li><span>2</span><strong>상세 확인</strong></li>
+            <li><span>3</span><strong>일정에 담기</strong></li>
+          </ol>
+          <p class="landmark-flow-status" data-landmark-flow-status>현재 장소와 함께 둘러보기 좋은 후보 4곳을 추천했어요.</p>
+          <div class="landmark-choice-grid">
+            ${landmarkOptions.map((item) => `
+              <article class="landmark-choice-card" data-landmark-card="${escapeHtml(item.id)}">
+                <img src="${escapeHtml(item.image || 'assets/images/landmark-kyoto.jpg')}" alt="${escapeHtml(item.name)} 방문 이미지">
+                <div class="landmark-choice-card-body">
+                  <div class="landmark-choice-meta"><span>${escapeHtml(item.area || '교토')}</span><span>추천 ${item.score}점</span></div>
+                  <strong>${escapeHtml(item.name)}</strong>
+                  <small>${escapeHtml(item.reason)}</small>
+                  <div class="landmark-choice-facts"><span>${escapeHtml(item.bestTime)} 추천</span><span>약 ${item.estimatedMinutes}분</span><span>${escapeHtml(confidenceLabel(item.confidence))}</span></div>
+                  <button class="ui-button" type="button" data-landmark-detail="${escapeHtml(item.id)}">상세보기</button>
+                </div>
+              </article>`).join('')}
+          </div>
+        </section>`);
+      landmarkAlternativesState = 'rendered';
+    } catch {
+      landmarkAlternativesState = 'idle';
+    }
   };
+
+  const openLandmarkDetail = (id) => {
+    const item = landmarkOptions.find((option) => option.id === id);
+    if (!item) return;
+    const confidenceLabel = ({
+      CATALOG_VERIFIED: '기본 정보가 확인된 장소입니다.',
+      HOURS_CHECK_REQUIRED: '방문 전 당일 운영시간을 확인해야 합니다.'
+    })[item.confidence] || '방문 전 최신 정보를 확인해 주세요.';
+    let dialog = document.querySelector('[data-landmark-dialog]');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.className = 'landmark-choice-dialog';
+      dialog.dataset.landmarkDialog = '';
+      document.body.append(dialog);
+    }
+    dialog.innerHTML = `
+      <div class="landmark-choice-dialog-visual"><img src="${escapeHtml(item.image || 'assets/images/landmark-kyoto.jpg')}" alt="${escapeHtml(item.name)} 상세 이미지"></div>
+      <div class="landmark-choice-dialog-copy">
+        <header><div><small>${escapeHtml(item.area || '교토')} · ${escapeHtml(item.tags.join(' · '))}</small><strong>${escapeHtml(item.name)}</strong></div><button type="button" data-landmark-dialog-close aria-label="상세보기 닫기">×</button></header>
+        <p>${escapeHtml(item.summary || item.reason)}</p>
+        <dl>
+          <div><dt>추천 시간</dt><dd>${escapeHtml(item.bestTime)}부터</dd></div>
+          <div><dt>권장 체류</dt><dd>약 ${item.estimatedMinutes}분</dd></div>
+          <div><dt>운영 안내</dt><dd>${escapeHtml(item.hoursNote || confidenceLabel)}</dd></div>
+          <div><dt>추천 이유</dt><dd>${escapeHtml(item.reason)}</dd></div>
+        </dl>
+        <div class="landmark-choice-tip"><strong>방문 전 확인</strong><span>${escapeHtml(item.visitTip || confidenceLabel)}</span></div>
+        <footer><button class="ui-button" type="button" data-landmark-dialog-close>다른 후보 더 보기</button><button class="ui-button primary" type="button" data-add-trip data-landmark-candidate data-trip-title="${escapeHtml(item.name)}" data-trip-type="${escapeHtml(item.type)}" data-trip-id="${escapeHtml(item.id)}">이 장소를 일정에 담기</button></footer>
+      </div>`;
+    dialog.querySelectorAll('[data-landmark-dialog-close]').forEach((button) => button.addEventListener('click', () => dialog.close()));
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    }, { once: true });
+    const flow = document.querySelector('[data-landmark-flow]');
+    if (flow) {
+      flow.dataset.stage = 'detail';
+      const status = flow.querySelector('[data-landmark-flow-status]');
+      if (status) status.textContent = `‘${item.name}’의 방문 정보와 주의사항을 확인하고 있어요.`;
+    }
+    dialog.showModal();
+  };
+
+  document.addEventListener('click', (event) => {
+    const detailButton = event.target.closest('[data-landmark-detail]');
+    if (detailButton) {
+      event.preventDefault();
+      openLandmarkDetail(detailButton.dataset.landmarkDetail);
+    }
+  });
 
   const observer = new MutationObserver(() => {
     renderDomainPanel();

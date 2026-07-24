@@ -6,14 +6,14 @@
   <title>다낭 호텔 검색 · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png" type="image/png">
   <link rel="stylesheet" href="styles/tokens.css?v=10"><link rel="stylesheet" href="styles/main.css?v=29"><link rel="stylesheet" href="styles/pages.css?v=17">
-  <script src="scripts/site-shell.js?v=12" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/auth.js?v=4" defer></script><script src="scripts/main.js?v=13" defer></script><script src="scripts/pages.js?v=8" defer></script>
+  <script src="scripts/site-shell.js?v=12" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/auth.js?v=4" defer></script><script src="scripts/main.js?v=13" defer></script><script src="scripts/pages.js?v=11" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a><div data-site-header data-active="hotels"></div>
   <main class="page-main" id="main-content">
     <section class="hotel-search-top">
       <div class="shell"><p class="search-kicker">해외 호텔 · 요금과 객실유형별 재고를 비교하세요</p>
-        <div class="search-summary"><form class="compact-search" data-search-page>
+        <div class="search-summary"><form class="compact-search" data-search-page data-hotel-search>
           <label><span>여행지 또는 호텔명</span><input name="destination" value="다낭" placeholder="도시나 호텔 이름" aria-label="여행지 또는 호텔명"></label>
           <label><span>체크인</span><input name="checkIn" type="date" value="2026-08-14" aria-label="체크인"></label>
           <label><span>체크아웃</span><input name="checkOut" type="date" value="2026-08-17" aria-label="체크아웃"></label>
@@ -45,7 +45,7 @@
         </aside>
 
         <section aria-labelledby="result-title">
-          <div class="result-toolbar"><div><h1 id="result-title"><span data-search-destination style="color:inherit">다낭</span> 호텔 <span data-result-count>4</span>곳</h1><p>2026.08.14–08.17 · 성인 2명 · 세금 포함 총액 기준</p></div><div class="view-controls"><button type="button" data-filter-toggle>필터</button><button class="is-active" type="button" data-hotel-view="list">목록</button><button type="button" data-hotel-view="map">지도</button><select aria-label="정렬" data-hotel-sort><option value="recommended">추천순</option><option value="price">낮은 가격순</option><option value="rating">평점 높은순</option></select></div></div>
+          <div class="result-toolbar"><div><h1 id="result-title"><span data-search-destination style="color:inherit">다낭</span> 호텔 <span data-result-count>4</span>곳</h1><p data-hotel-result-summary>2026.08.14–08.17 · 성인 2명 · 세금 포함 총액 기준</p></div><div class="view-controls"><button type="button" data-filter-toggle>필터</button><button class="is-active" type="button" data-hotel-view="list">목록</button><button type="button" data-hotel-view="map">지도</button><select aria-label="정렬" data-hotel-sort><option value="recommended">추천순</option><option value="price">낮은 가격순</option><option value="rating">평점 높은순</option></select></div></div>
           <div class="active-filters"><button type="button">해외 호텔 ×</button><button type="button">세금 포함 ×</button><button type="button">객실유형별 재고 ×</button></div>
           <div class="hotel-result-list">
             <article class="hotel-result-card" data-hotel-card data-price="559200" data-rating="9.2" data-tags="five-star pool breakfast free-cancel pickup kids">

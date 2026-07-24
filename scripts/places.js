@@ -143,10 +143,28 @@
         catalog: marketData.products[item.businessType]
       }))
       .filter((item) => item.profile);
+    const searchParams = new URLSearchParams(location.search);
+    const requestedDestination = searchParams.get('destination');
+    const destinationCity = {
+      다낭: 'Da Nang',
+      방콕: 'Bangkok',
+      발리: 'Bali',
+      교토: 'Kyoto'
+    }[requestedDestination] || requestedDestination;
+    const displayProviders = requestedDestination
+      ? providers.filter((item) => String(item.city).toLowerCase() === String(destinationCity).toLowerCase())
+      : providers;
 
     const list = document.querySelector('[data-place-catalog]');
     if (list) {
-      list.innerHTML = providers.map((item) => {
+      if (requestedDestination) {
+        const pageTitle = document.querySelector('[data-place-page-title]');
+        const pageLead = document.querySelector('[data-place-page-lead]');
+        if (pageTitle) pageTitle.textContent = `${requestedDestination} 현지 업체와 장소`;
+        if (pageLead) pageLead.textContent = `${requestedDestination}에서 이용할 수 있는 이동, 식사, 체험과 숙소를 실제 등록 데이터 기준으로 모았습니다.`;
+        document.title = `${requestedDestination} 현지 업체와 장소 · HotelnGo`;
+      }
+      list.innerHTML = displayProviders.map((item) => {
         const profile = item.profile;
         return `<article class="place-market-card" data-place-type="${h(item.businessType)}">
           <a class="place-market-cover" href="place-detail.html?id=${encodeURIComponent(item.id)}">
@@ -164,7 +182,7 @@
             </div>
           </div>
         </article>`;
-      }).join('');
+      }).join('') || `<div class="empty-state place-catalog-empty"><strong>${h(requestedDestination || '선택한 도시')}에 등록된 현지 상품이 아직 없습니다.</strong><p>다른 도시를 선택하거나 호텔·항공 검색을 먼저 진행해 주세요.</p><div class="page-head-actions"><a class="ui-button primary" href="hotels.html?destination=${encodeURIComponent(requestedDestination || '')}">호텔 보기</a><a class="ui-button" href="ai-travel.html">다른 도시 추천받기</a></div></div>`;
 
       document.querySelectorAll('[data-place-filter]').forEach((button) => button.addEventListener('click', () => {
         const type = button.dataset.placeFilter;
@@ -173,7 +191,7 @@
           card.hidden = type !== 'ALL' && card.dataset.placeType !== type;
         });
       }));
-      const requestedType = new URLSearchParams(location.search).get('category')?.toUpperCase();
+      const requestedType = searchParams.get('category')?.toUpperCase();
       const requestedFilter = requestedType && document.querySelector(`[data-place-filter="${requestedType}"]`);
       requestedFilter?.click();
     }
