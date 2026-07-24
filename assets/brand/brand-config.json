@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
+  "version": "1.5.0",
   "status": "LOCKED",
   "selectedAt": "2026-07-22",
   "brandName": "HotelnGo",
@@ -10,12 +10,12 @@
     "sourceContext": "actual header 126px"
   },
   "primaryAsset": {
-    "path": "index.html (.site-header .brand-logo)",
-    "format": "INLINE_SVG_EXACT_COPY",
-    "viewBox": "0 0 315 86",
+    "path": "assets/brand/official/hotelngo-logo-web.png",
+    "format": "PNG_RGBA",
+    "pixelSize": "504x138",
     "source": "assets/brand/n-color-types.html#color-03 .actual svg",
     "background": "transparent",
-    "policy": "DO_NOT_REDRAW_OR_SUBSTITUTE"
+    "policy": "USE_AS_IMAGE_WITHOUT_LIVE_TEXT"
   },
   "savedDesignSource": {
     "path": "assets/brand/n-color-types-v10-ocean-route.html",
@@ -40,10 +40,10 @@
     }
   },
   "rules": [
-    "Use the exact #color-03 actual SVG markup from n-color-types.html in the current website header.",
-    "Display it at 126px in the desktop header with the original 315:86 ratio.",
-    "Do not redraw, trace, crop, or substitute the header logo.",
+    "Use assets/brand/official/hotelngo-logo-web.png in website headers, footers, login screens, and backoffice shells.",
+    "Display it at 126px in the desktop header and preserve the 504:138 ratio.",
+    "Do not reconstruct the logo with HTML text, web fonts, or CSS shapes.",
     "Keep the saved n-color-types v10 HTML unchanged for future SVG work.",
-    "Do not use the previous wordmark PNG in website headers; do not overwrite the saved HTML source."
+    "Do not overwrite the saved HTML source or the approved web PNG without a new explicit approval."
   ]
 }

@@ -1,6 +1,6 @@
 # HotelnGo
 
-> **브랜드 로고 잠금:** 새 UI 작업 전에 `assets/brand/brand-config.json`과 `docs/hotelngo/13-brand-logo-style-guide.md`를 먼저 확인한다. 웹 헤더는 `n-color-types.html#color-03`에서 확정된 SVG 마크업만 사용한다.
+> **브랜드 로고 잠금:** 새 UI 작업 전에 `assets/brand/brand-config.json`과 `docs/hotelngo/13-brand-logo-style-guide.md`를 먼저 확인한다. 웹 화면은 `assets/brand/official/hotelngo-logo-web.png`만 사용하며 로고를 HTML 텍스트나 웹폰트로 재구성하지 않는다.
 
 해외 숙소 검색에서 시작해 호텔, 항공, 패키지, 투어, 랜드마크 스토리와 AI 여행을 연결하는 B2C 여행 플랫폼의 JSON Mock 프로토타입이다. 국내 상품은 이후 확장 범위다.
 

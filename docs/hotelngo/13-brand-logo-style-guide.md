@@ -1,4 +1,4 @@
-# HotelnGo 로고·브랜드 사용 가이드 v1.4
+# HotelnGo 로고·브랜드 사용 가이드 v1.5
 
 ## 1. 확정 상태
 
@@ -13,12 +13,12 @@
 
 | 파일 | 형식 | 용도 | 배경 |
 |---|---|---|---|
-| `index.html`의 `.site-header .brand-logo` | 인라인 SVG, viewBox 315 × 86 | 현재 홈페이지 헤더 정본 | 투명 |
+| `assets/brand/official/hotelngo-logo-web.png` | RGBA PNG, 504 × 138px | 웹 헤더·푸터·로그인·운영 화면 정본 | 투명 |
 | `assets/brand/n-color-types-v10-ocean-route.html` | HTML | Ocean Route v10 고정 보관본 | 해당 없음 |
 | `assets/brand/official/hotelngo-symbol-primary.png` | RGBA PNG, 88 × 88px | 파비콘·작은 배너 | 투명 |
 | `assets/brand/official/hotelngo-symbol-primary.svg` | SVG | 인쇄용 단독 심볼 | 투명 |
 
-현재 홈페이지에는 `n-color-types.html#color-03`의 `actual` SVG 마크업을 그대로 복사해 **실제 헤더 126px**로 표시한다. 다시 그린 자산을 사용하지 않는다. 동일 바이트 보관본은 `assets/brand/n-color-types-v10-ocean-route.html`이다.
+현재 홈페이지에는 `hotelngo-logo-web.png`를 **실제 헤더 126px**로 표시한다. 글자를 HTML 텍스트나 웹폰트로 렌더링하지 않는다. 디자인 소스 보관본은 `assets/brand/n-color-types-v10-ocean-route.html`이다.
 
 ## 3. 로고 구성
 
@@ -41,11 +41,11 @@
 
 `width`만 지정하고 `height:auto`로 원본 비율을 유지한다.
 
-메인 헤더는 `index.html`의 `.brand-logo`, 하위 페이지는 `scripts/site-shell.js`의 동일 마크업을 사용한다. 두 마크업의 viewBox, text 좌표, path, transform, gradient stop은 원본과 동일해야 한다.
+메인·하위 페이지는 `scripts/site-shell.js`를 통해 동일한 PNG를 사용한다. 로그인·관리자·호텔·파트너 화면도 같은 파일을 사용한다.
 
 ## 5. 배경과 여백
 
-- 승인된 웹 SVG 마크업과 단독 심볼 자산의 배경은 투명이다.
+- 승인된 웹 PNG와 단독 심볼 자산의 배경은 투명이다.
 - 흰색 또는 밝은 단색 표면에서 사용한다.
 - 사진·복잡한 그라데이션·어두운 배경에서는 흰색 보호 영역을 먼저 둔다.
 - 이미지 외부에는 최소 8px의 여백을 확보한다.
@@ -53,17 +53,17 @@
 
 ## 6. 용도별 선택
 
-- 웹 UI: `index.html` 및 `scripts/site-shell.js`의 승인된 `.brand-logo`
+- 웹 UI: `assets/brand/official/hotelngo-logo-web.png`
 - 파비콘·작은 아이콘: `hotelngo-symbol-primary.png`
 - 고정 보관본: `assets/brand/n-color-types-v10-ocean-route.html#color-03`
 - 심볼 단독 인쇄: `hotelngo-symbol-primary.svg`
 
-문서·인쇄용 워드마크는 현재 웹 SVG를 임의 변환하지 않고 별도 승인된 내보내기 자산이 준비될 때까지 보류한다.
+문서·인쇄용 워드마크는 웹 PNG를 확대하지 않고 별도 승인된 벡터 내보내기 자산이 준비될 때까지 보류한다.
 
 ## 7. 금지 사항
 
 - `assets/brand/archive/legacy-svg/` 내부 파일 사용
-- 원본 SVG 마크업 외의 HTML 텍스트, 웹폰트 조합 또는 CSS 도형으로 로고 재조립
+- HTML 텍스트, 웹폰트 조합, 인라인 SVG 또는 CSS 도형으로 로고 재조립
 - 서체, 자간, `n`·`g`·지도 마커 간격 변경
 - 지도 마커 내부 화살표만 이동하거나 다시 중앙 정렬
 - 크롭, 재색상, 늘이기, 찌그러뜨리기, 회전, 그림자, 외곽선, 필터 적용
@@ -81,13 +81,14 @@
 
 - [ ] `assets/brand/brand-config.json`을 먼저 읽었는가?
 - [ ] `assets/brand/n-color-types.html#color-03`의 actual SVG를 기준으로 했는가?
-- [ ] 현재 홈페이지에서 승인된 SVG 마크업을 126px로 사용하는가?
+- [ ] 현재 홈페이지에서 승인된 PNG를 126px로 사용하는가?
 - [ ] 비율, 승인 폭, 외부 여백을 유지하는가?
 - [ ] 마커 내부 흰 원이 불투명하게 유지되는가?
 - [ ] `archive/legacy-svg/` 파일을 사용하지 않았는가?
 
 ## 10. 관련 파일
 
-- SVG 고정 보관본: `assets/brand/n-color-types-v10-ocean-route.html`
+- 웹 PNG 정본: `assets/brand/official/hotelngo-logo-web.png`
+- 디자인 소스 보관본: `assets/brand/n-color-types-v10-ocean-route.html`
 - 시각 가이드: `style-guide.html`
 - 기계 판독 설정: `assets/brand/brand-config.json`

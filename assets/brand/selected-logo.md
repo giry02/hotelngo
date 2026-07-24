@@ -7,13 +7,13 @@
 
 ## 정본 파일
 
-- 현재 홈페이지 워드마크: `index.html`의 `.site-header .brand-logo`
+- 현재 홈페이지 워드마크: `official/hotelngo-logo-web.png`
 - 원본: `n-color-types.html#color-03`의 `actual` SVG 마크업
 - 고정 보관본: `n-color-types-v10-ocean-route.html#color-03`
 - 화면용 심볼: `official/hotelngo-symbol-primary.png`
 - 인쇄용 심볼: `official/hotelngo-symbol-primary.svg`
 
-현재 홈페이지 헤더는 `n-color-types.html#color-03`의 실제 헤더 126px SVG 마크업을 변경 없이 복사해 사용한다. 별도로 다시 그린 PNG나 SVG로 대체하지 않는다.
+현재 홈페이지 헤더·푸터·로그인·운영 화면은 투명 배경 `official/hotelngo-logo-web.png`를 사용한다. 로고는 이미지 파일로만 표시하며 HTML 텍스트나 웹폰트로 재구성하지 않는다.
 
 ## 자료 관리
 

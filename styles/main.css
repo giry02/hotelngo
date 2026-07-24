@@ -23,10 +23,7 @@ img, svg { display: block; max-width: 100%; }
 .site-header.is-scrolled { box-shadow: 0 4px 18px rgb(20 31 29 / 5%); }
 .header-inner { display: flex; align-items: center; height: 100%; gap: 42px; }
 .brand { width: 126px; height: auto; flex: 0 0 auto; }
-.brand img, .brand .brand-logo { width: 100%; height: auto; }
-.brand-logo .word { font-family: Pretendard, "Noto Sans", Arial, sans-serif; font-weight: 800; letter-spacing: -2.4px; fill: #181b1a; transform: scaleY(.94); transform-box: fill-box; transform-origin: center; }
-.brand-logo .pin { fill: #2f6bff; }
-.brand-logo .pin-hole { fill: #fff; }
+.brand img, .brand .brand-logo { width: 100%; height: auto; object-fit: contain; }
 .main-nav { display: flex; align-items: center; gap: 30px; height: 100%; }
 .main-nav a { position: relative; display: flex; align-items: center; height: 100%; color: #343a38; font-size: 16px; font-weight: 700; line-height: 24px; white-space: nowrap; }
 .main-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; }
