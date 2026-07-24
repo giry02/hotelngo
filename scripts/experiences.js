@@ -19,7 +19,7 @@
   };
   let catalog;
   let destinationId = '';
-  let category = 'ALL';
+  let category = categoryLabels[params.get('focus')] ? params.get('focus') : 'ALL';
 
   const destination = () => catalog.destinations.find((item) => item.id === destinationId);
   const destinationIdFrom = (value) => {
@@ -84,6 +84,9 @@
     const categoryButton = event.target.closest('[data-category]');
     if (categoryButton) {
       category = categoryButton.dataset.category;
+      if (category === 'ALL') params.delete('focus');
+      else params.set('focus', category);
+      history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
       renderCatalog();
       return;
     }
