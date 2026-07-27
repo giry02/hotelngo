@@ -114,7 +114,7 @@
       kicker: "02 · WHY NOW",
       title: "고객·공급자·운영자의 단절을 동시에 해결",
       summary: "검색과 예약이 흩어져 있고, 현지 공급자는 온라인 판매가 어렵고, 운영자는 여러 공급 방식의 품질과 거래를 통합하기 어렵습니다.",
-      visual: `<div class="cards-3" style="height:100%">
+      visual: `<div class="cards-3 feature-cards" style="height:100%">
         ${card("users", "TRAVELER", "전체 일정이 보이지 않는다", "호텔·맛집·골프·마사지·이동을 서로 다른 사이트에서 찾아 시간·거리·운영시간까지 직접 맞춰야 합니다.", "accent")}
         ${card("store", "SUPPLIER", "상품화와 판매 운영이 어렵다", "현지 업체는 사진·서비스·가격·자원·슬롯을 구조화하고 예약·정산까지 운영할 도구가 부족합니다.")}
         ${card("support", "OPERATOR", "부분 실패와 품질 책임이 남는다", "PMS·파트너·외부 API를 함께 다루며 오래된 정보, 취소, 환불, 대사와 고객지원을 해결해야 합니다.")}
@@ -245,7 +245,7 @@
       kicker: "10 · END-TO-END JOURNEY",
       title: "목적지 발견부터 여행 후 공유까지 하나의 흐름",
       summary: "목적지 미정·확정·AI 이용 고객의 출발점은 달라도 최종적으로 일정, 카트, 예약, 내 여행과 후기에서 합쳐집니다.",
-      visual: `<div class="flow-band" style="--count:8">
+      visual: `<div class="flow-band journey-flow" style="--count:4">
         ${flowNode("spark","01","욕구 형성","스토리·테마")}
         ${flowNode("compass","02","목적지 발견","도시·랜드마크")}
         ${flowNode("calendar","03","조건 확정","기간·인원")}
@@ -287,17 +287,22 @@
       kicker: "13 · MULTI-DAY ITINERARY",
       title: "하나의 상품이 아니라 여행 전체를 날짜별로 구성",
       summary: "4박 5일 안에 숙소·랜드마크·식사·골프·스파·이동을 여러 개 배치하고 시간·거리·영업시간·예약 상태를 검증합니다.",
-      visual: `<div class="itinerary-board">
-        <section class="day-timeline"><div class="day-tabs"><span class="day-tab active">DAY 1</span><span class="day-tab">DAY 2</span><span class="day-tab">DAY 3</span><span class="day-tab">DAY 4</span><span class="day-tab">DAY 5</span></div>
+      visual: `<div class="trip-composer">
+        <section class="day-timeline trip-selected"><div class="day-tabs"><span class="day-tab active">DAY 1</span><span class="day-tab">DAY 2</span><span class="day-tab">DAY 3</span><span class="day-tab">DAY 4</span><span class="day-tab">DAY 5</span></div>
           <div class="schedule-item"><time>15:00</time><div><strong>다낭 오션 리조트 체크인</strong><small>숙소 · 4박 · 예약 필요</small></div><i class="type-dot"></i></div>
           <div class="schedule-item"><time>17:30</time><div><strong>미케 비치 산책</strong><small>랜드마크 · 90분 · 무료</small></div><i class="type-dot"></i></div>
           <div class="schedule-item"><time>19:30</time><div><strong>선짜 해산물 디너</strong><small>식사 · 요청 예약</small></div><i class="type-dot"></i></div>
           <div class="schedule-item"><time>21:30</time><div><strong>리버사이드 마사지</strong><small>스파 · 60분 · 확인 필요</small></div><i class="type-dot"></i></div>
         </section>
-        <aside class="recommendation-stack"><small class="slide-kicker">ADD TO YOUR DAYS</small>
-          <div class="recommend-card"><img src="${ASSET}hotel-detail.png" alt=""><div><small>숙소</small><strong>객실 대안 비교</strong><p>가격·위치·취소 조건</p></div></div>
-          <div class="recommend-card"><img src="${ASSET}discover.png" alt=""><div><small>랜드마크</small><strong>바나힐 또는 호이안</strong><p>이동시간과 혼잡도 반영</p></div></div>
-          <div class="recommend-card"><img src="${ASSET}trip-planner.png" alt=""><div><small>일정 검증</small><strong>충돌·공백·숙소 누락</strong><p>저장 전 자동 확인</p></div></div>
+        <aside class="trip-palette">
+          <header><div><small>ADD TO YOUR DAYS</small><strong>선택하고, 날짜와 시간을 정해 담습니다</strong></div><span>4개 카테고리</span></header>
+          <div class="trip-option-grid">
+            <article class="trip-option"><img src="assets/images/marketplace/hotel-resort.jpg" alt="리조트"><div><small>숙소 · 즉시예약</small><strong>다낭 오션 리조트</strong><p>4박 612,000원 · 무료취소</p></div></article>
+            <article class="trip-option"><img src="assets/images/marketplace/golf-course.jpg" alt="골프장"><div><small>골프 · 요청예약</small><strong>몽고메리 링크스</strong><p>18홀 · 캐디·카트 포함</p></div></article>
+            <article class="trip-option"><img src="assets/images/marketplace/restaurant-dining.jpg" alt="레스토랑"><div><small>식사 · 좌석예약</small><strong>선짜 씨푸드 디너</strong><p>해산물 코스 · 2인</p></div></article>
+            <article class="trip-option"><img src="assets/images/marketplace/spa-treatment.jpg" alt="스파"><div><small>스파 · 요청예약</small><strong>리버사이드 테라피</strong><p>아로마 60분 · 픽업 가능</p></div></article>
+          </div>
+          <div class="validation-banner">${icon("shield")}<div><strong>일정 검증</strong><span>이동 25분 · 영업시간 정상 · 중복 없음 · 예약 3건 필요</span></div></div>
         </aside>
       </div>`
     },
@@ -306,9 +311,17 @@
       kicker: "14 · HOTEL SEARCH & BOOKING",
       title: "PMS 판매 데이터와 B2C 콘텐츠를 결합한 호텔 경험",
       summary: "도시와 호텔명을 함께 검색하고, 다중 이미지·객실·편의시설·후기·정책·요금·재고를 확인한 뒤 일정과 예약으로 연결합니다.",
-      visual: `<div class="desktop-collage">
+      visual: `<div class="product-showcase">
         ${screen("hotel-detail.png","main-screen","호텔 상세 화면")}
-        <div class="side-screens">${screen("home.png","","호텔 검색")}${screen("cart.png","","여행 카트")}</div>
+        <aside class="product-proof">
+          <div class="proof-lead"><small>ONE HOTEL VIEW</small><strong>PMS 판매 정보와<br>B2C 콘텐츠의 결합</strong><p>내부 호실 정보는 숨기고 고객이 비교·선택·예약하는 정보만 제공합니다.</p></div>
+          <div class="proof-list">
+            <div>${icon("compass")}<span><strong>도시·호텔명 통합 검색</strong><small>목적지와 숙소명을 같은 검색창에서</small></span></div>
+            <div>${icon("hotel")}<span><strong>객실별 다중 이미지</strong><small>갤러리·편의시설·정책·후기</small></span></div>
+            <div>${icon("calendar")}<span><strong>날짜별 요금·가용 수량</strong><small>PMS Offer와 재고를 공개 모델로 변환</small></span></div>
+            <div>${icon("cart")}<span><strong>일정 담기 또는 즉시예약</strong><small>카트에서도 날짜·인원·객실 유지</small></span></div>
+          </div>
+        </aside>
       </div>`
     },
     {
@@ -331,7 +344,7 @@
       title: "AI는 일정 초안을 만들고, 실데이터와 규칙이 가능성을 검증",
       summary: "자연어 선호를 구조화하고 RAG와 도구로 장소·상품·운영시간·거리·재고를 조회한 뒤 근거와 신뢰 상태를 함께 제시합니다.",
       theme: "ink",
-      visual: `<div>
+      visual: `<div class="ai-architecture">
         <div class="pipeline">
           <article class="pipeline-step"><small>01 · INPUT</small><strong>자연어 요청</strong><p>도시·기간·동행·예산·분위기·꼭 하고 싶은 일</p></article>
           <article class="pipeline-step"><small>02 · RETRIEVE</small><strong>근거 검색</strong><p>장소·상품·정책·스토리·후기·실시간 도구</p></article>
@@ -347,7 +360,7 @@
       kicker: "17 · MEMBER & SUPPORT",
       title: "독립 회원을 중심으로 후기와 고객지원을 연결",
       summary: "HotelNGo 회원은 PMS 회원과 분리하며, 여행자 프로필·예약·일정·후기·문의 데이터를 독립적으로 소유합니다.",
-      visual: `<div class="flow-band" style="--count:5">
+      visual: `<div class="flow-band member-flow" style="--count:5">
         ${flowNode("users","ACCOUNT","회원·프로필","이메일·SNS·국적·여권 정보")}
         ${flowNode("calendar","MY TRIP","여행·예약","저장 일정·예약·바우처")}
         ${flowNode("review","REVIEW","검증된 후기","실제 이용 연결·사진·신고")}
@@ -440,6 +453,11 @@
           <div class="status-lane wait">2단계 · /api/v1/channel 조회 + Shadow</div>
           <div class="status-lane risk">3단계 · hold/create/modify/cancel/reconcile</div>
         </div>
+        <div class="pms-principles">
+          <article>${icon("shield")}<div><strong>공개 경계</strong><p>물리 호실·직원·Folio는 B2C 계약에서 제외</p></div></article>
+          <article>${icon("database")}<div><strong>원천 데이터</strong><p>요금·재고·예약의 최종 원천은 Hotel_PMS</p></div></article>
+          <article>${icon("link")}<div><strong>예약 연결</strong><p>HotelNGo 예약과 PMS 예약은 링크 엔티티로 연결</p></div></article>
+        </div>
       </div>`
     },
     {
@@ -460,13 +478,17 @@
       kicker: "24 · API & INTEGRATION",
       title: "공개·파트너·관리자·공급 API를 계약 중심으로 구축",
       summary: "채널 구현을 교체해도 B2C 표현이 바뀌지 않도록 공급 어댑터를 중심에 두고 인증·멱등성·추적·버전·오류 계약을 공통화합니다.",
-      visual: `<div class="adapter-hub">
-        <div class="adapter-core">HotelSupplyAdapter<br><small>COMMON CONTRACT</small></div>
-        <article class="adapter-satellite"><strong>B2C Public API</strong><p>검색·상세·오퍼·일정·카트·예약·회원</p></article>
-        <article class="adapter-satellite"><strong>Partner API</strong><p>업체·상품·자원·슬롯·예약·정산</p></article>
-        <article class="adapter-satellite"><strong>Admin API</strong><p>심사·권한·감사·대사·CS·AI 운영</p></article>
-        <article class="adapter-satellite"><strong>External Adapters</strong><p>PG·지도·날씨·메시지·환율·미디어</p></article>
-        <article class="adapter-satellite"><strong>PMS Channel API</strong><p>호텔·객실·요금·재고·예약·대사</p></article>
+      visual: `<div class="api-stack">
+        <div class="api-consumers">
+          <article><span>${icon("users")}</span><div><small>CLIENT API</small><strong>B2C Public</strong><p>검색·상세·일정·카트·예약·회원</p></div></article>
+          <article><span>${icon("store")}</span><div><small>OPERATIONS API</small><strong>Partner</strong><p>업체·상품·자원·슬롯·예약·정산</p></div></article>
+          <article><span>${icon("shield")}</span><div><small>CONTROL API</small><strong>Admin</strong><p>심사·감사·대사·CS·AI 운영</p></div></article>
+        </div>
+        <div class="contract-bar"><span>${icon("api")}</span><div><small>COMMON CONTRACT</small><strong>HotelSupplyAdapter</strong></div>${chips(["인증", "멱등성", "추적 ID", "버전", "오류 계약"], "dark")}</div>
+        <div class="api-providers">
+          <article><span>${icon("hotel")}</span><div><small>INTERNAL SUPPLY</small><strong>PMS Channel API</strong><p>호텔·객실·요금·재고·예약·대사</p></div></article>
+          <article><span>${icon("link")}</span><div><small>EXTERNAL SERVICES</small><strong>External Adapters</strong><p>PG·지도·날씨·메시지·환율·미디어</p></div></article>
+        </div>
       </div>`
     },
     {
@@ -474,17 +496,17 @@
       kicker: "25 · BRAND & EXPERIENCE",
       title: "한국형 상용 여행 서비스의 밀도와 감성 콘텐츠를 결합",
       summary: "신뢰감 있는 블루를 주색으로 사용하고, HotelnGo의 n 심볼과 지도 마커 O를 아이덴티티로 유지하며 화면별 목적과 전환을 명확히 합니다.",
-      visual: `<div class="split-layout wide-left">
-        <div class="desktop-collage">${screen("home.png","main-screen","데스크톱 홈")}<div class="side-screens">${screen("mobile-home.png","","모바일 홈")}${screen("mobile-trip.png","","모바일 일정")}</div></div>
-        <div>
-          <div class="metric-grid" style="grid-template-columns:1fr 1fr">
+      visual: `<div class="design-showcase">
+        ${screen("home.png","main-screen","HotelNGo 데스크톱 홈")}
+        <aside>
+          <div class="metric-grid design-tokens" style="grid-template-columns:1fr 1fr">
             <div class="metric-card"><small>PRIMARY</small><strong style="color:#356dff">#356DFF</strong><p>행동과 신뢰</p></div>
             <div class="metric-card"><small>ACCENT</small><strong style="color:#16c4d8">#16C4D8</strong><p>여행과 연결</p></div>
             <div class="metric-card"><small>TYPE</small><strong>Pretendard</strong><p>한국어 정보 밀도</p></div>
             <div class="metric-card"><small>IDENTITY</small><strong>n + map O</strong><p>브랜드 자산</p></div>
           </div>
-          ${chips(["명확한 위계", "44px 이상 터치", "공통 컴포넌트", "반응형", "상태 피드백"], "teal")}
-        </div>
+          <div class="design-principles"><strong>화면 원칙</strong>${chips(["명확한 위계", "44px 이상 터치", "공통 컴포넌트", "반응형", "상태 피드백"], "teal")}</div>
+        </aside>
       </div>`
     },
     {
@@ -565,13 +587,13 @@
       kicker: "31 · RISK MANAGEMENT",
       title: "공급·거래·AI·운영 위험을 출시 단계에서 통제",
       summary: "범위 확대보다 신뢰 가능한 정보와 부분 실패 복구를 우선하며, 도시와 예약 방식별로 위험을 낮춘 뒤 확장합니다.",
-      visual: `<div class="risk-matrix">
+      visual: `<div class="risk-matrix improved">
         <div class="risk-y">영향도 ↑</div>
         <div class="risk-board">
-          <div><span class="risk-chip">콘텐츠 권리</span><span class="risk-chip">SEO 의존</span></div>
-          <div><span class="risk-chip">공급 밀도 부족</span><span class="risk-chip">오래된 정보</span><span class="risk-chip">현지 SLA</span></div>
-          <div><span class="risk-chip">범위 과대</span><span class="risk-chip">외부 API 비용</span></div>
-          <div><span class="risk-chip">PMS 지연</span><span class="risk-chip">부분 예약 실패</span><span class="risk-chip">AI 환각</span><span class="risk-chip">개인정보·여권</span><span class="risk-chip">취소·분쟁</span></div>
+          <div><h3>관찰</h3><span class="risk-chip">콘텐츠 권리</span><span class="risk-chip">SEO 의존</span><p>권리 증빙과 유입 채널을 지속 점검</p></div>
+          <div><h3>완화</h3><span class="risk-chip">공급 밀도 부족</span><span class="risk-chip">오래된 정보</span><span class="risk-chip">현지 SLA</span><p>한 도시 집중·확인일·응답 SLA 운영</p></div>
+          <div><h3>범위 통제</h3><span class="risk-chip">범위 과대</span><span class="risk-chip">외부 API 비용</span><p>단계별 Gate와 비용 한도로 통제</p></div>
+          <div><h3>출시 차단</h3><span class="risk-chip">PMS 지연</span><span class="risk-chip">부분 예약 실패</span><span class="risk-chip">AI 환각</span><span class="risk-chip">개인정보</span><p>Shadow·대사·근거 검증·암호화가 없으면 출시하지 않음</p></div>
         </div>
         <div class="risk-x">발생 가능성 →</div>
       </div>`
@@ -581,7 +603,7 @@
       kicker: "32 · GO / HOLD / STOP",
       title: "다섯 개 의사결정 Gate로 투자와 확장을 통제",
       summary: "문제·공급·거래·단위경제성·확장 가설이 순서대로 검증되어야 다음 단계의 범위와 예산을 승인합니다.",
-      visual: `<div class="decision-board">
+      visual: `<div class="decision-board gate-sequence">
         <article class="decision-gate" data-gate="1"><small>GATE 1</small><strong>문제·고객 검증</strong><p>다일정 어려움, 감성 콘텐츠, 직접·AI 방식 선호</p><span class="decision">INTERVIEW → PROTOTYPE</span></article>
         <article class="decision-gate" data-gate="2"><small>GATE 2</small><strong>공급 검증</strong><p>도시별 공급 밀도, 상품 운영 의사, 요청예약 SLA</p><span class="decision">SUPPLY PILOT</span></article>
         <article class="decision-gate" data-gate="3"><small>GATE 3</small><strong>거래 검증</strong><p>가격·재고 신뢰, 요청 확정, 비호텔 객단가 기여</p><span class="decision">PAID TRANSACTION</span></article>
@@ -594,7 +616,7 @@
       kicker: "33 · ITEMS TO CONFIRM",
       title: "사업 착수 전에 확정해야 할 14개 핵심 항목",
       summary: "도시·공급·거래·정책·기술·법무·AI·조직의 미확정 사항을 책임자와 기한이 있는 의사결정 항목으로 관리합니다.",
-      visual: `<div class="decision-board" style="grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)">
+      visual: `<div class="decision-board open-decisions" style="grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)">
         ${[
           ["01–02","시장·공급","1차 국가·도시와 목표 호텔·업체·상품 수"],
           ["03–04","거래·PMS","실거래 업종·예약 방식과 채널 API 주체·일정"],
