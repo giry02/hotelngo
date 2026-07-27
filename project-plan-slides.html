@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HotelNGo 사업·통합 프로젝트 계획서 웹 프레젠테이션">
+  <meta name="theme-color" content="#071735">
+  <title>HotelNGo 사업·통합 프로젝트 계획서 · Web Presentation</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/project-plan-slides.css?v=2">
+</head>
+<body>
+  <div class="deck-app" data-deck>
+    <header class="deck-topbar">
+      <a class="deck-logo" href="index.html" aria-label="HotelNGo 홈">
+        <img src="assets/brand/official/hotelngo-logo-web.png" alt="HotelNGo">
+      </a>
+      <div class="deck-document">
+        <span>PROJECT PLAN · WEB PRESENTATION</span>
+        <strong>사업·통합 프로젝트 계획서</strong>
+      </div>
+      <div class="deck-top-actions">
+        <a class="deck-source-link" href="project-plan.html">전체 문서</a>
+        <button type="button" class="icon-button" data-overview-open aria-label="전체 슬라이드 보기" title="전체 슬라이드 보기 (O)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+        </button>
+        <button type="button" class="icon-button" data-fullscreen aria-label="전체 화면" title="전체 화면 (F)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="deck-workspace">
+      <div class="deck-stage-wrap">
+        <div class="deck-stage" data-deck-stage aria-live="polite"></div>
+      </div>
+
+      <aside class="deck-index" aria-label="슬라이드 진행 현황">
+        <div class="deck-counter"><strong data-current>01</strong><span>/</span><small data-total>36</small></div>
+        <div class="deck-progress"><span data-progress></span></div>
+        <div class="deck-section-name" data-section-name>INTRO</div>
+      </aside>
+
+      <nav class="deck-controls" aria-label="프레젠테이션 이동">
+        <button type="button" data-prev aria-label="이전 슬라이드">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button type="button" data-next aria-label="다음 슬라이드">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </nav>
+    </main>
+
+    <div class="deck-overview" data-overview hidden>
+      <div class="overview-backdrop" data-overview-close></div>
+      <section class="overview-panel" role="dialog" aria-modal="true" aria-labelledby="overview-title">
+        <header>
+          <div>
+            <span>SLIDE MAP</span>
+            <h2 id="overview-title">전체 36장 구성</h2>
+          </div>
+          <button type="button" class="icon-button dark" data-overview-close aria-label="닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </header>
+        <div class="overview-grid" data-overview-grid></div>
+      </section>
+    </div>
+
+    <div class="rotate-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4 7h11v8H4zM17 9l3 3-3 3M8 19h8"/></svg>
+      <strong>가로 화면에서 더 선명하게 볼 수 있어요.</strong>
+    </div>
+  </div>
+
+  <noscript>이 프레젠테이션은 JavaScript가 필요합니다. <a href="project-plan.html">전체 계획서</a>를 열어주세요.</noscript>
+  <script src="scripts/project-plan-slides.js?v=2"></script>
+</body>
+</html>
