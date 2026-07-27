@@ -50,6 +50,14 @@
     return `<figure class="screen-frame ${classes}"><span class="screen-browser"><i></i><i></i><i></i></span><img src="${ASSET}${src}" alt="${label}" loading="lazy"></figure>`;
   }
 
+  function menuDetailCard(iconName, title, description, items, tone = "") {
+    return `<article class="menu-detail-card ${tone}">
+      <div class="menu-detail-icon">${icon(iconName)}</div>
+      <div class="menu-detail-copy"><h3>${title}</h3><p>${description}</p></div>
+      <ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>
+    </article>`;
+  }
+
   function standardBody(slide, index) {
     return `
       <div class="slide-shell ${slide.theme || "light"}">
@@ -525,12 +533,39 @@
     {
       section: "ROADMAP",
       kicker: "27 · RELEASE ROADMAP",
-      title: "공급과 거래 능력을 검증하며 단계적으로 출시",
-      summary: "모든 업종의 즉시예약을 한 번에 구축하지 않고 호텔 조회와 요청예약으로 시작해 운영 능력이 검증된 영역부터 확장합니다.",
-      visual: `<div class="roadmap">
-        <article class="roadmap-phase" data-phase="1"><small>WAVE 1 · FOUNDATION</small><h3>사업·플랫폼·공급 기반</h3><p>0~3단계</p><ul><li>고객·도시·공급 가설 검증</li><li>독립 계정·DB·API·감사</li><li>Provider·Place·claim·콘텐츠</li><li>PMS 호텔 조회·Shadow</li></ul></article>
-        <article class="roadmap-phase" data-phase="2"><small>WAVE 2 · DEMAND & COMPOSE</small><h3>발견·일정·요청 예약</h3><p>4~6단계</p><ul><li>홈·스토리·랜드마크·공개 일정</li><li>다일정 편집·지도·검증</li><li>현지 서비스 요청 예약</li><li>복수 업종 조합률 검증</li></ul></article>
-        <article class="roadmap-phase" data-phase="3"><small>WAVE 3 · TRANSACTION & SCALE</small><h3>결제·PMS 예약·AI·확장</h3><p>7~10단계</p><ul><li>주문·PG·환불·정산·대사</li><li>PMS hold·예약·변경·취소</li><li>RAG·도구·평가 기반 AI</li><li>도시·다국어·앱·개인화</li></ul></article>
+      title: "고객이 쓰는 메뉴와 운영 메뉴를 순서대로 개방",
+      summary: "기술 구축 단위가 아니라 고객이 무엇을 할 수 있고 호텔·파트너·관리자가 언제부터 운영하는지를 기준으로 세 차례에 나누어 출시합니다.",
+      visual: `<div class="release-roadmap">
+        <article class="release-wave wave-one" data-phase="1">
+          <header><small>1차 공개 · 발견과 호텔</small><h3>가고 싶은 곳을 찾고<br>호텔을 비교합니다</h3><p>해외 도시 탐색과 호텔 조회가 가능한 첫 공개 범위</p></header>
+          <div class="release-menu-list">
+            <div><strong>B2C</strong><span>홈·여행 발견 · 호텔 검색·상세 · 저장</span></div>
+            <div><strong>호텔</strong><span>호텔·객실·사진·편의시설 · PMS 공개 매핑</span></div>
+            <div><strong>파트너</strong><span>가입 신청 · 업체 소개 · 입점 상담</span></div>
+            <div><strong>관리자</strong><span>호텔·콘텐츠·업체 심사 · 공개 승인</span></div>
+          </div>
+          <footer><span>OPEN WHEN</span><strong>다낭 호텔 조회와 콘텐츠 검수가 안정적일 때</strong></footer>
+        </article>
+        <article class="release-wave wave-two" data-phase="2">
+          <header><small>2차 공개 · 일정과 요청예약</small><h3>4박 5일 여행을 만들고<br>현지 서비스를 담습니다</h3><p>호텔과 여러 즐길거리를 날짜별로 조합하는 범위</p></header>
+          <div class="release-menu-list">
+            <div><strong>B2C</strong><span>여행 일정 · AI 초안 · 즐길거리 · 여행 카트</span></div>
+            <div><strong>호텔</strong><span>요금·가용 수량 조회 · 콘텐츠 갱신</span></div>
+            <div><strong>파트너</strong><span>상품·옵션·가격·슬롯 · 요청예약 처리</span></div>
+            <div><strong>관리자</strong><span>상품 심사 · 예약 현황 · 고객문의·대체 처리</span></div>
+          </div>
+          <footer><span>OPEN WHEN</span><strong>복수 업종 일정과 요청예약 SLA가 검증될 때</strong></footer>
+        </article>
+        <article class="release-wave wave-three" data-phase="3">
+          <header><small>3차 공개 · 결제와 운영 확장</small><h3>예약·결제·여행 후기를<br>하나로 관리합니다</h3><p>통합 거래와 사후 운영까지 완성하는 확장 범위</p></header>
+          <div class="release-menu-list">
+            <div><strong>B2C</strong><span>결제 · 예약 조회 · 내 여행 · 후기·공유</span></div>
+            <div><strong>호텔</strong><span>PMS 예약 명령 · 변경·취소 · 대사</span></div>
+            <div><strong>파트너</strong><span>예약 변경·취소 · 쿠폰 · 정산·통계</span></div>
+            <div><strong>관리자</strong><span>결제·환불·정산 · 감사 · AI·운영 모니터링</span></div>
+          </div>
+          <footer><span>OPEN WHEN</span><strong>부분 실패 복구와 거래당 공헌이익이 확인될 때</strong></footer>
+        </article>
       </div>`
     },
     {
@@ -643,17 +678,59 @@
       </div>`
     },
     {
-      section: "APPENDIX B",
-      kicker: "35 · REQUIREMENT COVERAGE",
-      title: "최초 계획서의 모든 핵심 항목을 본 계획에 연결",
-      summary: "사업·공급·고객·B2C·파트너·관리자·데이터·PMS·비기능·로드맵·테스트 항목을 1~35장에 추적 가능하게 배치합니다.",
-      visual: `<div class="coverage-board">
-        <section class="coverage-list"><h3>사업·고객·서비스</h3>
-          ${[["01–06","비전·사업 구조"],["04·17","사용자·회원·권한"],["10–12","B2C·홈·스토리"],["13","직접 일정·공개 일정"],["14","호텔 검색·예약"],["15·20","업종별 상품·파트너"],["16","AI 여행·RAG"],["18","카트·통합 거래"]].map(([n,t])=>`<div class="coverage-item"><span>${n}</span><strong>${t}</strong><i></i></div>`).join("")}
-        </section>
-        <section class="coverage-list"><h3>공급·기술·운영·검증</h3>
-          ${[["09·23","공급·입점·소유권"],["19–21","콘텐츠·파트너·관리자"],["22","Hotel_PMS 연동"],["23–24","데이터·API"],["25–26","디자인·비기능"],["27–28","로드맵·조직"],["29–32","KPI·손익·위험·Gate"],["33–35","확정 항목·메뉴·추적"]].map(([n,t])=>`<div class="coverage-item"><span>${n}</span><strong>${t}</strong><i></i></div>`).join("")}
-        </section>
+      section: "APPENDIX B · B2C",
+      kicker: "35 · B2C MENU GUIDE",
+      title: "고객은 발견부터 여행 후 관리까지 한 계정에서 수행",
+      summary: "각 메뉴가 무엇을 위한 화면인지 명확히 구분하고, 발견한 콘텐츠와 선택한 상품이 여행 일정·카트·예약으로 계속 이어지게 합니다.",
+      visual: `<div class="menu-detail-grid b2c-menu">
+        ${menuDetailCard("compass","홈 · 여행 발견","어디로 갈지 정하지 못한 고객에게 도시와 테마를 제안합니다.",["시즌·이벤트 배너","도시·랜드마크 스토리","테마·인기 여행 추천"],"primary")}
+        ${menuDetailCard("calendar","여행 일정","목적지·기간·동행을 정하고 날짜별 전체 여행을 구성합니다.",["일차별 숙소·식사·활동·이동","시간·거리·영업 충돌 확인","공개 일정 복사·수정·공유"])}
+        ${menuDetailCard("spark","AI 여행","자연어 요청으로 여행 초안을 받고 근거를 보며 대안을 바꿉니다.",["취향·예산·속도 입력","장소·상품 근거와 신뢰 상태","대화형 일정·장소 교체"],"teal")}
+        ${menuDetailCard("hotel","호텔 · 즐길거리","도시와 호텔명을 함께 찾고 업종별 선택 기준으로 비교합니다.",["객실별 다중 이미지·요금·재고","골프·차량·식사·스파·투어","저장 또는 일정에 담기"])}
+        ${menuDetailCard("cart","여행 카트 · 예약","일정에서 고른 항목을 재검증하고 하나의 여행 주문으로 관리합니다.",["날짜·인원·옵션 유지","즉시·요청·외부·정보형 구분","결제·확정·바우처·변경·취소"],"violet")}
+        ${menuDetailCard("users","내 여행 · 후기 · 고객센터","여행 전후 필요한 정보와 개인 데이터를 독립 회원 계정에서 관리합니다.",["예정·지난 숙박과 예약 내역","프로필·국적·여권 정보","검증 후기·문의·취소·분쟁"])}
+      </div>`
+    },
+    {
+      section: "APPENDIX C · HOTEL",
+      kicker: "36 · HOTEL CONTENT MENU GUIDE",
+      title: "호텔은 PMS 운영 데이터와 별도로 공개 판매 콘텐츠를 관리",
+      summary: "PMS는 요금·재고·예약의 원천으로 두고, 호텔 콘텐츠센터에서는 고객에게 보일 호텔·객실 정보와 공개 매핑·검수·발행을 운영합니다.",
+      visual: `<div class="menu-detail-grid hotel-menu">
+        ${menuDetailCard("chart","대시보드","호텔별 콘텐츠 완성도와 PMS 매핑·검수 상태를 한눈에 확인합니다.",["공개 준비율·누락 항목","객실 매핑·동기화 상태","검수 대기·최근 발행"],"primary")}
+        ${menuDetailCard("hotel","호텔 기본정보","B2C 검색과 상세 화면에 필요한 호텔 공개정보를 관리합니다.",["호텔명·소개·등급·연락처","위치·체크인·정책·다국어","편의시설·교통·주변 정보"])}
+        ${menuDetailCard("map","호텔 · 객실 갤러리","대표 이미지와 객실유형별 사진을 여러 장 등록하고 순서를 정합니다.",["대표·외관·로비·부대시설","객실·욕실·전망 이미지","저작권·대체텍스트·노출 순서"],"teal")}
+        ${menuDetailCard("calendar","객실 공개정보","PMS RoomType과 연결되는 고객용 객실 상품 설명을 관리합니다.",["침대·면적·정원·전망","객실 소개·편의품목·정책","PMS 객실유형 공개 매핑"])}
+        ${menuDetailCard("link","PMS 공개 매핑","PMS 원천 데이터가 어떤 공개 호텔·객실 상품으로 보일지 연결합니다.",["Tenant·RoomType 연결","요금·재고·확인 시각","Shadow 비교·오류·재동기화"],"violet")}
+        ${menuDetailCard("shield","미리보기 · 검수 · 발행","고객 화면을 미리 확인하고 승인된 버전만 공개합니다.",["필수항목·품질 체크","관리자 검수·보완 요청","버전·발행·변경 이력"])}
+      </div>`
+    },
+    {
+      section: "APPENDIX D · PARTNER",
+      kicker: "37 · PARTNER MENU GUIDE",
+      title: "현지 업체는 입점부터 상품·예약·정산까지 직접 운영",
+      summary: "골프장·차량·음식점·스파·투어 업체가 업종별 선택 정보를 구조화해 등록하고, 요청 또는 즉시예약의 운영 책임을 수행합니다.",
+      visual: `<div class="menu-detail-grid partner-menu">
+        ${menuDetailCard("store","가입 · 승인","사업자와 담당자 정보를 제출하고 계약·정산 조건을 확인합니다.",["사업자·담당자·연락처","계약·수수료·정산 계좌","심사 상태·보완 요청"],"primary")}
+        ${menuDetailCard("map","업체 · 지점","고객이 방문하거나 서비스를 받을 실제 장소와 운영정보를 관리합니다.",["업체 소개·사진·주소","운영시간·휴무·언어","픽업·접근성·문의 방식"])}
+        ${menuDetailCard("spark","상품 · 옵션","업종별 비교 기준과 고객이 선택할 서비스 옵션을 등록합니다.",["홀·차종·요리·테라피·코스","포함·불포함·소요시간","인원·추가옵션·결합 할인"],"teal")}
+        ${menuDetailCard("calendar","가격 · 자원 · 슬롯","판매 가능한 날짜·시간과 자원별 수량을 운영합니다.",["기본가·시즌가·쿠폰","티타임·차량·좌석·룸","마감·휴무·예약 가능 수량"])}
+        ${menuDetailCard("support","예약 · 변경 · 취소","신규 요청에 응답하고 고객 변경·취소와 대체 제안을 처리합니다.",["신규·확정·거절·대기","변경·취소·노쇼·대체","바우처·고객 메시지·SLA"],"violet")}
+        ${menuDetailCard("chart","정산 · 통계 · 문의","거래 결과와 지급 예정 금액을 확인하고 운영 문의를 관리합니다.",["매출·수수료·환불·지급","상품·슬롯·확정률 통계","정산 이의·운영 문의"])}
+      </div>`
+    },
+    {
+      section: "APPENDIX E · ADMIN",
+      kicker: "38 · ADMIN MENU GUIDE",
+      title: "관리자는 심사·거래·정산·신뢰와 예외 처리를 통제",
+      summary: "호텔과 파트너가 각자 운영하되 플랫폼 관리자는 공개 품질, 권한, 거래 실패, 고객지원, 정산과 AI 근거를 공통 정책으로 관리합니다.",
+      visual: `<div class="menu-detail-grid admin-menu">
+        ${menuDetailCard("chart","운영 대시보드","오늘 처리해야 할 심사·예약·정산·고객지원 예외를 우선순위로 보여줍니다.",["심사·대사·CS 대기 건","거래·환불·정산 현황","콘텐츠 만료·장애 알림"],"primary")}
+        ${menuDetailCard("users","회원 · 권한 · 감사","고객·호텔·파트너·관리자 계정과 역할별 접근 권한을 관리합니다.",["회원 상태·동의·민감정보","조직·역할·RBAC·MFA","로그인·변경·감사 로그"])}
+        ${menuDetailCard("shield","입점 · 소유권 심사","호텔과 현지 업체의 소유권·계약·정산 정보를 검증합니다.",["사업자·담당자·권한 검증","업체 claim·계약·수수료","승인·보완·중지·해지"],"teal")}
+        ${menuDetailCard("store","장소 · 콘텐츠 · 상품","공개 장소와 호텔·파트너 콘텐츠의 품질·권리·정책을 통제합니다.",["장소·호텔·상품 심사","사진 권리·확인일·다국어","카테고리·노출·프로모션"])}
+        ${menuDetailCard("cart","주문 · 결제 · 정산 · CS","부분 실패가 있는 여행 주문을 공급자별로 추적하고 복구합니다.",["예약·결제·환불·취소","공급자 지급·대사·재처리","고객문의·분쟁·수동 복구"],"violet")}
+        ${menuDetailCard("spark","AI · RAG · 시스템 운영","AI 제안의 근거와 비용·품질, 외부 연동과 장애 상태를 관측합니다.",["근거·평가·금칙어·피드백","모델·도구·비용·오류율","PMS·PG·지도·메시지 상태"])}
       </div>`
     }
   ];
