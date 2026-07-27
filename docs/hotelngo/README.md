@@ -29,7 +29,9 @@
 23. `22-end-to-end-process-validation.md` — 전체 화면·유스케이스·역할 간 상태 전달·AI/PMS/결제 경계의 종합 검증
 24. `23-southeast-asia-same-day-user-journey-qa.md` — 오늘 출발 동남아 탐색·선택·Mock 예약 사용자 테스트와 실서비스 차이
 25. `24-product-menu-identity-and-trip-composer-blueprint.md` — 메뉴별 고객 질문·책임·하위 기능과 다일정 여행 조합 기준선
-26. `HotelNGo_페이지별_구현현황_및_구성도.xlsx` — 193개 화면·메뉴·유스케이스·검증 결과·실서비스 백로그 통합 구성도
+26. `26-interaction-layout-quality-guide.md` — 공통 선택기·버튼·아이콘·여행 일정 레이아웃 품질 기준
+27. `27-integrated-project-plan-draft.md` — 사업성 검토를 위한 미래형 사업·통합 프로젝트 계획서 초안
+28. `HotelNGo_페이지별_구현현황_및_구성도.xlsx` — 193개 화면·메뉴·유스케이스·검증 결과·실서비스 백로그 통합 구성도
 
 ## 문서 사용 규칙
 
