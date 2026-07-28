@@ -1505,6 +1505,198 @@ svg {
   line-height: 1.35;
 }
 
+/* Appendix · frontend menu */
+.appendix-cover-shell {
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  gap: 1.05cqw;
+  color: #fff;
+  background:
+    radial-gradient(circle at 82% 24%, rgba(24,191,208,.26), transparent 28%),
+    radial-gradient(circle at 16% 84%, rgba(111,87,237,.22), transparent 30%),
+    linear-gradient(135deg, #07162f 0%, #0a2d5f 56%, #0b4159 100%);
+}
+
+.appendix-kicker {
+  color: #78e0e5;
+  font-size: max(10px, .78cqw);
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+
+.appendix-cover-copy {
+  align-self: center;
+  max-width: 70cqw;
+}
+
+.appendix-cover-copy p {
+  margin: 0 0 .7cqw;
+  color: #7ce5e7;
+  font-size: .85cqw;
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+
+.appendix-cover-copy h1 {
+  margin: 0;
+  font-size: 5.1cqw;
+  line-height: 1.05;
+  letter-spacing: -.055em;
+}
+
+.appendix-cover-copy h2 {
+  max-width: 62cqw;
+  margin: 1cqw 0 0;
+  color: rgba(255,255,255,.72);
+  font-size: 1.15cqw;
+  font-weight: 540;
+  line-height: 1.55;
+}
+
+.appendix-menu-line {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr) auto) minmax(0, 1fr);
+  align-items: center;
+  gap: .45cqw;
+}
+
+.appendix-menu-line span {
+  padding: .85cqw .45cqw;
+  text-align: center;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: .7cqw;
+  font-size: max(10px, .86cqw);
+  font-weight: 800;
+}
+
+.appendix-menu-line i {
+  color: #6fe0e5;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.appendix-scope {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .7cqw;
+}
+
+.appendix-scope article {
+  display: grid;
+  gap: .25cqw;
+  padding: .75cqw .9cqw;
+  background: rgba(255,255,255,.06);
+  border-left: .22cqw solid #61dce1;
+}
+
+.appendix-scope small {
+  color: #72dfe4;
+  font-size: .67cqw;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.appendix-scope strong {
+  font-size: max(10px, .82cqw);
+}
+
+.appendix-cover-shell .slide-footer {
+  color: rgba(255,255,255,.54);
+}
+
+.frontend-menu-grid,
+.utility-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: .9cqw;
+}
+
+.frontend-menu-grid article,
+.utility-menu-grid article {
+  --menu-tone: var(--blue-600);
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1cqw 1.1cqw;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: .9cqw;
+  box-shadow: 0 .7cqw 1.6cqw rgba(14,39,76,.05);
+}
+
+.frontend-menu-grid article::before,
+.utility-menu-grid article::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: .28cqw;
+  background: var(--menu-tone);
+}
+
+.frontend-menu-grid .menu-planner,
+.utility-menu-grid article:nth-child(2) { --menu-tone: #1789c7; }
+.frontend-menu-grid .menu-hotels,
+.utility-menu-grid article:nth-child(3) { --menu-tone: var(--teal-600); }
+.frontend-menu-grid .menu-experience,
+.utility-menu-grid article:nth-child(4) { --menu-tone: #ef8a35; }
+.frontend-menu-grid .menu-ai,
+.utility-menu-grid article:nth-child(5) { --menu-tone: var(--violet-600); }
+.frontend-menu-grid .menu-trips,
+.utility-menu-grid article:nth-child(6) { --menu-tone: #d14d78; }
+
+.frontend-menu-grid article header,
+.utility-menu-grid article header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .8cqw;
+}
+
+.frontend-menu-grid article header span,
+.utility-menu-grid article header span {
+  color: var(--menu-tone);
+  font-size: .75cqw;
+  font-weight: 900;
+}
+
+.frontend-menu-grid article header small,
+.utility-menu-grid article header small {
+  overflow: hidden;
+  color: #8a99aa;
+  font-size: .66cqw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.frontend-menu-grid h3,
+.utility-menu-grid h3 {
+  margin: .55cqw 0 .4cqw;
+  font-size: 1.28cqw;
+  letter-spacing: -.035em;
+}
+
+.frontend-menu-grid p,
+.utility-menu-grid p {
+  margin: 0;
+  color: var(--text);
+  font-size: max(10px, .79cqw);
+  line-height: 1.5;
+}
+
+.frontend-menu-grid article footer,
+.utility-menu-grid article b {
+  margin-top: auto;
+  padding-top: .7cqw;
+  color: var(--menu-tone);
+  border-top: 1px solid #edf1f6;
+  font-size: max(9px, .7cqw);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 /* Overview */
 .deck-overview {
   position: fixed;
