@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HotelnGo 메인 시안 2 - 여행 장면과 큐레이션 중심의 에디토리얼 홈">
+  <title>HotelnGo 메인 시안 2 · Scene Editorial</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png" type="image/png">
+  <link rel="stylesheet" href="styles/tokens.css?v=9">
+  <link rel="stylesheet" href="styles/main.css?v=30">
+  <link rel="stylesheet" href="styles/main-concepts.css?v=1">
+  <script src="scripts/site-shell.js?v=15" defer></script>
+  <script src="scripts/auth.js?v=4" defer></script>
+  <script src="scripts/main-concepts.js?v=1" defer></script>
+</head>
+<body class="concept-page concept-editorial" data-concept="02">
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div data-site-header></div>
+
+  <main id="main-content">
+    <section class="c2-hero" aria-label="추천 여행 장면">
+      <div class="c2-hero-media" data-concept-slides>
+        <article class="c2-slide is-active" data-concept-slide>
+          <img src="assets/images/landmark-kyoto.jpg" alt="등불이 켜진 교토 골목">
+          <div class="c2-slide-shade"></div>
+          <div class="c2-hero-copy shell">
+            <span class="eyebrow">CURATED SCENE · KYOTO</span>
+            <h1>가고 싶은 장면부터,<br>여행이 시작됩니다</h1>
+            <p>교토의 저녁 골목에서 머물 곳과 식사, 산책 코스까지<br>한 편의 여행처럼 이어서 만나보세요.</p>
+            <div class="hero-cta-row"><a class="solid-light" href="story.html">여행 장면 보기</a><a class="text-light" href="trip-planner.html">이 일정으로 만들기 <span>→</span></a></div>
+          </div>
+        </article>
+        <article class="c2-slide" data-concept-slide hidden>
+          <img src="assets/images/hero-hotel.jpg" alt="바다를 마주한 다낭 리조트">
+          <div class="c2-slide-shade"></div>
+          <div class="c2-hero-copy shell">
+            <span class="eyebrow">SLOW SUMMER · DANANG</span>
+            <h2>바다와 골목 사이,<br>느리게 머무는 4박 5일</h2>
+            <p>리조트와 로컬 식당, 마사지와 골프를 여유로운 동선으로 묶었습니다.</p>
+            <div class="hero-cta-row"><a class="solid-light" href="discover.html">다낭 여행 발견</a><a class="text-light" href="hotels.html?destination=다낭">숙소 먼저 보기 <span>→</span></a></div>
+          </div>
+        </article>
+      </div>
+      <div class="c2-hero-nav shell" aria-label="대표 장면 전환">
+        <button type="button" data-concept-prev aria-label="이전 장면">←</button>
+        <span><b data-concept-current>01</b> / 02</span>
+        <button type="button" data-concept-next aria-label="다음 장면">→</button>
+      </div>
+    </section>
+
+    <section class="c2-search shell" aria-label="여행 통합 검색">
+      <form class="concept-search" data-concept-search>
+        <label class="concept-search-keyword">
+          <span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <span><small>여행지 또는 호텔</small><input name="destination" value="교토" placeholder="도시, 지역, 호텔명을 검색하세요"></span>
+        </label>
+        <label><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M3 9h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg></span><span><small>여행 일정</small><input name="dates" value="2026. 08. 24. – 08. 28." readonly></span></label>
+        <label><span class="line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-2.5A4.5 4.5 0 0 1 8 13h2a4.5 4.5 0 0 1 4.5 4.5V20M16 5.5a3 3 0 0 1 0 5.8M17 14a4 4 0 0 1 3.5 4v2"/></svg></span><span><small>여행 인원</small><select name="guests"><option>성인 2명</option><option>성인 1명</option><option>성인 3명</option><option>성인 4명</option></select></span></label>
+        <button type="submit">검색</button>
+      </form>
+      <div class="concept-tags"><span>지금 많이 찾아요</span><button type="button" data-keyword="다낭"># 다낭 휴양</button><button type="button" data-keyword="교토"># 교토 골목</button><button type="button" data-keyword="방콕"># 방콕 미식</button><button type="button" data-keyword="발리"># 발리 리조트</button></div>
+    </section>
+
+    <section class="c2-services shell" aria-labelledby="c2-service-title">
+      <div class="concept-section-head"><div><span class="eyebrow blue">BUILD YOUR JOURNEY</span><h2 id="c2-service-title">여행에 필요한 모든 장면</h2></div><a href="experiences.html">전체 서비스 보기 →</a></div>
+      <div class="c2-service-grid">
+        <a href="hotels.html"><span class="service-glyph">⌂</span><div><b>호텔</b><small>도시와 호텔명으로 찾기</small></div><i>01</i></a>
+        <a href="flights.html"><span class="service-glyph">↗</span><div><b>항공</b><small>일정에 맞는 항공편</small></div><i>02</i></a>
+        <a href="experiences.html"><span class="service-glyph">◇</span><div><b>즐길거리</b><small>골프·투어·티켓</small></div><i>03</i></a>
+        <a href="places.html?category=RESTAURANT"><span class="service-glyph">♧</span><div><b>맛집·스파</b><small>현지의 하루를 채우기</small></div><i>04</i></a>
+        <a href="ai-travel.html" class="service-ai"><span class="service-glyph">✦</span><div><b>AI 여행</b><small>취향으로 한 번에 만들기</small></div><i>NEW</i></a>
+      </div>
+    </section>
+
+    <section class="c2-edition shell" aria-labelledby="edition-title">
+      <div class="concept-section-head"><div><span class="eyebrow blue">THIS WEEK'S EDITION</span><h2 id="edition-title">이번 주, 먼저 떠나본 여행</h2><p>장면과 동선을 함께 담은 HotelnGo 에디터의 큐레이션입니다.</p></div><div class="rail-control"><button type="button" data-rail-prev aria-label="이전 추천">←</button><button type="button" data-rail-next aria-label="다음 추천">→</button></div></div>
+      <div class="edition-grid" data-card-rail>
+        <a class="edition-feature" href="story.html"><img src="assets/images/hero-hotel.jpg" alt="바다와 맞닿은 다낭 리조트"><span class="image-overlay"></span><div><small>5 DAYS · DANANG</small><h3>바다 가까이 머무는<br>다낭의 느린 아침</h3><p>리조트와 골목, 골프와 미식을 여유로운 동선으로 연결한 여행</p><b>여행 에디션 보기 →</b></div></a>
+        <div class="edition-stack">
+          <a href="story.html"><img src="assets/images/landmark-bangkok.jpg" alt="방콕의 야시장"><div><small>NIGHT · BANGKOK</small><h3>밤이 되면 더 맛있는 도시</h3><p>차이나타운부터 루프톱까지</p><b>12 SPOTS</b></div></a>
+          <a href="story.html"><img src="assets/images/landmark-paris.jpg" alt="파리의 에펠탑"><div><small>WALK · PARIS</small><h3>센강을 따라 걷는 오후</h3><p>사진보다 오래 남는 여섯 장면</p><b>1 DAY</b></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="c2-route">
+      <div class="shell">
+        <div class="concept-section-head light"><div><span class="eyebrow">A DAY IN KYOTO</span><h2>여행자의 하루를 미리 걸어보세요</h2><p>머무는 곳부터 저녁까지, 예약 가능한 항목을 하나의 동선으로 연결합니다.</p></div><a href="trip-planner.html">이 코스 내 여행에 담기 →</a></div>
+        <ol class="route-timeline">
+          <li><span>09:30</span><img src="assets/images/stay-busan.jpg" alt="호텔 객실"><div><small>STAY</small><b>호텔에서 천천히 시작</b><p>조식 후 체크아웃</p></div></li>
+          <li><span>11:00</span><img src="assets/images/landmark-kyoto.jpg" alt="교토 골목"><div><small>LANDMARK</small><b>기온 골목 산책</b><p>도보 70분</p></div></li>
+          <li><span>13:10</span><img src="assets/images/landmark-bangkok.jpg" alt="현지 식당"><div><small>TABLE</small><b>작은 식당의 점심</b><p>예약 요청</p></div></li>
+          <li><span>18:40</span><img src="assets/images/landmark-paris.jpg" alt="해질녘 전망"><div><small>SCENE</small><b>강변에서 맞는 저녁</b><p>일몰 30분 전</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="c2-stays shell" aria-labelledby="c2-stay-title">
+      <div class="concept-section-head"><div><span class="eyebrow blue">STAY IN THE SCENE</span><h2 id="c2-stay-title">여행 장면과 가까운 호텔</h2></div><a href="hotels.html">호텔 전체 보기 →</a></div>
+      <div class="concept-card-grid">
+        <article><a href="hotel-detail.html"><img src="assets/images/hero-hotel.jpg" alt="다낭 오션 리조트"></a><button type="button" data-concept-save aria-label="호텔 저장">♡</button><div><small>다낭 · 리조트</small><h3>다낭 오션 리조트</h3><p>바다를 마주한 풀빌라와 여유로운 조식</p><span><b>9.2</b> 3,410개 후기</span><strong>₩286,000~</strong></div></article>
+        <article><a href="hotel-detail.html"><img src="assets/images/stay-gangneung.jpg" alt="도시 야경 호텔"></a><button type="button" data-concept-save aria-label="호텔 저장">♡</button><div><small>교토 · 부티크</small><h3>기온 메모리 호텔</h3><p>골목 산책을 시작하기 좋은 작은 호텔</p><span><b>9.0</b> 1,824개 후기</span><strong>₩194,000~</strong></div></article>
+        <article><a href="hotel-detail.html"><img src="assets/images/stay-jeju.jpg" alt="해변 앞 리조트"></a><button type="button" data-concept-save aria-label="호텔 저장">♡</button><div><small>발리 · 리조트</small><h3>우붓 가든 스테이</h3><p>정원과 스파가 이어지는 조용한 하루</p><span><b>9.4</b> 2,210개 후기</span><strong>₩318,000~</strong></div></article>
+      </div>
+    </section>
+
+    <section class="concept-ai-banner shell">
+      <div><span class="ai-mark">✦</span><small>HOTELNGO AI TRIP</small><h2>말하듯 알려주면,<br>여행의 뼈대를 먼저 만들어드려요</h2><p>목적지와 기간, 좋아하는 분위기를 알려주세요. 숙소·식사·랜드마크·이동을 날짜별로 연결합니다.</p><a href="ai-travel.html">AI로 여행 만들기 →</a></div>
+      <div class="ai-sample"><span>“8월 말 교토 4박 5일,<br>골목과 작은 식당을 좋아해요.”</span><ol><li><b>DAY 1</b> 기온 체크인 · 저녁 산책</li><li><b>DAY 2</b> 아라시야마 · 가이세키</li><li><b>DAY 3</b> 우지 반일 여행 · 찻집</li></ol></div>
+    </section>
+  </main>
+
+  <div class="concept-label" aria-label="현재 시안">MAIN CONCEPT <b>02</b><span>SCENE EDITORIAL</span></div>
+  <div data-site-footer></div>
+  <div data-site-mobile-nav data-active="home"></div>
+</body>
+</html>

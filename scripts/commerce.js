@@ -40,12 +40,15 @@
   const cartCounts = [...document.querySelectorAll('[data-cart-count]')];
   const cartCheckout = document.querySelector('[data-cart-checkout]');
   if (cart) {
+    const cartNote = document.querySelector('.prototype-note');
+    if (cartNote) cartNote.textContent = '결제 직전에 각 상품의 가격과 예약 가능 여부를 다시 확인하며, 공급처가 다른 상품은 주문이 나뉠 수 있습니다.';
+    const marketplaceTypeLabel = { GOLF: '골프', VEHICLE: '차량', RESTAURANT: '식사', SPA: '마사지·스파', TOUR: '투어·체험', HOTEL: '호텔' };
     let marketplaceItems = [];
     try { marketplaceItems = JSON.parse(localStorage.getItem('hotelngo.marketplace.cart.v1') || '[]'); } catch {}
     const list = cart.querySelector('.cart-list');
     const imageByType = { GOLF:'assets/images/marketplace/golf-course.jpg', VEHICLE:'assets/images/marketplace/vehicle-sedan.jpg', RESTAURANT:'assets/images/marketplace/restaurant-dining.jpg', SPA:'assets/images/marketplace/spa-treatment.jpg', TOUR:'assets/images/marketplace/tour-kyoto.jpg' };
     marketplaceItems.forEach((item, index) => {
-      list?.insertAdjacentHTML('beforeend', `<article class="cart-item" data-marketplace-cart-index="${index}"><input type="checkbox" checked data-cart-select data-price="${item.price || 0}" aria-label="${item.name} 선택"><img src="${item.image || imageByType[item.type] || imageByType.TOUR}" alt="${item.name}"><div class="cart-copy"><strong>${item.name}</strong><small>${item.slot} · ${item.extras?.join(' · ') || '추가 옵션 없음'}</small><span>${item.price ? '업체 슬롯 재확인 후 결제' : '견적·요청 확정 후 금액 반영'} · ${item.type}</span></div><div class="cart-price"><strong>${item.price ? `${Number(item.price).toLocaleString('ko-KR')}원` : '견적 요청'}</strong><small>${item.price ? '기본가 · 옵션 별도' : '아직 결제되지 않음'}</small><button type="button" data-cart-remove>삭제</button></div></article>`);
+      list?.insertAdjacentHTML('beforeend', `<article class="cart-item" data-marketplace-cart-index="${index}"><input type="checkbox" checked data-cart-select data-price="${item.price || 0}" aria-label="${item.name} 선택"><img src="${item.image || imageByType[item.type] || imageByType.TOUR}" alt="${item.name}"><div class="cart-copy"><strong>${item.name}</strong><small>${item.slot} · ${item.extras?.join(' · ') || '추가 옵션 없음'}</small><span>${item.price ? '업체 일정 재확인 후 결제' : '견적·요청 확정 후 금액 반영'} · ${marketplaceTypeLabel[item.type] || '여행 상품'}</span></div><div class="cart-price"><strong>${item.price ? `${Number(item.price).toLocaleString('ko-KR')}원` : '견적 요청'}</strong><small>${item.price ? '기본가 · 옵션 별도' : '아직 결제되지 않음'}</small><button type="button" data-cart-remove>삭제</button></div></article>`);
     });
     if (!marketplaceItems.length) {
       list?.insertAdjacentHTML('beforeend', '<div class="empty-state" data-cart-empty><strong>여행 카트가 비어 있습니다.</strong><p>호텔이나 현지 상품에서 날짜와 옵션을 선택해 담아주세요.</p><div class="page-head-actions"><a class="ui-button primary" href="hotels.html">호텔 찾기</a><a class="ui-button" href="places.html">현지 상품 찾기</a></div></div>');
@@ -120,6 +123,28 @@
     persistCartSelection();
   });
   updateCart();
+
+  document.querySelectorAll('[data-same-as-booker]').forEach((checkbox) => {
+    const form = checkbox.closest('form');
+    if (!form) return;
+    const familyName = form.elements.familyName;
+    const givenName = form.elements.givenName;
+    const travelerFamilyName = form.elements.travelerFamilyName;
+    const travelerGivenName = form.elements.travelerGivenName;
+    const syncTravelerName = () => {
+      if (!checkbox.checked) return;
+      travelerFamilyName.value = familyName.value.trim().toUpperCase();
+      travelerGivenName.value = givenName.value.trim().toUpperCase();
+    };
+    checkbox.addEventListener('change', () => {
+      travelerFamilyName.readOnly = checkbox.checked;
+      travelerGivenName.readOnly = checkbox.checked;
+      syncTravelerName();
+      if (!checkbox.checked) travelerFamilyName.focus();
+    });
+    familyName.addEventListener('input', syncTravelerName);
+    givenName.addEventListener('input', syncTravelerName);
+  });
 
   document.querySelectorAll('[data-flow-form]').forEach((form) => form.addEventListener('submit', (event) => {
     event.preventDefault();

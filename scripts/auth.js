@@ -76,6 +76,14 @@
       link.textContent = session ? `${session.user.displayName}님` : '로그인';
       link.setAttribute('aria-label', session ? `${session.user.name} 마이페이지` : '로그인');
     });
+    document.querySelectorAll('.reservation-link').forEach((link) => {
+      link.href = session ? 'orders.html' : 'bookings.html';
+      link.textContent = session ? '내 예약' : '예약 조회';
+    });
+    document.querySelectorAll('.mobile-menu-actions a[href="bookings.html"]').forEach((link) => {
+      link.href = session ? 'orders.html' : 'bookings.html';
+      link.textContent = session ? '내 예약' : '예약 조회';
+    });
     document.querySelectorAll('.mobile-menu-actions .primary').forEach((link) => {
       link.href = session ? 'my.html' : 'login.html';
       link.textContent = session ? `${session.user.displayName}님의 마이페이지` : '로그인·회원가입';
@@ -85,6 +93,11 @@
       document.querySelectorAll('.account-nav').forEach((nav) => {
         if (!nav.querySelector('[data-auth-logout]')) nav.insertAdjacentHTML('beforeend', '<button class="account-logout" type="button" data-auth-logout>로그아웃</button>');
       });
+      const loginCard = document.querySelector('[data-login-form]')?.closest('.auth-card');
+      if (loginCard && !loginCard.dataset.authenticatedView) {
+        loginCard.dataset.authenticatedView = 'true';
+        loginCard.innerHTML = `<span class="page-eyebrow">SIGNED IN</span><h1>이미 로그인되어 있습니다</h1><p><strong>${session.user.displayName}님</strong>의 여행과 예약을 계속 확인할 수 있습니다.</p><div class="form-stack"><a class="ui-button primary" href="${safeReturnUrl()}">계속하기</a><a class="ui-button" href="my.html">마이페이지 보기</a><button class="ui-button soft" type="button" data-auth-logout>다른 계정으로 로그인</button></div>`;
+      }
     }
   };
 

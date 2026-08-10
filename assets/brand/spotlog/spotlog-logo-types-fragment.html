@@ -1,0 +1,147 @@
+<style>
+  #spotlog-logo-types-v1 {
+    color: CanvasText;
+    font-family: Arial, "Noto Sans KR", sans-serif;
+  }
+
+  #spotlog-logo-types-v1 * {
+    box-sizing: border-box;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-heading h1,
+  #spotlog-logo-types-v1 .spotlog-heading p {
+    margin: 0;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-heading p {
+    color: GrayText;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-item {
+    margin: 0;
+    min-width: 0;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-artwork {
+    display: grid;
+    min-height: 13.5rem;
+    place-items: center;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-artwork img {
+    display: block;
+    width: min(100%, 505px);
+    height: auto;
+  }
+
+  #spotlog-logo-types-v1 figcaption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: .75rem;
+    border-top: 1px solid color-mix(in srgb, CanvasText 18%, transparent);
+  }
+
+  #spotlog-logo-types-v1 .spotlog-label {
+    display: flex;
+    align-items: baseline;
+    gap: .65rem;
+    min-width: 0;
+  }
+
+  #spotlog-logo-types-v1 .spotlog-index,
+  #spotlog-logo-types-v1 code {
+    color: GrayText;
+  }
+
+  #spotlog-logo-types-v1 code {
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  @media (max-width: 880px) {
+    #spotlog-logo-types-v1 .spotlog-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #spotlog-logo-types-v1 .spotlog-heading,
+    #spotlog-logo-types-v1 figcaption {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    #spotlog-logo-types-v1 .spotlog-artwork {
+      min-height: 10rem;
+    }
+
+    #spotlog-logo-types-v1 code {
+      text-align: left;
+    }
+  }
+</style>
+
+<main id="spotlog-logo-types-v1">
+  <header class="spotlog-heading">
+    <h1>Spotlog 로고 타입</h1>
+    <p>원본 이미지에서 그대로 분리한 4개 시안</p>
+  </header>
+
+  <section class="spotlog-grid" aria-label="Spotlog 로고 타입 비교">
+    <figure class="spotlog-item">
+      <div class="spotlog-artwork">
+        <img src="extracted/spotlog-logo-01-travel-journal.png" width="505" height="199" alt="책과 위치 핀, 망원경이 결합된 갈색 Spotlog 여행의 기록 로고">
+      </div>
+      <figcaption>
+        <span class="spotlog-label"><span class="spotlog-index">01</span><strong>여행의 기록</strong></span>
+        <code>spotlog-logo-01-travel-journal.png</code>
+      </figcaption>
+    </figure>
+
+    <figure class="spotlog-item">
+      <div class="spotlog-artwork">
+        <img src="extracted/spotlog-logo-02-simple-share.png" width="505" height="148" alt="빨간 경로 아이콘과 빨간 Spotlog 글자가 결합된 스팟의 간편한 공유 로고">
+      </div>
+      <figcaption>
+        <span class="spotlog-label"><span class="spotlog-index">02</span><strong>스팟의 간편한 공유</strong></span>
+        <code>spotlog-logo-02-simple-share.png</code>
+      </figcaption>
+    </figure>
+
+    <figure class="spotlog-item">
+      <div class="spotlog-artwork">
+        <img src="extracted/spotlog-logo-03-route-map.png" width="505" height="148" alt="접힌 지도와 경로 아이콘이 결합된 파란색 Spotlog 지도로 남기는 코스 로고">
+      </div>
+      <figcaption>
+        <span class="spotlog-label"><span class="spotlog-index">03</span><strong>지도로 남기는 코스</strong></span>
+        <code>spotlog-logo-03-route-map.png</code>
+      </figcaption>
+    </figure>
+
+    <figure class="spotlog-item">
+      <div class="spotlog-artwork">
+        <img src="extracted/spotlog-logo-04-instant-share.png" width="505" height="140" alt="보라색 북마크와 공유 화살표가 결합된 Spotlog 스팟 즉시 공유 로고">
+      </div>
+      <figcaption>
+        <span class="spotlog-label"><span class="spotlog-index">04</span><strong>스팟 즉시 공유</strong></span>
+        <code>spotlog-logo-04-instant-share.png</code>
+      </figcaption>
+    </figure>
+  </section>
+</main>

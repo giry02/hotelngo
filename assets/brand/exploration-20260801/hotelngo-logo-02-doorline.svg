@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="112" viewBox="0 0 620 112" role="img" aria-labelledby="title desc">
+  <title id="title">HotelnGo Doorline logo</title>
+  <desc id="desc">An open hotel doorway symbol beside a clean HotelnGo wordmark.</desc>
+  <defs>
+    <linearGradient id="doorline-gradient" x1="16" y1="96" x2="96" y2="16" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6B7"/>
+      <stop offset="0.5" stop-color="#1CB3E5"/>
+      <stop offset="1" stop-color="#2F6BFF"/>
+    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&amp;display=swap');
+      .word{font-family:'Montserrat Alternates','Segoe UI',Arial,sans-serif;font-size:82px;font-weight:700;letter-spacing:-1.4px;fill:#181B1A}
+    </style>
+  </defs>
+  <rect x="4" y="4" width="104" height="104" rx="27" fill="#101E33"/>
+  <path d="M32 86V43c0-15.5 10.5-27 24-27s24 11.5 24 27v43" fill="none" stroke="url(#doorline-gradient)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M56 36v50l30-10V46L56 36Z" fill="url(#doorline-gradient)"/>
+  <circle cx="72" cy="61" r="4" fill="#FFFFFF"/>
+  <path d="M88 86h13" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  <text class="word" x="132" y="84">HotelnGo</text>
+</svg>

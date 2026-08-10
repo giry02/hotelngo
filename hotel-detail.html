@@ -5,10 +5,10 @@
   <meta name="description" content="Hyatt Regency Danang Resort 객실과 요금">
   <title>Hyatt Regency Danang Resort · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png" type="image/png">
-  <link rel="stylesheet" href="styles/tokens.css?v=10"><link rel="stylesheet" href="styles/main.css?v=30"><link rel="stylesheet" href="styles/pages.css?v=19">
-  <script src="scripts/site-shell.js?v=15" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/auth.js?v=4" defer></script><script src="scripts/main.js?v=13" defer></script><script src="scripts/pages.js?v=8" defer></script><script src="scripts/hotel-content.js?v=5" defer></script>
+  <link rel="stylesheet" href="styles/tokens.css?v=11"><link rel="stylesheet" href="styles/main.css?v=31"><link rel="stylesheet" href="styles/pages.css?v=21">
+  <script src="scripts/site-shell.js?v=17" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=18" defer></script><script src="scripts/auth.js?v=6" defer></script><script src="scripts/main.js?v=15" defer></script><script src="scripts/pages.js?v=14" defer></script><script src="scripts/hotel-content.js?v=8" defer></script>
 </head>
-<body>
+<body class="hotel-detail-page">
   <a class="skip-link" href="#main-content">본문으로 바로가기</a><div data-site-header data-active="hotels"></div>
   <main class="page-main" id="main-content">
     <div class="shell hotel-detail-head">
@@ -28,9 +28,9 @@
       <div class="detail-content">
         <section id="overview"><div class="offer-toolbar"><h2>논누억 비치 앞에서 시작하는 느린 하루</h2><span class="status-chip">공개정보 확인</span></div><p>긴 해변과 다섯 개의 수영장을 품은 리조트입니다. 아침에는 객실에서 바다를 보고, 한낮에는 야자수 아래에서 쉬고, 해가 기울면 오행산이나 호이안으로 이동하기 좋습니다. 가족 여행과 조용한 휴양을 모두 고려한 객실 구성이 특징입니다.</p><div class="property-highlights"><div><span>◷</span><b>체크인 15:00</b></div><div><span>◴</span><b>체크아웃 11:00</b></div><div><span>⌖</span><b>공항에서 25분</b></div><div><span>◎</span><b>프라이빗 비치</b></div></div></section>
 
-        <section class="offer-section" id="rooms"><div class="offer-toolbar"><div><h2>객실과 요금</h2><p style="margin:3px 0 0;color:#848b89;font-size:12px">2026.08.14–08.17 · 3박 · 객실 1 · 성인 2</p></div><p class="data-note">PMS Mock · 3분 전 확인</p></div>
+        <section class="offer-section" id="rooms"><div class="offer-toolbar"><div><h2>객실과 요금</h2><p class="stay-summary" data-stay-summary>2026.08.14–08.17 · 3박 · 객실 1 · 성인 2명</p></div><p class="data-note">3분 전 재고 확인</p></div>
           <div class="offer-list" data-room-offers><div class="empty-state"><strong>객실 공개정보를 불러오는 중입니다.</strong></div></div>
-          <p class="supplier-notice"><strong>실제 연동은 아직 조회 전용입니다.</strong> 아래 예약 CTA는 화면 피드백용 정적 단계로 이동합니다. 객실유형·요금·가용 수량은 Hotel_PMS 구조를 반영한 독립 Mock이며 실제 hold·PMS 예약 생성·변경·취소는 실행하지 않습니다.</p>
+          <p class="supplier-notice"><strong>예약 전 가격과 객실을 한 번 더 확인합니다.</strong> 객실을 선택하면 예약자 정보 입력 단계에서 최종 요금, 취소 조건과 남은 객실 수를 다시 안내합니다.</p>
         </section>
 
         <section id="amenities"><h2>주요 편의시설</h2><div class="amenity-grid" data-property-amenities><span>편의시설을 불러오는 중입니다.</span></div></section>
@@ -39,9 +39,10 @@
         <section id="story"><div class="offer-toolbar"><div><span class="page-eyebrow">START FROM THE HOTEL</span><h2 style="margin-top:7px">호텔에서 시작하는 다낭의 하루</h2></div><a class="ui-button" href="story.html">스토리 보기</a></div><p>07:10 해변 산책, 11:30 오행산, 17:40 호이안 강변까지. 숙소 위치를 기준으로 이동시간과 머무는 시간을 엮은 하루 코스를 확인하세요.</p></section>
       </div>
 
-      <aside class="detail-side" aria-label="날짜와 요금 요약"><small>선택한 일정의 최저 총액</small><strong>559,200원</strong><p class="data-note">PMS Mock · 3분 전</p><div class="side-date-grid"><label><span>체크인</span><b>8월 14일 (금)</b></label><label><span>체크아웃</span><b>8월 17일 (월)</b></label></div><div class="side-date-grid"><label><span>객실</span><b>1개</b></label><label><span>투숙객</span><b>성인 2명</b></label></div><a class="ui-button primary" href="#rooms">객실 요금 보기</a><button class="ui-button" style="margin-top:7px" type="button" data-save-item data-text-save>저장</button></aside>
+      <aside class="detail-side" aria-label="날짜와 요금 요약"><small>선택한 일정의 최저 총액</small><strong data-side-total>559,200원</strong><p class="data-note">3분 전 재고 확인</p><div class="side-date-grid"><label><span>체크인</span><b data-side-checkin>8월 14일 (금)</b></label><label><span>체크아웃</span><b data-side-checkout>8월 17일 (월)</b></label></div><div class="side-date-grid"><label><span>객실</span><b>1개</b></label><label><span>투숙객</span><b data-side-guests>성인 2명</b></label></div><a class="ui-button primary" href="#rooms">객실 요금 보기</a><button class="ui-button" style="margin-top:7px" type="button" data-save-item data-text-save>저장</button></aside>
     </div>
   </main>
+  <div class="mobile-booking-bar" data-mobile-booking-bar><span><small>선택 일정 최저가</small><strong data-mobile-total>559,200원</strong></span><a class="ui-button primary" href="#rooms">객실 선택</a></div>
   <div data-site-footer></div><div class="toast" role="status" aria-live="polite" data-toast></div>
   <div data-site-mobile-nav data-active="hotels"></div>
 </body>

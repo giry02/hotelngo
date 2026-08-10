@@ -43,6 +43,17 @@
   });
 
   const hotelCards = [...document.querySelectorAll('[data-hotel-card]')];
+  const filterPanel = document.querySelector('.filter-panel');
+  const filterToggle = document.querySelector('[data-filter-toggle]');
+  const filterScrim = document.querySelector('.filter-scrim');
+  const setFilterOpen = (open) => {
+    filterPanel?.classList.toggle('is-open', open);
+    if (filterScrim) filterScrim.hidden = !open;
+    filterToggle?.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('filter-open', open);
+    if (open) filterPanel?.querySelector('[data-filter-close]')?.focus();
+    else filterToggle?.focus();
+  };
   const updateHotelFilters = () => {
     if (!hotelCards.length) return;
     const checked = [...document.querySelectorAll('[data-hotel-filter]:checked')].map((input) => input.value);
@@ -55,15 +66,17 @@
     });
     const count = document.querySelector('[data-result-count]');
     if (count) count.textContent = String(visible);
+    const mobileCount = document.querySelector('[data-filter-result-count]');
+    if (mobileCount) mobileCount.textContent = String(visible);
   };
   document.querySelectorAll('[data-hotel-filter]').forEach((input) => input.addEventListener('change', updateHotelFilters));
   document.querySelector('[data-filter-reset]')?.addEventListener('click', () => {
     document.querySelectorAll('[data-hotel-filter]').forEach((input) => { input.checked = false; });
     updateHotelFilters();
   });
-  document.querySelector('[data-filter-toggle]')?.addEventListener('click', () => {
-    document.querySelector('.filter-panel')?.classList.toggle('is-open');
-  });
+  filterToggle?.setAttribute('aria-expanded', 'false');
+  filterToggle?.addEventListener('click', () => setFilterOpen(!filterPanel?.classList.contains('is-open')));
+  document.querySelectorAll('[data-filter-close], [data-filter-apply]').forEach((button) => button.addEventListener('click', () => setFilterOpen(false)));
   document.querySelectorAll('[data-hotel-view]').forEach((button) => button.addEventListener('click', () => {
     const mapMode = button.dataset.hotelView === 'map';
     document.querySelectorAll('[data-hotel-view]').forEach((item) => item.classList.toggle('is-active', item === button));
@@ -85,21 +98,40 @@
     showToast('선택한 검색 조건을 해제했습니다.');
   }));
   document.querySelectorAll('.map-price-pin').forEach((button, index) => button.addEventListener('click', () => {
-    const query = new URLSearchParams({ from: 'map', result: String(index + 1), price: button.textContent.trim() });
+    const targetCard = hotelCards[index];
+    const query = new URLSearchParams(location.search);
+    query.set('hotelId', targetCard?.dataset.hotelId || '');
+    query.set('from', 'map');
+    query.set('price', button.textContent.trim());
     location.href = `hotel-detail.html?${query.toString()}`;
   }));
 
   document.querySelectorAll('[data-search-page]').forEach((form) => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const destination = new FormData(form).get('destination') || '선택한 지역';
-      showToast(`${destination}의 최신 요금과 재고를 다시 확인했습니다.`);
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const next = new URLSearchParams();
+      ['destination', 'checkIn', 'checkOut', 'guests'].forEach((name) => {
+        const value = data.get(name);
+        if (value) next.set(name, value);
+      });
+      location.href = `hotels.html?${next.toString()}`;
     });
   });
 
   const searchParams = new URLSearchParams(window.location.search);
   const destinationFromQuery = searchParams.get('destination');
   const hotelSearchForm = document.querySelector('[data-hotel-search]');
+  const guestLabel = (value) => {
+    const text = String(value || '2');
+    const adultMatch = text.match(/성인\s*(\d+)/);
+    const adultCount = Number(adultMatch?.[1] || text.match(/^\d+/)?.[0] || 2);
+    const childMatch = text.match(/아동\s*(\d+)/);
+    const childCount = Number(childMatch?.[1] || (text.includes('-') ? text.split('-')[1] : 0) || 0);
+    return `성인 ${adultCount}명${childCount ? ` · 아동 ${childCount}명` : ''}`;
+  };
+  const formatShortDate = (value) => new Intl.DateTimeFormat('ko-KR', { month: 'numeric', day: 'numeric' }).format(new Date(`${value}T12:00:00`));
   if (hotelSearchForm && destinationFromQuery) {
     hotelSearchForm.elements.destination.value = destinationFromQuery;
     document.querySelectorAll('[data-search-destination]').forEach((element) => { element.textContent = destinationFromQuery; });
@@ -112,22 +144,60 @@
   if (hotelSearchForm) {
     const checkIn = searchParams.get('checkIn') || hotelSearchForm.elements.checkIn?.value || '';
     const checkOut = searchParams.get('checkOut') || hotelSearchForm.elements.checkOut?.value || '';
+    const guests = searchParams.get('guests') || hotelSearchForm.elements.guests?.value || '2';
+    if (hotelSearchForm.elements.guests) {
+      const guestValue = guests.includes('아동') || guests === '2-1' ? '2-1' : String(guests).match(/성인\s*(\d+)/)?.[1] || String(guests).match(/^\d+/)?.[0] || '2';
+      if ([...hotelSearchForm.elements.guests.options].some((option) => option.value === guestValue)) hotelSearchForm.elements.guests.value = guestValue;
+    }
+    const normalizedGuests = guestLabel(guests);
+    const nights = checkIn && checkOut ? Math.max(1, Math.round((new Date(`${checkOut}T12:00:00`) - new Date(`${checkIn}T12:00:00`)) / 86400000)) : 1;
     const summary = document.querySelector('[data-hotel-result-summary]');
     if (summary && checkIn && checkOut) {
-      summary.textContent = `${checkIn.replaceAll('-', '.')}–${checkOut.replaceAll('-', '.')} · 성인 2명 · 세금 포함 총액 기준`;
+      summary.textContent = `${checkIn.replaceAll('-', '.')}–${checkOut.replaceAll('-', '.')} · ${nights}박 · ${normalizedGuests} · 세금 포함 총액 기준`;
     }
+    const mobileSearchSummary = document.querySelector('[data-mobile-search-summary]');
+    if (mobileSearchSummary && checkIn && checkOut) mobileSearchSummary.textContent = `${destinationFromQuery || hotelSearchForm.elements.destination.value} · ${formatShortDate(checkIn)}–${formatShortDate(checkOut)} · ${normalizedGuests}`;
+    const collapsibleSearch = document.querySelector('[data-search-collapsible]');
+    const searchExpand = document.querySelector('[data-search-expand]');
+    searchExpand?.addEventListener('click', () => {
+      const collapsed = collapsibleSearch?.classList.toggle('is-collapsed');
+      searchExpand.setAttribute('aria-expanded', String(!collapsed));
+      if (!collapsed) hotelSearchForm.elements.destination?.focus();
+    });
     const query = new URLSearchParams();
     if (destinationFromQuery) query.set('destination', destinationFromQuery);
     if (checkIn) query.set('checkIn', checkIn);
     if (checkOut) query.set('checkOut', checkOut);
-    document.querySelectorAll('a[href="hotel-detail.html"]').forEach((link) => {
-      link.href = `hotel-detail.html?${query.toString()}`;
+    query.set('guests', String(guests));
+    hotelCards.forEach((card) => {
+      const nightlyRate = Number(card.dataset.nightlyRate || 0);
+      const originalNightlyRate = Number(card.dataset.originalNightlyRate || 0);
+      const total = nightlyRate * nights;
+      if (total) {
+        card.dataset.price = String(total);
+        const priceBox = card.querySelector('.result-price');
+        const stayCopy = priceBox?.querySelector('small');
+        const currentPrice = priceBox?.querySelector('strong');
+        const originalPrice = priceBox?.querySelector('del');
+        if (stayCopy) stayCopy.textContent = `${nights}박 · ${card.dataset.stayIncludes || '객실만'}`;
+        if (currentPrice) currentPrice.textContent = `${total.toLocaleString('ko-KR')}원${card.dataset.hotelId === 'htl_danang_intercontinental' ? '부터' : ''}`;
+        if (originalPrice && originalNightlyRate) originalPrice.textContent = `${(originalNightlyRate * nights).toLocaleString('ko-KR')}원`;
+      }
+      const hotelQuery = new URLSearchParams(query);
+      hotelQuery.set('hotelId', card.dataset.hotelId || 'htl_danang_ocean');
+      card.querySelectorAll('a[href="hotel-detail.html"]').forEach((link) => {
+        link.href = `hotel-detail.html?${hotelQuery.toString()}`;
+      });
+    });
+    document.querySelectorAll('.map-price-pin').forEach((pin, index) => {
+      const amount = Number(hotelCards[index]?.dataset.price || 0);
+      if (amount) pin.textContent = `${amount.toLocaleString('ko-KR')}원`;
     });
     const today = new Date();
     const todayValue = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     const resultRegion = document.querySelector('section[aria-labelledby="result-title"]');
     if (resultRegion && checkIn === todayValue && !resultRegion.querySelector('[data-same-day-hotel-notice]')) {
-      resultRegion.querySelector('.result-toolbar')?.insertAdjacentHTML('afterend', '<div class="supplier-notice ai-urgent-notice" data-same-day-hotel-notice><strong>오늘 체크인 재확인 필요:</strong> 현재 객실 수와 가격은 JSON Mock 예시입니다. 실제 판매 전에는 PMS·공급자 API로 당일 재고와 체크인 가능 시간을 다시 확인해야 합니다.</div>');
+      resultRegion.querySelector('.result-toolbar')?.insertAdjacentHTML('afterend', '<div class="supplier-notice ai-urgent-notice" data-same-day-hotel-notice><strong>오늘 체크인:</strong> 예약 전에 객실과 체크인 가능 시간을 한 번 더 확인해 주세요.</div>');
     }
   }
 
@@ -146,7 +216,7 @@
   });
 
   document.querySelectorAll('[data-disabled-booking]').forEach((button) => {
-    button.addEventListener('click', () => showToast('현재는 요금·재고 조회 단계입니다. 예약 기능은 PMS 쓰기 연동 후 열립니다.'));
+    button.addEventListener('click', () => showToast('이 객실은 현재 가격을 다시 확인하고 있습니다. 다른 객실을 선택하거나 잠시 후 다시 확인해 주세요.'));
   });
 
   document.querySelectorAll('[data-page-action]').forEach((button) => {
@@ -231,7 +301,7 @@
     const images = [...document.querySelectorAll('.hotel-gallery img')];
     const dialog = document.createElement('dialog');
     dialog.className = 'gallery-dialog';
-    dialog.innerHTML = `<div class="gallery-dialog-head"><div><strong>호텔 사진</strong><span>${images.length}개 Mock 이미지</span></div><button type="button" aria-label="갤러리 닫기">×</button></div><div class="gallery-dialog-grid">${images.map((image) => `<img src="${image.src}" alt="${image.alt}">`).join('')}</div>`;
+    dialog.innerHTML = `<div class="gallery-dialog-head"><div><strong>호텔 사진</strong><span>등록 사진 ${images.length}장</span></div><button type="button" aria-label="갤러리 닫기">×</button></div><div class="gallery-dialog-grid">${images.map((image) => `<img src="${image.src}" alt="${image.alt}">`).join('')}</div>`;
     document.body.append(dialog);
     dialog.querySelector('button').addEventListener('click', () => dialog.close());
     dialog.addEventListener('close', () => dialog.remove());

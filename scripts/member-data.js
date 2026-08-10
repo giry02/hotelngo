@@ -19,7 +19,7 @@
       Object.entries(values).forEach(([key, value]) => {
         document.querySelectorAll(`[data-member-value="${key}"]`).forEach((target) => { target.textContent = String(value); });
       });
-      document.querySelectorAll('[data-member-source]').forEach((target) => { target.textContent = 'JSON Mock API'; });
+      document.querySelectorAll('[data-member-source]').forEach((target) => { target.textContent = '계정에 저장된 정보'; });
       const profile = await loadMemberProfile();
       const traveler = profile.travelerProfiles?.find((item) => item.isPrimary) || profile.travelerProfiles?.[0] || {};
       document.querySelectorAll('[data-profile-field]').forEach((field) => {
@@ -31,8 +31,8 @@
       const links = traveler.pmsGuestLinks || [];
       document.querySelectorAll('[data-pms-link-state]').forEach((target) => {
         target.textContent = links.length
-          ? `${links.length}개 호텔 PMS 고객 레코드와 연결됨 · 로그인 계정은 병합되지 않습니다.`
-          : '연결 없음 · 예약 전송 후 호텔별 PmsGuestLink를 별도로 생성할 수 있습니다.';
+          ? `${links.length}개 호텔 예약 고객 정보와 연결되어 있습니다. HotelnGo 로그인 계정은 호텔 회원 계정과 별도로 유지됩니다.`
+          : '연결된 호텔 고객 정보가 없습니다. 예약이 전달되면 호텔별 고객 정보와 안전하게 연결할 수 있습니다.';
       });
     } catch (error) {
       document.querySelectorAll('[data-member-source]').forEach((target) => { target.textContent = '데이터 로드 실패'; });

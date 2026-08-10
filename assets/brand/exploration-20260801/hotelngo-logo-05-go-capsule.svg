@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="100" viewBox="0 0 420 100" role="img" aria-labelledby="title desc">
+  <title id="title">HotelnGo Go Capsule logo</title>
+  <desc id="desc">A compact Hoteln wordmark paired with a bright GO capsule.</desc>
+  <defs>
+    <linearGradient id="capsule-gradient" x1="224" y1="14" x2="398" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6B7"/>
+      <stop offset="0.48" stop-color="#1CB3E5"/>
+      <stop offset="1" stop-color="#2F6BFF"/>
+    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@700;800&amp;display=swap');
+      .base{font-family:'Barlow Semi Condensed','Segoe UI',Arial,sans-serif;font-size:78px;font-weight:700;letter-spacing:-.5px;fill:#181B1A}
+      .go{font-family:'Barlow Semi Condensed','Segoe UI',Arial,sans-serif;font-size:61px;font-weight:800;letter-spacing:0;fill:#FFFFFF}
+    </style>
+  </defs>
+  <text class="base" x="2" y="76">Hoteln</text>
+  <rect x="212" y="8" width="190" height="84" rx="42" fill="url(#capsule-gradient)"/>
+  <text class="go" x="232" y="69">GO</text>
+  <path d="M314 50h44m-14-13 14 13-14 13" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -17,6 +17,7 @@
     TOUR: '투어·체험',
     TRANSPORT: '차량·픽업'
   };
+  const bookingLabels = { INSTANT: '바로 예약 가능', REQUEST: '업체 확인 후 확정', INFORMATION_ONLY: '방문 정보 제공' };
   let catalog;
   let destinationId = '';
   let category = categoryLabels[params.get('focus')] ? params.get('focus') : 'ALL';
@@ -60,9 +61,9 @@
         <img src="${escapeHtml(selected.cover)}" alt="${escapeHtml(selected.name)}">
         <div><span class="page-eyebrow">${escapeHtml(selected.country)} · ${escapeHtml(selected.name)}</span><h1>${escapeHtml(selected.name)}에서<br>무엇을 해볼까요?</h1><p>${escapeHtml(selected.summary)}</p><div class="page-head-actions"><a class="ui-button primary" href="${tripHref()}">이 도시로 일정 만들기</a><a class="ui-button" href="${hotelHref}">호텔 보기</a><button class="ui-button" type="button" data-change-destination>도시 바꾸기</button></div></div>
       </section>
-      <div class="experience-context-note"><strong>현재 여행지: ${escapeHtml(selected.name)}</strong><span>일정 날짜가 있으면 운영시간·예약 슬롯·이동시간 순으로 다시 정렬합니다. 현재 가격과 재고는 JSON Mock입니다.</span></div>
+      <div class="experience-context-note"><strong>현재 여행지: ${escapeHtml(selected.name)}</strong><span>일정 날짜가 있으면 운영시간·예약 가능 여부·이동시간 순으로 다시 정렬합니다.</span></div>
       <nav class="experience-category-nav" aria-label="즐길거리 분류"><button class="${category === 'ALL' ? 'is-active' : ''}" type="button" data-category="ALL">전체</button>${Object.entries(categoryLabels).map(([id, label]) => `<button class="${category === id ? 'is-active' : ''}" type="button" data-category="${id}">${escapeHtml(label)}</button>`).join('')}</nav>
-      <section class="experience-product-grid">${products.map((item) => `<article class="experience-product-card"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"><div><small>${escapeHtml(categoryLabels[item.category])} · ${escapeHtml(item.area)}</small><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><dl><div><dt>소요시간</dt><dd>${item.duration ? `${item.duration}분` : '숙박 구간'}</dd></div><div><dt>예상금액</dt><dd>${escapeHtml(item.priceLabel)}</dd></div><div><dt>예약방식</dt><dd>${escapeHtml(item.bookingType)}</dd></div></dl><div class="page-head-actions"><a class="ui-button primary" href="${tripHref(item.id)}">일정에 날짜 선택해 추가</a><button class="ui-button" type="button" data-save-candidate="${escapeHtml(item.id)}">후보 저장</button></div></div></article>`).join('')}</section>`;
+      <section class="experience-product-grid">${products.map((item) => `<article class="experience-product-card"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"><div><small>${escapeHtml(categoryLabels[item.category])} · ${escapeHtml(item.area)}</small><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><dl><div><dt>소요시간</dt><dd>${item.duration ? `${item.duration}분` : '숙박 구간'}</dd></div><div><dt>예상금액</dt><dd>${escapeHtml(item.priceLabel)}</dd></div><div><dt>예약방식</dt><dd>${escapeHtml(bookingLabels[item.bookingType] || '조건 확인')}</dd></div></dl><div class="page-head-actions"><a class="ui-button primary" href="${tripHref(item.id)}">상세 보고 일정에 추가</a><button class="ui-button" type="button" data-save-candidate="${escapeHtml(item.id)}">후보 저장</button></div></div></article>`).join('')}</section>`;
   };
 
   root.addEventListener('click', (event) => {

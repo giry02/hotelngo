@@ -135,10 +135,9 @@
         if (!input.dataset.searchHref) {
           const query = normalize(input.value);
           const historyMatch = memberHistory.find((item) => normalize(item.hotelName) === query);
-          const hotelMatch = (catalog.hotels || []).find((item) => {
-            const candidates = [item.name, ...(item.keywords || [])].map(normalize);
-            return candidates.includes(query);
-          });
+          // 도시명이나 광범위한 키워드는 호텔 상세가 아니라 검색 결과로 보냅니다.
+          // 정확한 호텔명(공백만 무시)이 일치할 때만 상세로 바로 이동합니다.
+          const hotelMatch = (catalog.hotels || []).find((item) => normalize(item.name) === query);
           const match = historyMatch ? { ...historyMatch, type: 'HISTORY' } : hotelMatch;
           if (match) {
             input.dataset.searchKind = match.type;

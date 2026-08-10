@@ -15,6 +15,8 @@
   let toastTimer;
   let heroTimer;
   let heroIndex = 0;
+  let menuReturnFocus = null;
+  const menuBackground = () => [document.querySelector('main'), document.querySelector('.site-footer'), document.querySelector('.mobile-tabbar')].filter(Boolean);
 
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -37,13 +39,16 @@
     toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 3000);
   };
 
-  const closeMenu = () => {
-    if (!menuTrigger || !mobileMenu) return;
+  const closeMenu = (restoreFocus = true) => {
+    if (!menuTrigger || !mobileMenu || mobileMenu.hidden) return;
     mobileMenu.hidden = true;
     if (menuScrim) menuScrim.hidden = true;
     menuTrigger.setAttribute('aria-expanded', 'false');
     menuTrigger.setAttribute('aria-label', '전체 메뉴 열기');
     document.body.classList.remove('menu-open');
+    menuBackground().forEach((element) => element.removeAttribute('inert'));
+    if (restoreFocus) (menuReturnFocus || menuTrigger).focus();
+    menuReturnFocus = null;
   };
 
   const showHeroSlide = (index, restart = false) => {
@@ -84,17 +89,43 @@
 
   menuTrigger?.addEventListener('click', () => {
     const willOpen = menuTrigger.getAttribute('aria-expanded') !== 'true';
+    if (!willOpen) {
+      closeMenu();
+      return;
+    }
+    menuReturnFocus = document.activeElement;
     mobileMenu.hidden = !willOpen;
     if (menuScrim) menuScrim.hidden = !willOpen;
     menuTrigger.setAttribute('aria-expanded', String(willOpen));
     menuTrigger.setAttribute('aria-label', willOpen ? '전체 메뉴 닫기' : '전체 메뉴 열기');
     document.body.classList.toggle('menu-open', willOpen);
+    menuBackground().forEach((element) => element.setAttribute('inert', ''));
+    mobileMenu.querySelector('[data-menu-close]')?.focus();
   });
 
   mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
   menuClose?.addEventListener('click', closeMenu);
   menuScrim?.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+  document.addEventListener('keydown', (event) => {
+    if (mobileMenu?.hidden) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = [...mobileMenu.querySelectorAll('a[href], button:not([disabled])')];
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
   searchTabs.forEach((tab) => tab.addEventListener('click', () => {
     searchTabs.forEach((item) => {

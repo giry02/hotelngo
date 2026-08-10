@@ -1,4 +1,11 @@
 (async () => {
+  const pageParams = new URLSearchParams(location.search);
+  const selectedCheckIn = pageParams.get('checkIn') || '2026-08-14';
+  const selectedCheckOut = pageParams.get('checkOut') || '2026-08-17';
+  const rawGuests = pageParams.get('guests') || '2';
+  const adultCount = Number(String(rawGuests).match(/성인\s*(\d+)/)?.[1] || String(rawGuests).match(/^\d+/)?.[0] || 2);
+  const childCount = String(rawGuests).includes('아동') ? Number(String(rawGuests).match(/아동\s*(\d+)/)?.[1] || 1) : String(rawGuests).includes('-') ? Number(String(rawGuests).split('-')[1] || 0) : 0;
+  const selectedGuests = `성인 ${adultCount}명${childCount ? ` · 아동 ${childCount}명` : ''}`;
   const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
   const amenityIcons = {
     '해변': '<circle cx="6" cy="6" r="2.5"/><path d="M2 14c2-1.7 4-1.7 6 0s4 1.7 6 0 4-1.7 6 0M3 18c2-1.4 4-1.4 6 0s4 1.4 6 0 4-1.4 6 0"/>',
@@ -14,6 +21,12 @@
   const amenityIcon = (amenity) => {
     const key = Object.keys(amenityIcons).find((label) => amenity.includes(label)) || '해변';
     return `<svg class="amenity-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${amenityIcons[key]}</svg>`;
+  };
+  const dateLabel = (value) => new Intl.DateTimeFormat('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${value}T12:00:00`));
+  const selectedNights = Math.max(1, Math.round((new Date(`${selectedCheckOut}T12:00:00`) - new Date(`${selectedCheckIn}T12:00:00`)) / 86400000));
+  const bookingHref = (roomTypeId) => {
+    const params = new URLSearchParams({ hotelId: pageParams.get('hotelId') || 'htl_danang_ocean', roomTypeId, destination: pageParams.get('destination') || '다낭', checkIn: selectedCheckIn, checkOut: selectedCheckOut, guests: String(adultCount) + (childCount ? `-${childCount}` : '') });
+    return `booking-guests.html?${params.toString()}`;
   };
   const reviewCard = (review) => `<article class="hotel-review-card" data-review-traveler="${escapeHtml(review.travelerType)}" data-review-room="${escapeHtml(review.roomType)}" data-review-score="${review.score}">
     <div class="review-card-head"><b>${review.score.toFixed(1)}</b><div><strong>${escapeHtml(review.title)}</strong><span>${review.verified ? '✓ 예약 확인' : '일반 후기'} · ${escapeHtml(review.travelerType)}</span></div></div>
@@ -50,8 +63,29 @@
     dialog.addEventListener('close', () => dialog.remove());
     dialog.showModal();
   };
+  const openRoomDetails = (room) => {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'room-detail-dialog';
+    const selectedTotal = room.rate * selectedNights;
+    dialog.innerHTML = `<header><div><small>객실 상세 정보</small><strong>${escapeHtml(room.name)}</strong><span>${room.sizeM2}㎡ · ${escapeHtml(room.bed)} · ${escapeHtml(room.view)}</span></div><button type="button" aria-label="객실 상세 닫기">×</button></header><div class="room-detail-body"><img src="${escapeHtml(room.images[0].src)}" alt="${escapeHtml(room.images[0].alt)}"><div><dl><div><dt>기준 인원</dt><dd>${escapeHtml(room.occupancy)}</dd></div><div><dt>욕실</dt><dd>${escapeHtml(room.bathroom)}</dd></div><div><dt>현재 재고</dt><dd>${room.available > 0 ? `${room.available}객실` : '매진'}</dd></div><div><dt>${selectedNights}박 총액</dt><dd>${selectedTotal.toLocaleString('ko-KR')}원</dd></div></dl><h3>포함 사항과 취소 조건</h3><ul>${room.highlights.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul><h3>객실 편의시설</h3><div class="room-detail-amenities">${room.amenities.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div></div></div><footer><button class="ui-button" type="button" data-room-photos>사진 ${room.images.length}장 보기</button>${room.available > 0 ? `<a class="ui-button primary" href="${bookingHref(room.pmsRoomTypeId)}">이 객실 예약하기</a>` : '<span class="ui-button is-disabled" aria-disabled="true">현재 매진</span>'}</footer>`;
+    document.body.append(dialog);
+    const close = () => dialog.close();
+    dialog.querySelector('header button').addEventListener('click', close);
+    dialog.querySelector('[data-room-photos]').addEventListener('click', () => { close(); openGallery(room.name, room.images); });
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) close(); });
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.showModal();
+  };
   const content = await getContent();
   const property = content.property;
+  document.querySelector('[data-stay-summary]')?.replaceChildren(document.createTextNode(`${selectedCheckIn.replaceAll('-', '.')}–${selectedCheckOut.replaceAll('-', '.')} · ${selectedNights}박 · 객실 1 · ${selectedGuests}`));
+  document.querySelector('[data-side-checkin]')?.replaceChildren(document.createTextNode(dateLabel(selectedCheckIn)));
+  document.querySelector('[data-side-checkout]')?.replaceChildren(document.createTextNode(dateLabel(selectedCheckOut)));
+  document.querySelector('[data-side-guests]')?.replaceChildren(document.createTextNode(selectedGuests));
+  const lowestAvailableRate = Math.min(...content.roomTypes.filter((room) => room.available > 0).map((room) => room.rate));
+  const lowestStayTotal = lowestAvailableRate * selectedNights;
+  document.querySelector('[data-side-total]')?.replaceChildren(document.createTextNode(`${lowestStayTotal.toLocaleString('ko-KR')}원`));
+  document.querySelector('[data-mobile-total]')?.replaceChildren(document.createTextNode(`${lowestStayTotal.toLocaleString('ko-KR')}원`));
 
   const propertyGallery = document.querySelector('[data-property-gallery]');
   if (propertyGallery) {
@@ -90,18 +124,24 @@
         <div class="room-photo-thumbs" aria-hidden="true">${room.images.slice(1, 4).map((image) => `<img src="${escapeHtml(image.src)}" alt="">`).join('')}</div>
       </div>
       <div class="offer-info">
-        <div class="room-title-line"><h3>${escapeHtml(room.name)}</h3><button type="button" class="room-detail-link" data-room-gallery="${escapeHtml(room.pmsRoomTypeId)}">객실 자세히</button></div>
+        <div class="room-title-line"><h3>${escapeHtml(room.name)}</h3><button type="button" class="room-detail-link" data-room-detail="${escapeHtml(room.pmsRoomTypeId)}">객실 자세히</button></div>
         <small>${room.sizeM2}㎡ · ${escapeHtml(room.bed)} · ${escapeHtml(room.occupancy)} · ${escapeHtml(room.view)}</small>
         <div class="offer-bullets">${room.highlights.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>
         <div class="room-amenity-preview">${room.amenities.slice(0, 4).map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>
       </div>
       <div class="offer-price">
-        <span class="stock">${room.available > 0 ? `잔여 ${room.available}객실` : '매진'}</span><small>3박 총액</small><strong>${room.total.toLocaleString('ko-KR')}원</strong><em>1박 평균 ${room.rate.toLocaleString('ko-KR')}원</em>
-        <span class="room-data-source">PMS 재고 · ${new Date(room.inventoryCheckedAt).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})} 확인</span>
-        <a class="ui-button primary${room.available < 1 ? ' is-disabled' : ''}" href="${room.available > 0 ? `booking-guests.html?roomTypeId=${encodeURIComponent(room.pmsRoomTypeId)}` : '#'}" ${room.available < 1 ? 'aria-disabled="true"' : ''}>${room.available > 0 ? '예약 화면 보기' : '현재 매진'}</a>
+        <span class="stock">${room.available > 0 ? `잔여 ${room.available}객실` : '매진'}</span><small>${selectedNights}박 총액</small><strong>${(room.rate * selectedNights).toLocaleString('ko-KR')}원</strong><em>1박 평균 ${room.rate.toLocaleString('ko-KR')}원</em>
+        <span class="room-data-source">객실 현황 · ${new Date(room.inventoryCheckedAt).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})} 확인</span>
+        <a class="ui-button primary${room.available < 1 ? ' is-disabled' : ''}" href="${room.available > 0 ? bookingHref(room.pmsRoomTypeId) : '#'}" ${room.available < 1 ? 'aria-disabled="true"' : ''}>${room.available > 0 ? '예약하기' : '현재 매진'}</a>
       </div>
     </article>`).join('');
     offers.addEventListener('click', (event) => {
+      const detailButton = event.target.closest('[data-room-detail]');
+      if (detailButton) {
+        const room = content.roomTypes.find((item) => item.pmsRoomTypeId === detailButton.dataset.roomDetail);
+        if (room) openRoomDetails(room);
+        return;
+      }
       const button = event.target.closest('[data-room-gallery]');
       if (!button) return;
       const room = content.roomTypes.find((item) => item.pmsRoomTypeId === button.dataset.roomGallery);
