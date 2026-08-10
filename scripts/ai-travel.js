@@ -84,7 +84,8 @@
     const params = new URLSearchParams({
       destination: destination.name,
       nights: String(nights),
-      mode: 'ai',
+      source: 'ai',
+      pace: document.querySelector('[name="pace"]')?.value || 'BALANCED',
       prompt: text
     });
     if (/오늘/.test(text)) {
@@ -94,7 +95,7 @@
       params.set('startDate', formatDate(start));
       params.set('endDate', formatDate(end));
     }
-    location.href = `trip-planner.html?${params.toString()}`;
+    location.href = `trip-create.html?${params.toString()}`;
   };
 
   const supportsFullTripPlanner = (destination) =>
@@ -329,7 +330,7 @@
   const initialize = async () => {
     knowledge = await api.get('ai/travel-knowledge.json');
     const version = document.querySelector('[data-ai-version]');
-    if (version) version.textContent = `${knowledge.plannerVersion} · 외부 AI 미연결`;
+    if (version) version.textContent = `${knowledge.plannerVersion} · 여행 조건 기반 일정 설계`;
     const promptFromQuery = new URLSearchParams(location.search).get('prompt');
     if (promptFromQuery) prompt.value = promptFromQuery;
   };

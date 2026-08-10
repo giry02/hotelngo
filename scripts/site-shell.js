@@ -14,7 +14,7 @@
   }
   if (!document.querySelector('script[data-hotelngo-search]')) {
     const searchScript = document.createElement('script');
-    searchScript.src = 'scripts/search-autocomplete.js?v=3';
+    searchScript.src = 'scripts/search-autocomplete.js?v=5';
     searchScript.dataset.hotelngoSearch = '';
     document.head.append(searchScript);
   }
@@ -24,7 +24,7 @@
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
-    ['planner', '여행 일정', 'trip-planner.html'],
+    ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
     ['ai', 'AI 여행', 'ai-travel.html'],
@@ -47,7 +47,7 @@
       </div>
     </header>
     <button class="menu-scrim" type="button" aria-label="메뉴 닫기" data-menu-scrim hidden></button>
-    <aside class="mobile-menu" aria-label="전체 메뉴" data-mobile-menu hidden>
+    <aside class="mobile-menu" role="dialog" aria-modal="true" aria-label="전체 메뉴" data-mobile-menu hidden>
       <div class="mobile-menu-head"><div><small>HOTELNGO MENU</small><strong>여행을 어디서 이어갈까요?</strong></div><button type="button" aria-label="전체 메뉴 닫기" data-menu-close>×</button></div>
       <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}${key === 'trips' ? ' data-member-only' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
       <div class="mobile-menu-actions"><a href="cart.html">여행 카트</a><a href="bookings.html">예약 조회</a><a class="primary" href="login.html">로그인·회원가입</a></div>
@@ -67,9 +67,8 @@
   const mobileNav = (active) => `
     <nav class="mobile-tabbar" aria-label="모바일 하단 메뉴">
       <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>⌂</span>홈</a>
-      <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>⌕</span>검색</a>
-      <a class="${active === 'ai' ? 'is-active' : ''}" href="ai-travel.html"><span>✦</span>AI 여행</a>
-      <a class="${active === 'trips' ? 'is-active' : ''}" href="trips.html" data-member-only><span>◇</span>내 여행</a>
+      <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>⌕</span>호텔</a>
+      <a class="${active === 'planner' || active === 'ai' || active === 'trips' ? 'is-active' : ''}" href="trip-create.html"><span>＋</span>여행 만들기</a>
       <a class="${active === 'my' ? 'is-active' : ''}" href="my.html"><span>○</span>마이</a>
     </nav>`;
 

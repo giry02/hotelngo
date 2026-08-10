@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#2f6bff">
   <title>HotelnGo — Stay here. Go anywhere.</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png?v=2" type="image/png">
-  <link rel="stylesheet" href="styles/tokens.css?v=9">
-  <link rel="stylesheet" href="styles/main.css?v=30">
-  <script src="scripts/site-shell.js?v=15" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=7" defer></script><script src="scripts/auth.js?v=4" defer></script>
-  <script src="scripts/main.js?v=14" defer></script>
+  <link rel="stylesheet" href="styles/tokens.css?v=11">
+  <link rel="stylesheet" href="styles/main.css?v=31">
+  <script src="scripts/site-shell.js?v=17" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=18" defer></script><script src="scripts/auth.js?v=6" defer></script>
+  <script src="scripts/main.js?v=15" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -68,7 +68,7 @@
           </label>
           <label class="search-field date-field">
             <span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M3 9h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg></span>
-            <span class="field-copy"><small>일정</small><span class="date-inputs"><input name="checkIn" type="date" required><b>–</b><input name="checkOut" type="date" required></span></span>
+            <span class="field-copy"><small>일정</small><span class="date-inputs"><input name="checkIn" type="date" required aria-label="체크인 날짜"><b aria-hidden="true">–</b><input name="checkOut" type="date" required aria-label="체크아웃 날짜"></span></span>
           </label>
           <label class="search-field guest-field">
             <span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-2.5A4.5 4.5 0 0 1 8 13h2a4.5 4.5 0 0 1 4.5 4.5V20M16 5.5a3 3 0 0 1 0 5.8M17 14a4 4 0 0 1 3.5 4v2"/></svg></span>
@@ -204,15 +204,15 @@
     <section class="section stay-section shell" id="stays">
       <div class="section-heading stay-head"><div><span class="heading-chip">RECOMMEND</span><h2>지금 예약하기 좋은 해외 호텔</h2></div><div class="stay-filters" role="tablist" aria-label="추천 숙소 유형"><button class="is-active" type="button" data-stay-filter="all">전체</button><button type="button" data-stay-filter="city">시티 호텔</button><button type="button" data-stay-filter="resort">리조트</button><button type="button" data-stay-filter="boutique">부티크</button><button type="button" data-stay-filter="villa">풀빌라</button></div></div>
       <div class="stay-grid" data-stay-grid>
-        <article class="stay-card" data-category="city"><div class="stay-photo photo-jeju"><span class="discount-badge">20% 할인</span><button type="button" aria-label="The Standard Bangkok 찜하기" data-save>♡</button></div><div class="stay-info"><small>5성급 · 시티 호텔</small><h3>The Standard Bangkok</h3><p>방콕 · 마하나콘 타워 도보 1분</p><div class="rating"><b>9.3</b><span>2,184명 평가</span></div><div class="price"><small>쿠폰 적용 시</small><strong>218,000원</strong><del>274,000원</del></div></div></article>
-        <article class="stay-card" data-category="resort"><div class="stay-photo photo-gangneung"><span class="discount-badge hot">오늘만 특가</span><button type="button" aria-label="Hyatt Regency Danang 찜하기" data-save>♡</button></div><div class="stay-info"><small>5성급 · 비치 리조트</small><h3>Hyatt Regency Danang</h3><p>다낭 · 논누억 비치 앞</p><div class="rating"><b>9.2</b><span>3,410명 평가</span></div><div class="price"><small>회원 특가</small><strong>186,400원</strong><del>242,000원</del></div></div></article>
-        <article class="stay-card" data-category="boutique"><div class="stay-photo photo-gapyeong"><span class="discount-badge green">잔여 2객실</span><button type="button" aria-label="The Royal Park Kyoto 찜하기" data-save>♡</button></div><div class="stay-info"><small>4성급 · 부티크 호텔</small><h3>The Royal Park Kyoto</h3><p>교토 · 산조역 도보 3분</p><div class="rating"><b>9.5</b><span>1,864명 평가</span></div><div class="price"><small>연박 할인</small><strong>172,000원</strong><del>215,000원</del></div></div></article>
-        <article class="stay-card" data-category="villa"><div class="stay-photo photo-busan"><span class="discount-badge">신규 입점</span><button type="button" aria-label="Uluwatu Ocean Villa 찜하기" data-save>♡</button></div><div class="stay-info"><small>프라이빗 · 풀빌라</small><h3>Uluwatu Ocean Villa</h3><p>발리 · 울루와뚜 절벽 해안</p><div class="rating"><b>9.6</b><span>526명 평가</span></div><div class="price"><small>조식 포함</small><strong>289,000원</strong><del>360,000원</del></div></div></article>
+        <article class="stay-card" data-category="city"><div class="stay-photo photo-jeju"><span class="discount-badge">20% 할인</span><button type="button" aria-label="The Standard Bangkok 찜하기" data-save>♡</button></div><div class="stay-info"><small>5성급 · 시티 호텔</small><h3><a href="hotels.html?destination=방콕">The Standard Bangkok</a></h3><p>방콕 · 마하나콘 타워 도보 1분</p><div class="rating"><b>9.3</b><span>2,184명 평가</span></div><div class="price"><small>쿠폰 적용 시</small><strong>218,000원</strong><del>274,000원</del></div></div></article>
+        <article class="stay-card" data-category="resort"><div class="stay-photo photo-gangneung"><span class="discount-badge hot">오늘만 특가</span><button type="button" aria-label="Hyatt Regency Danang 찜하기" data-save>♡</button></div><div class="stay-info"><small>5성급 · 비치 리조트</small><h3><a href="hotel-detail.html?hotelId=htl_danang_ocean">Hyatt Regency Danang</a></h3><p>다낭 · 논누억 비치 앞</p><div class="rating"><b>9.2</b><span>3,410명 평가</span></div><div class="price"><small>회원 특가</small><strong>186,400원</strong><del>242,000원</del></div></div></article>
+        <article class="stay-card" data-category="boutique"><div class="stay-photo photo-gapyeong"><span class="discount-badge green">잔여 2객실</span><button type="button" aria-label="The Royal Park Kyoto 찜하기" data-save>♡</button></div><div class="stay-info"><small>4성급 · 부티크 호텔</small><h3><a href="hotel-detail.html?hotelId=htl_kyoto_gion">The Royal Park Kyoto</a></h3><p>교토 · 산조역 도보 3분</p><div class="rating"><b>9.5</b><span>1,864명 평가</span></div><div class="price"><small>연박 할인</small><strong>172,000원</strong><del>215,000원</del></div></div></article>
+        <article class="stay-card" data-category="villa"><div class="stay-photo photo-busan"><span class="discount-badge">신규 입점</span><button type="button" aria-label="Uluwatu Ocean Villa 찜하기" data-save>♡</button></div><div class="stay-info"><small>프라이빗 · 풀빌라</small><h3><a href="hotels.html?destination=발리">Uluwatu Ocean Villa</a></h3><p>발리 · 울루와뚜 절벽 해안</p><div class="rating"><b>9.6</b><span>526명 평가</span></div><div class="price"><small>조식 포함</small><strong>289,000원</strong><del>360,000원</del></div></div></article>
       </div>
       <a class="more-button" href="hotels.html">해외 호텔 더보기 <span>＋</span></a>
     </section>
 
-    <section class="section member-banner shell"><div><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt="" aria-hidden="true"><span><small>HotelnGo 회원 전용</small><strong>로그인하고 해외 호텔 회원가를 확인하세요.</strong></span></div><a class="member-cta" href="login.html">로그인/회원가입</a></section>
+    <section class="section member-banner shell" data-guest-only><div><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt="" aria-hidden="true"><span><small>HotelnGo 회원 전용</small><strong>로그인하고 해외 호텔 회원가를 확인하세요.</strong></span></div><a class="member-cta" href="login.html">로그인/회원가입</a></section>
     <section class="section app-banner"><div class="shell app-inner"><div><span class="app-icon"><img src="assets/brand/official/hotelngo-symbol-primary.png?v=2" alt=""></span><p><small>여행 장면을 저장하고 예약까지</small><strong>HotelnGo 앱에서 내 여행을 이어가세요</strong></p></div><div class="app-actions"><a href="app-download.html">앱 다운로드 안내</a><span>WEB</span></div></div></section>
   </main>
 

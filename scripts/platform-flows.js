@@ -6,7 +6,8 @@
   const session = (() => {
     try { return JSON.parse(sessionStorage.getItem('hotelngo.mock.session.v1') || 'null'); } catch { return null; }
   })();
-  const memberId = session?.user?.id || 'usr_demo_jiho';
+  const memberId = session?.user?.id || 'guest_local';
+  const BOOKING_ACCESS_KEY = 'hotelngo.mock.booking-access.v1';
   let seeds = null;
   let toastTimer;
   let pendingCancellation = null;
@@ -16,7 +17,7 @@
   if (!document.querySelector('link[data-platform-flows]')) {
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = 'styles/platform-flows.css?v=3';
+    style.href = 'styles/platform-flows.css?v=4';
     style.dataset.platformFlows = '';
     document.head.append(style);
   }
@@ -27,6 +28,49 @@
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+  const bookingStatusLabel = (value) => ({
+    CONFIRMED: '예약 확정',
+    PENDING: '확인 중',
+    PENDING_SUPPLIER: '업체 확인 중',
+    UNAVAILABLE: '예약 불가',
+    CANCEL_REQUESTED: '취소 요청',
+    CANCELLED: '취소 완료',
+    CHANGE_REQUESTED: '변경 요청'
+  }[value] || '상태 확인');
+  const bookingStatusHelp = (value) => ({
+    CONFIRMED: '예약이 확정되었습니다. 이용 전 확인서와 바우처를 확인해주세요.',
+    PENDING: '예약 요청을 확인하고 있습니다. 처리 결과를 알림으로 안내합니다.',
+    PENDING_SUPPLIER: '예약 요청을 접수했습니다. 업체 확인이 끝나면 알림으로 안내합니다.',
+    UNAVAILABLE: '선택한 상품을 확정할 수 없습니다. 결제 취소 또는 대체 상품을 안내합니다.',
+    CANCEL_REQUESTED: '취소 요청을 접수했습니다. 환불 금액과 완료 시점을 확인하고 있습니다.',
+    CANCELLED: '예약 취소와 환불 처리가 완료되었습니다.',
+    CHANGE_REQUESTED: '변경 요청을 접수했습니다. 가능 여부와 차액을 확인하고 있습니다.'
+  }[value] || '현재 처리 상태를 확인하고 있습니다.');
+  const paymentStatusLabel = (value) => ({
+    DEMO_AUTHORIZED: '결제 확인 완료(데모)',
+    AUTHORIZED: '결제 승인 완료',
+    PAID: '결제 완료',
+    REFUND_PENDING: '환불 처리 중',
+    REFUNDED: '환불 완료'
+  }[value] || '결제 상태 확인 중');
+  const providerLabel = (value) => ({ HOTEL: '호텔', MULTI_SUPPLIER: '여행 상품', ACTIVITY: '즐길거리' }[value] || '예약 상품');
+  const readBookingAccess = () => {
+    try { return JSON.parse(sessionStorage.getItem(BOOKING_ACCESS_KEY) || 'null'); } catch { return null; }
+  };
+  const grantBookingAccess = (booking) => {
+    sessionStorage.setItem(BOOKING_ACCESS_KEY, JSON.stringify({
+      bookingId: booking.id,
+      expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString()
+    }));
+  };
+  const canAccessBooking = (booking) => {
+    if (session && booking.memberId === memberId) return true;
+    const access = readBookingAccess();
+    return access?.bookingId === booking.id && Date.parse(access.expiresAt || '') > Date.now();
+  };
+  const formatDateTime = (value) => value
+    ? new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
+    : '-';
 
   const showToast = (message) => {
     let toast = document.querySelector('[data-toast], [data-bo-toast], [data-workflow-toast]');
@@ -246,6 +290,28 @@
     const form = event.target;
     if (!(form instanceof HTMLFormElement)) return;
 
+    if (route === 'bookings.html' && form.matches('[data-booking-lookup]')) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!form.reportValidity()) return;
+      await seedDomains();
+      const values = serializeForm(form);
+      const bookingId = String(values.bookingId || '').trim().toUpperCase();
+      const email = String(values.email || '').trim().toLowerCase();
+      const booking = api.list('bookings').find((item) => item.id.toUpperCase() === bookingId && String(item.guest?.email || '').toLowerCase() === email);
+      const feedback = form.querySelector('[data-booking-lookup-feedback]');
+      if (!booking) {
+        if (feedback) feedback.textContent = '예약번호와 예약자 이메일이 일치하지 않습니다.';
+        showToast('예약 정보를 다시 확인해주세요.');
+        return;
+      }
+      if (feedback) feedback.textContent = '';
+      grantBookingAccess(booking);
+      showToast('예약 정보를 확인했습니다.');
+      setTimeout(() => { location.href = `booking-detail.html?id=${encodeURIComponent(booking.id)}`; }, 220);
+      return;
+    }
+
     if (form.matches('[data-flow-form]')) {
       const values = serializeForm(form);
       if (route === 'booking-guests.html') {
@@ -267,7 +333,7 @@
         const checkout = saveCheckout({ payment: values, step: 'COMPLETE' });
         const id = `HNG-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
         const first = checkout.items?.[0];
-        api.upsert('bookings', {
+        const createdBooking = api.upsert('bookings', {
           id,
           memberId,
           providerId: 'pending_provider',
@@ -287,6 +353,7 @@
             { at: new Date().toISOString(), status: 'PENDING_SUPPLIER', label: '공급자 예약 API 확인 대기' }
           ]
         });
+        grantBookingAccess(createdBooking);
         saveCheckout({ bookingId: id });
         api.appendAudit({ actor: memberId, action: 'BOOKING_CREATED', entityType: 'BOOKING', entityId: id });
       }
@@ -467,7 +534,9 @@
     if (!main || main.querySelector('[data-platform-trip-list]')) return;
     const trips = api.list('trips').filter((item) => item.ownerId === memberId);
     const head = main.querySelector('.page-head, .content-section-head');
-    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIP JSON</span><h2>저장된 나의 여행</h2><p>직접 만든 일정, 공개 가이드에서 복사한 일정, AI가 만든 초안을 같은 구조로 편집합니다.</p></div><a class="ui-button primary" href="trip-planner.html">새 여행 만들기</a></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(trip.sourceType)} · ${trip.items?.length || 0}개 일정 · ${escapeHtml(trip.status)}</small></div><div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(trip.id)}">예약 준비도</a><a class="ui-button primary" href="trip-planner.html?tripId=${encodeURIComponent(trip.id)}">편집</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
+    const sourceLabels = { USER_CREATED: '직접 만든 일정', AI_DRAFT: 'AI 추천 초안', COMMUNITY_COPY: '공유 가이드에서 복사' };
+    const statusLabels = { DRAFT: '작성 중', PUBLISHED: '공개됨', LINK_SHARED: '링크 공유' };
+    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIPS</span><h2>저장된 나의 여행</h2><p>직접 만든 일정, 공개 가이드에서 복사한 일정, AI가 만든 초안을 같은 구조로 편집합니다.</p></div></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(sourceLabels[trip.sourceType] || '내 여행')} · ${trip.duration || ''} · ${trip.items?.length || 0}개 장소 · ${escapeHtml(statusLabels[trip.status] || '작성 중')}</small></div><div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(trip.id)}">예약 준비도</a><a class="ui-button" href="trip-publish.html?tripId=${encodeURIComponent(trip.id)}">공유</a><a class="ui-button primary" href="trip-planner.html?tripId=${encodeURIComponent(trip.id)}">일정 편집</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
     if (head) head.insertAdjacentHTML('afterend', html);
     else main.insertAdjacentHTML('afterbegin', html);
   };
@@ -476,10 +545,28 @@
     if (!['booking-detail.html', 'booking-complete.html', 'booking-change.html', 'booking-cancel.html'].includes(route)) return;
     await seedDomains();
     const checkout = api.list('checkout', []).find((item) => item.id === 'active');
-    const id = new URLSearchParams(location.search).get('id') || checkout?.bookingId || 'HNG-2026-000001';
+    const bookingParams = new URLSearchParams(location.search);
+    const id = bookingParams.get('id') || bookingParams.get('bookingId') || (route === 'booking-complete.html' ? checkout?.bookingId : null);
     const booking = api.list('bookings').find((item) => item.id === id);
     const main = getMainShell();
-    if (!booking || !main || main.querySelector('[data-live-booking-state]')) return;
+    const protectedMain = document.querySelector('main[data-booking-protected]');
+    const accessSurface = protectedMain || document.querySelector('main');
+    if (!main || main.querySelector('[data-live-booking-state]')) return;
+    if (!booking) {
+      if (accessSurface) {
+        accessSurface.innerHTML = '<div class="shell"><section class="access-required"><span class="page-eyebrow">BOOKING LOOKUP</span><h1>예약 정보를 찾을 수 없습니다</h1><p>예약번호를 다시 확인하거나 예약 조회 화면에서 본인 확인을 진행해주세요.</p><a class="ui-button primary" href="bookings.html">예약 조회로 이동</a></section></div>';
+        accessSurface.hidden = false;
+      }
+      return;
+    }
+    if (!canAccessBooking(booking)) {
+      if (accessSurface) {
+        accessSurface.innerHTML = '<div class="shell"><section class="access-required"><span class="page-eyebrow">PRIVATE BOOKING</span><h1>예약 확인이 필요합니다</h1><p>예약자 정보 보호를 위해 예약번호와 이메일 확인 후 상세 내용을 볼 수 있습니다.</p><a class="ui-button primary" href="bookings.html">예약 확인하기</a><a class="ui-button" href="login.html?returnUrl=orders.html">회원 로그인</a></section></div>';
+        accessSurface.hidden = false;
+      }
+      return;
+    }
+    if (protectedMain) protectedMain.hidden = false;
     if (route === 'booking-complete.html') {
       const number = main.querySelector('.success-number strong');
       const copy = main.querySelector('[data-copy-booking]');
@@ -498,13 +585,13 @@
       const detailMain = main.querySelector('.checkout-main');
       if (detailMain) {
         detailMain.innerHTML = `
-          <div class="state-banner"><div><strong>${booking.status === 'UNAVAILABLE' ? '예약 불가 · 대안 선택 필요' : escapeHtml(booking.status)}</strong><p>${escapeHtml(booking.supplierBookingId ? `공급자 번호 ${booking.supplierBookingId}` : '공급자 예약번호 미수신 또는 확인 대기')}</p></div><span class="status-chip warning">${escapeHtml(booking.status)}</span></div>
+          <div class="state-banner"><div><strong>${escapeHtml(bookingStatusLabel(booking.status))}</strong><p>${escapeHtml(bookingStatusHelp(booking.status))}</p></div><span class="status-chip ${booking.status === 'CONFIRMED' ? 'success' : booking.status === 'UNAVAILABLE' ? 'danger' : 'warning'}">${escapeHtml(bookingStatusLabel(booking.status))}</span></div>
           <section class="checkout-card"><div class="checkout-card-head"><div><h2>예약 정보</h2><p>예약번호 ${escapeHtml(booking.id)}</p></div></div><div class="info-list">
             <div class="info-row"><strong>고객 선택</strong><div>${escapeHtml(booking.title)}<br>${escapeHtml(booking.product || '')}</div></div>
-            <div class="info-row"><strong>이용 일정</strong><div>${escapeHtml(booking.startAt ? new Date(booking.startAt).toLocaleString('ko-KR') : '일정 미정')}${booking.endAt ? ` – ${escapeHtml(new Date(booking.endAt).toLocaleString('ko-KR'))}` : ''}</div></div>
+            <div class="info-row"><strong>이용 일정</strong><div>${escapeHtml(booking.startAt ? formatDateTime(booking.startAt) : '일정 미정')}${booking.endAt ? ` – ${escapeHtml(formatDateTime(booking.endAt))}` : ''}</div></div>
             <div class="info-row"><strong>예약자</strong><div>${escapeHtml(`${booking.guest?.familyName || ''} ${booking.guest?.givenName || ''}`.trim() || '회원 프로필')} · ${escapeHtml(booking.guest?.email || '-')}</div></div>
-            <div class="info-row"><strong>취소·환불</strong><div>${booking.cancellation ? `무료 취소 ${escapeHtml(booking.cancellation.freeUntil || '-')}까지 · 예상 환불 ${Number(booking.cancellation.estimatedRefund || 0).toLocaleString('ko-KR')}원` : '공급자 정책 확인 필요'}</div></div>
-            <div class="info-row"><strong>결제·정산</strong><div>${escapeHtml(booking.paymentStatus || '-')} · ${escapeHtml(booking.settlementStatus || '-')} · ${Number(booking.amount || 0).toLocaleString('ko-KR')}원</div></div>
+            <div class="info-row"><strong>취소·환불</strong><div>${booking.cancellation ? `무료 취소 ${escapeHtml(formatDateTime(booking.cancellation.freeUntil))}까지 · 예상 환불 ${Number(booking.cancellation.estimatedRefund || 0).toLocaleString('ko-KR')}원` : '공급자 정책 확인 필요'}</div></div>
+            <div class="info-row"><strong>결제 상태</strong><div>${escapeHtml(paymentStatusLabel(booking.paymentStatus))} · ${Number(booking.amount || 0).toLocaleString('ko-KR')}원</div></div>
           </div></section>
           ${(booking.items || []).length ? `<section class="checkout-card"><div class="checkout-card-head"><div><h2>복수 공급자 선택 항목</h2><p>각 항목은 공급자별로 별도 확정·취소·정산합니다.</p></div></div><div class="info-list">${booking.items.map((item) => `<div class="info-row"><strong>${escapeHtml(item.title)}</strong><div>${escapeHtml(item.description || '')}<br>${Number(item.amount || 0).toLocaleString('ko-KR')}원</div></div>`).join('')}</div></section>` : ''}
           <section class="checkout-card"><div class="checkout-card-head"><div><h2>처리 이력</h2><p>고객 상태와 공급자 상태를 함께 기록합니다.</p></div></div><ol class="order-timeline">${(booking.timeline || []).map((item) => `<li><time>${escapeHtml(new Date(item.at).toLocaleString('ko-KR'))}</time><strong>${escapeHtml(item.label || item.status)}</strong></li>`).join('')}</ol></section>`;
@@ -527,7 +614,7 @@
                 ? 'assets/images/marketplace/restaurant-dining.jpg'
                 : 'assets/images/hero-hotel.jpg';
         if (sideTitle) sideTitle.textContent = booking.title;
-        if (sideCopy) sideCopy.innerHTML = `${escapeHtml(booking.providerType || '공급자')}<br>${escapeHtml(booking.startAt ? new Date(booking.startAt).toLocaleString('ko-KR') : '일정 미정')}`;
+        if (sideCopy) sideCopy.innerHTML = `${escapeHtml(providerLabel(booking.providerType))}<br>${escapeHtml(booking.startAt ? formatDateTime(booking.startAt) : '일정 미정')}`;
         if (sideImage) {
           sideImage.src = firstItem.image || fallbackImage;
           sideImage.alt = booking.title;
@@ -566,11 +653,53 @@
       if (amounts[2]) amounts[2].textContent = `${Number(booking.amount || 0).toLocaleString('ko-KR')}원`;
       main.querySelectorAll('a[href="booking-detail.html"]').forEach((link) => { link.href = `booking-detail.html?id=${encodeURIComponent(booking.id)}`; });
     }
-    main.insertAdjacentHTML('afterbegin', `<section class="platform-booking-strip" data-live-booking-state><div><small>JSON LOCAL API MOCK · ${escapeHtml(booking.id)}</small><strong>${escapeHtml(booking.status)}</strong><span>${escapeHtml(booking.title)} · ${Number(booking.amount || 0).toLocaleString('ko-KR')}원</span></div><div><a class="ui-button" href="inquiry-create.html?bookingId=${encodeURIComponent(booking.id)}">이 예약 문의</a><a class="ui-button" href="booking-detail.html?id=${encodeURIComponent(booking.id)}">상태 새로 보기</a></div></section>`);
+    main.insertAdjacentHTML('afterbegin', `<section class="platform-booking-strip" data-live-booking-state><div><small>화면 검증용 예약 · ${escapeHtml(booking.id)}</small><strong>${escapeHtml(bookingStatusLabel(booking.status))}</strong><span>${escapeHtml(booking.title)} · ${Number(booking.amount || 0).toLocaleString('ko-KR')}원</span></div><div><a class="ui-button" href="inquiry-create.html?bookingId=${encodeURIComponent(booking.id)}">이 예약 문의</a><a class="ui-button" href="booking-detail.html?id=${encodeURIComponent(booking.id)}">상태 새로 보기</a></div></section>`);
   };
 
   const renderCheckoutState = () => {
     if (!['booking-guests.html', 'booking-review.html', 'checkout.html'].includes(route)) return;
+    const bookingParams = new URLSearchParams(location.search);
+    const selectedRoomTypeId = bookingParams.get('roomTypeId');
+    const roomCatalog = {
+      rt_deluxe_ocean: { name: '디럭스 오션뷰', rate: 186400, includes: '2인 조식 포함 · 체크인 3일 전까지 무료 취소' },
+      rt_club_ocean: { name: '리젠시 클럽 오션', rate: 262000, includes: '클럽 라운지·조식 포함 · 체크인 7일 전까지 무료 취소' },
+      rt_family_suite: { name: '2 베드룸 레지던스', rate: 278000, includes: '4인 조식 포함 · 예약 후 환불 불가' }
+    };
+    if (route === 'booking-guests.html' && selectedRoomTypeId && roomCatalog[selectedRoomTypeId] && !document.documentElement.dataset.bookingContextSeeded) {
+      document.documentElement.dataset.bookingContextSeeded = 'true';
+      const room = roomCatalog[selectedRoomTypeId];
+      const checkIn = bookingParams.get('checkIn') || '2026-08-14';
+      const checkOut = bookingParams.get('checkOut') || '2026-08-17';
+      const nights = Math.max(1, Math.round((new Date(`${checkOut}T12:00:00`) - new Date(`${checkIn}T12:00:00`)) / 86400000));
+      const guestValue = bookingParams.get('guests') || '2';
+      const adultCount = Number(guestValue.match(/^\d+/)?.[0] || 2);
+      const childCount = guestValue.includes('-') ? Number(guestValue.split('-')[1] || 0) : 0;
+      saveCheckout({
+        items: [{
+          id: `hotel_${selectedRoomTypeId}`,
+          title: `Hyatt Regency Danang Resort · ${room.name}`,
+          description: `${checkIn.replaceAll('-', '.')}–${checkOut.replaceAll('-', '.')} · ${nights}박 · 성인 ${adultCount}명${childCount ? ` · 아동 ${childCount}명` : ''}`,
+          supplier: 'Hyatt Regency Danang Resort',
+          image: 'assets/images/hero-hotel.jpg',
+          amount: room.rate * nights,
+          selected: true,
+          roomTypeId: selectedRoomTypeId,
+          checkIn,
+          checkOut,
+          guests: guestValue,
+          policy: room.includes
+        }],
+        guest: {},
+        bookingContext: { hotelId: bookingParams.get('hotelId') || 'htl_danang_ocean', destination: bookingParams.get('destination') || '다낭', checkIn, checkOut, guests: guestValue },
+        step: 'GUESTS'
+      });
+      const backLink = document.querySelector('[data-booking-back]');
+      if (backLink) {
+        const backParams = new URLSearchParams({ destination: bookingParams.get('destination') || '다낭', checkIn, checkOut, guests: guestValue, hotelId: bookingParams.get('hotelId') || 'htl_danang_ocean' });
+        backLink.href = `hotel-detail.html?${backParams.toString()}#rooms`;
+        backLink.textContent = '객실 선택으로 돌아가기';
+      }
+    }
     const checkout = api.list('checkout', []).find((item) => item.id === 'active');
     if (!checkout) return;
     const main = getMainShell();
@@ -649,9 +778,15 @@
     const main = document.querySelector('.bo-main') || getMainShell();
     if (!main || main.querySelector('[data-platform-role-state]')) return;
 
-    if (['bookings.html', 'orders.html'].includes(route)) {
+    if (route === 'orders.html' && session) {
       const records = api.list('bookings').filter((item) => item.memberId === memberId);
-      main.insertAdjacentHTML('afterbegin', `<section class="platform-state-panel" data-platform-role-state><header><div><small>BOOKING JSON STATE</small><h2>내 예약·주문 실제 Mock 상태</h2></div><span>${records.length}건</span></header><div class="platform-table-wrap"><table><thead><tr><th>예약</th><th>상품</th><th>이용일</th><th>금액</th><th>상태</th><th>관리</th></tr></thead><tbody>${records.map((item) => `<tr><td><strong>${escapeHtml(item.id)}</strong><small>${escapeHtml(item.providerType)}</small></td><td>${escapeHtml(item.title)}<small>${escapeHtml(item.product || '')}</small></td><td>${escapeHtml(item.startAt ? new Date(item.startAt).toLocaleDateString('ko-KR') : '-')}</td><td>${Number(item.amount || 0).toLocaleString('ko-KR')}원</td><td><span class="workflow-badge ${item.status === 'CONFIRMED' ? 'success' : item.status === 'UNAVAILABLE' ? 'danger' : 'warn'}">${escapeHtml(item.status)}</span></td><td><a class="workflow-button" href="booking-detail.html?id=${encodeURIComponent(item.id)}">상세</a></td></tr>`).join('')}</tbody></table></div></section>`);
+      const accountContent = main.querySelector('.account-content') || main;
+      accountContent.querySelectorAll(':scope > .checkout-card').forEach((card) => card.remove());
+      const cards = records.map((item) => `<article class="platform-booking-card"><div><small>${escapeHtml(providerLabel(item.providerType))} · ${escapeHtml(item.id)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.product || '')}</span></div><dl><div><dt>이용일</dt><dd>${escapeHtml(item.startAt ? new Date(item.startAt).toLocaleDateString('ko-KR') : '일정 미정')}</dd></div><div><dt>금액</dt><dd>${Number(item.amount || 0).toLocaleString('ko-KR')}원</dd></div></dl><footer><span class="workflow-badge ${item.status === 'CONFIRMED' ? 'success' : item.status === 'UNAVAILABLE' ? 'danger' : 'warn'}">${escapeHtml(bookingStatusLabel(item.status))}</span><a class="workflow-button" href="booking-detail.html?id=${encodeURIComponent(item.id)}">예약 상세</a></footer></article>`).join('');
+      const html = `<section class="platform-booking-list" data-platform-role-state><header><div><small>MY BOOKINGS</small><h2>내 예약·주문 현황</h2></div><span>${records.length}건</span></header><div class="platform-booking-cards">${cards || '<div class="empty-state"><strong>예약 내역이 없습니다.</strong><p>예약이 완료되면 이곳에서 상태를 확인할 수 있습니다.</p></div>'}</div></section>`;
+      const tabs = accountContent.querySelector('.route-tabs');
+      if (tabs) tabs.insertAdjacentHTML('afterend', html);
+      else accountContent.insertAdjacentHTML('beforeend', html);
     }
 
     if (route === 'saved.html') {
