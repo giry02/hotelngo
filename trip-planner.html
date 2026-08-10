@@ -7,20 +7,23 @@
   <title>여행 일정 만들기 · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
-  <link rel="stylesheet" href="styles/main.css?v=30">
-  <link rel="stylesheet" href="styles/pages.css?v=19">
-  <link rel="stylesheet" href="styles/trip-planner.css?v=3">
-  <script src="scripts/site-shell.js?v=15" defer></script>
+  <link rel="stylesheet" href="styles/main.css?v=31">
+  <link rel="stylesheet" href="styles/pages.css?v=20">
+  <link rel="stylesheet" href="styles/trip-planner.css?v=5">
+  <link rel="stylesheet" href="styles/leaflet-local.css?v=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ynhtmHJsN5FIKH3WNxZ3fUYQF0ow=" crossorigin="">
+  <script src="scripts/site-shell.js?v=16" defer></script>
   <script src="scripts/mock-api.js?v=7" defer></script>
-  <script src="scripts/auth.js?v=4" defer></script>
-  <script src="scripts/trip-planner.js?v=2" defer></script>
+  <script src="scripts/auth.js?v=6" defer></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="scripts/trip-planner.js?v=6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
   <div data-site-header data-active="planner"></div>
   <main class="page-main trip-planner-page" id="main-content">
     <div class="shell" data-trip-planner-root>
-      <div class="empty-state"><strong>여행 일정 편집기를 준비하고 있습니다.</strong><p>목적지·날짜와 현지 상품 JSON을 불러오는 중입니다.</p></div>
+      <div class="empty-state"><strong>여행 일정 편집기를 준비하고 있습니다.</strong><p>목적지·날짜와 주변 추천 장소를 불러오는 중입니다.</p></div>
     </div>
   </main>
   <div data-site-footer></div>

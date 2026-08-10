@@ -27,10 +27,43 @@
     })))
   });
 
+  const tripSnapshot = (trip) => trip ? {
+    id: trip.id,
+    title: trip.title,
+    destination: trip.destination,
+    destinationId: trip.destinationId,
+    startDate: trip.startDate,
+    endDate: trip.endDate,
+    travelers: trip.travelers,
+    duration: trip.duration,
+    sourceType: trip.sourceType,
+    sourceGuideId: trip.sourceGuideId || null,
+    sourceGuideTitle: trip.sourceGuideTitle || null,
+    sourceAuthor: trip.sourceAuthor || null,
+    items: (trip.items || []).map((item) => ({
+      id: item.id,
+      sourceId: item.sourceId,
+      type: item.type,
+      category: item.category,
+      day: item.day,
+      time: item.time,
+      title: item.title,
+      area: item.area,
+      image: item.image,
+      duration: item.duration,
+      priceLabel: item.priceLabel,
+      bookingType: item.bookingType,
+      status: item.status,
+      note: item.note,
+      lat: item.lat,
+      lng: item.lng
+    }))
+  } : null;
+
   const feed = document.querySelector('[data-community-feed]');
   if (feed) catalog().then(({ trips }) => {
     const localStories = api.list('stories').filter((story) => ['PUBLISHED', 'PENDING_REVIEW'].includes(story.status)).map((story) => ({
-      id: story.tripTemplateId || story.id,
+      id: story.id,
       title: story.title,
       summary: story.summary,
       cover: story.cover,
@@ -70,7 +103,28 @@
   const detail = document.querySelector('[data-community-detail]');
   if (detail) catalog().then(({ trips }) => {
     const id = new URLSearchParams(location.search).get('id') || trips[0].id;
-    const trip = normalizeTrip(trips.find((item) => item.id === id) || trips[0]);
+    const localStory = api.list('stories').find((story) => story.id === id);
+    const catalogTrip = trips.find((item) => item.id === id);
+    const sourceTrip = localStory?.tripSnapshot
+      || (localStory?.tripTemplateId ? api.list('trips').find((item) => item.id === localStory.tripTemplateId) : null)
+      || (localStory?.tripTemplateId ? trips.find((item) => item.id === localStory.tripTemplateId) : null);
+    const localTrip = localStory ? {
+      ...(sourceTrip || {}),
+      id: localStory.id,
+      guideId: localStory.id,
+      title: localStory.title,
+      summary: localStory.summary,
+      cover: localStory.cover,
+      destination: localStory.destination,
+      duration: localStory.duration || sourceTrip?.duration || '일정 초안',
+      tags: localStory.tags || [],
+      author: { displayName: localStory.authorName || '회원 가이드', verifiedTrips: 0 },
+      saves: localStory.saves || 0,
+      copies: localStory.copies || 0,
+      allowCopy: localStory.allowCopy !== false,
+      publishedVersion: localStory.publishedVersion || 1
+    } : null;
+    const trip = normalizeTrip(localTrip || catalogTrip || trips[0]);
     const days = trip.days?.length ? trip.days : Object.values(trip.items.reduce((groups, item) => {
       groups[item.day] ||= { day: item.day, dateLabel: '', items: [] };
       groups[item.day].items.push(item);
@@ -84,10 +138,11 @@
           <h1>${escapeHtml(trip.title)}</h1>
           <p>${escapeHtml(trip.summary)}</p>
           <div class="creator-line"><strong>${escapeHtml(trip.author?.displayName || '회원 가이드')}</strong><span>공개 일정 ${trip.author?.verifiedTrips || 0}개</span></div>
+          ${trip.sourceGuideId ? `<div class="guide-attribution"><span>원본 가이드 기반</span><a href="trip-guide-detail.html?id=${encodeURIComponent(trip.sourceGuideId)}">${escapeHtml(trip.sourceGuideTitle || '원본 일정')} 보기</a></div>` : ''}
           <div class="community-tags">${(trip.tags || []).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
           <div class="page-head-actions">
             <button class="ui-button" type="button" data-save-item="${escapeHtml(trip.id)}" data-text-save>저장</button>
-            <button class="ui-button primary" type="button" data-copy-trip>내 여행으로 독립 복사</button>
+            ${trip.allowCopy === false ? '<span class="guide-copy-note">작성자가 복사를 허용하지 않은 가이드입니다.</span>' : '<button class="ui-button primary" type="button" data-copy-trip>이 일정으로 내 여행 만들기</button>'}
           </div>
         </div>
       </header>
@@ -100,8 +155,9 @@
           }).join('')}</div></article>`).join('') : '<div class="empty-state"><strong>작성자가 세부 일정을 정리하고 있습니다.</strong></div>'}
         </section>
         <aside class="community-side">
-          <strong>복사하면 이렇게 됩니다</strong>
+          <strong>내 여행으로 만들면</strong>
           <ol><li>원본과 독립된 내 여행 초안 생성</li><li>날짜·인원·장소 교체·삭제</li><li>운영시간·이동·재고 재검증</li><li>예약 가능한 항목만 카트에 추가</li></ol>
+          <p>내가 수정해도 원본 가이드는 바뀌지 않으며, 다시 공유할 때 원작자 출처가 표시됩니다.</p>
           <a class="ui-button" href="community.html">다른 일정 보기</a>
         </aside>
       </div>`;
@@ -117,20 +173,71 @@
         ownerId: currentSession.user.id,
         title: `${trip.title} · 내 버전`,
         destination: trip.destination,
+        destinationId: trip.destinationId,
+        startDate: trip.startDate,
+        endDate: trip.endDate,
+        travelers: trip.travelers,
+        duration: trip.duration,
         status: 'DRAFT',
         sourceType: 'COMMUNITY_COPY',
         sourceTripId: trip.id,
+        sourceGuideId: trip.guideId || trip.id,
+        sourceGuideTitle: trip.title,
         sourceAuthor: trip.author,
+        sourcePublishedVersion: trip.publishedVersion || 1,
         items: trip.items.map((item) => ({ ...item, id: `copy_${Date.now()}_${Math.random().toString(36).slice(2, 6)}` })),
         updatedAt: new Date().toISOString()
       };
       api.upsert('trips', copy);
       api.appendAudit({ actor: currentSession.user.id, action: 'COMMUNITY_TRIP_COPIED', entityType: 'TRIP', entityId: copy.id, payload: { sourceTripId: trip.id } });
-      location.href = `trip-editor.html?tripId=${encodeURIComponent(copy.id)}&copied=1`;
+      location.href = `trip-planner.html?tripId=${encodeURIComponent(copy.id)}&copied=1`;
     });
   });
 
   const publishForm = document.querySelector('[data-trip-publish-form]');
+  if (publishForm) {
+    const tripId = new URLSearchParams(location.search).get('tripId');
+    const sourceTrip = api.list('trips').find((item) => item.id === tripId);
+    if (sourceTrip) {
+      const titleDuration = String(sourceTrip.title || '').match(/\d+박\s*\d+일/)?.[0] || '';
+      publishForm.elements.title.value = sourceTrip.title;
+      publishForm.elements.summary.value = `${sourceTrip.destination}에서 날짜별로 만든 ${sourceTrip.items?.length || 0}개 장소의 여행 가이드입니다. 복사한 뒤 숙소와 식사, 활동을 자유롭게 바꿀 수 있습니다.`;
+      publishForm.elements.destination.value = sourceTrip.destination || '';
+      publishForm.elements.duration.value = sourceTrip.duration || titleDuration || '기간 미정';
+      publishForm.elements.companions.value = sourceTrip.travelers || '인원 미정';
+      publishForm.elements.tags.value = `${sourceTrip.destination || ''}, 일정가이드, ${sourceTrip.items?.some((item) => item.category === 'GOLF') ? '골프,' : ''} 자유편집`;
+      const covers = [...new Set((sourceTrip.items || []).map((item) => item.image).filter(Boolean))];
+      if (!covers.length) covers.push('assets/images/landmark-kyoto.jpg');
+      const coverInput = publishForm.elements.cover;
+      const coverPreview = publishForm.querySelector('[data-publish-cover-preview]');
+      const coverOptions = publishForm.querySelector('[data-publish-cover-options]');
+      const selectCover = (cover) => {
+        coverInput.value = cover;
+        if (coverPreview) coverPreview.src = cover;
+        coverOptions?.querySelectorAll('button').forEach((button) => button.classList.toggle('is-active', button.dataset.cover === cover));
+      };
+      if (coverOptions) {
+        coverOptions.innerHTML = covers.slice(0, 6).map((cover, index) => `<button type="button" data-cover="${escapeHtml(cover)}" aria-label="대표 이미지 ${index + 1}"><img src="${escapeHtml(cover)}" alt=""></button>`).join('');
+        coverOptions.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-cover]');
+          if (button) selectCover(button.dataset.cover);
+        });
+      }
+      selectCover(covers[0]);
+    }
+  }
+
+  const renderPublishPreview = () => {
+    if (!publishForm) return;
+    const preview = document.querySelector('[data-publish-preview]');
+    if (!preview) return;
+    const values = Object.fromEntries(new FormData(publishForm).entries());
+    preview.hidden = false;
+    preview.innerHTML = `<img src="${escapeHtml(values.cover || 'assets/images/landmark-kyoto.jpg')}" alt=""><span>${escapeHtml(values.destination || '여행지')} · 가이드 미리보기</span><strong>${escapeHtml(values.title || '가이드 제목')}</strong><p>${escapeHtml(values.summary || '한 줄 소개를 입력해 주세요.')}</p><div>${String(values.tags || '').split(',').map((tag) => tag.trim()).filter(Boolean).map((tag) => `<em>#${escapeHtml(tag)}</em>`).join('')}</div>`;
+    preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+  document.querySelector('[data-preview-guide]')?.addEventListener('click', renderPublishPreview);
+
   publishForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!publishForm.reportValidity()) return;
@@ -153,13 +260,16 @@
       saves: 0,
       copies: 0,
       tripTemplateId: tripId || null,
+      tripSnapshot: tripSnapshot(api.list('trips').find((item) => item.id === tripId)),
+      allowCopy: values.allowCopy === 'on',
+      publishedVersion: 1,
       publishedAt: new Date().toISOString()
     });
     api.appendAudit({ actor: story.authorId, action: 'STORY_PUBLISH_REQUESTED', entityType: 'STORY', entityId: story.id, payload: { visibility: story.visibility } });
     const result = document.querySelector('[data-publish-result]');
     if (result) {
       result.hidden = false;
-      result.innerHTML = `<strong>${story.status === 'PENDING_REVIEW' ? '공개 검수를 요청했습니다.' : '링크 공유 스토리를 만들었습니다.'}</strong><p>예약번호와 여권 정보는 공개 데이터에 포함하지 않습니다.</p><a class="ui-button primary" href="my-stories.html">내 스토리 보기</a>`;
+      result.innerHTML = `<strong>${story.status === 'PENDING_REVIEW' ? '가이드 공개 검수를 요청했습니다.' : '링크로 공유할 가이드를 만들었습니다.'}</strong><p>발행 당시 일정이 별도 버전으로 저장되었으며, 예약번호와 여권 정보는 공개 데이터에 포함하지 않습니다.</p><a class="ui-button primary" href="trip-guide-detail.html?id=${encodeURIComponent(story.id)}">발행 결과 보기</a>`;
     }
   });
 
@@ -223,7 +333,7 @@
 
     const renderItems = () => {
       const current = api.list('trips').find((item) => item.id === trip.id) || trip;
-      panel.innerHTML = `<div class="content-section-head"><div><h2>구조화 일정 편집</h2><p>변경 내용은 trips JSON Mock 상태에 즉시 저장됩니다.</p></div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(current.id)}">예약 준비도 확인</a></div>${(current.items || []).map((item) => {
+      panel.innerHTML = `<div class="content-section-head"><div><h2>장소별 일정 편집</h2><p>변경 내용은 내 여행에 즉시 저장됩니다.</p></div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(current.id)}">예약 준비도 확인</a></div>${(current.items || []).map((item) => {
         const candidates = places.filter((place) => place.id !== item.sourceId).slice(0, 6);
         return `<article data-trip-item="${escapeHtml(item.id)}"><div><small>DAY ${item.day} · ${escapeHtml(item.time || '미정')} · ${escapeHtml(item.type || 'PLACE')}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.bookingStatus || 'NOT_BOOKED')}</span></div><div><select data-trip-replacement><option value="">다른 장소 선택</option>${candidates.map((place) => `<option value="${escapeHtml(place.id)}">${escapeHtml(place.name)} · ${escapeHtml(place.reason)}</option>`).join('')}</select><button class="ui-button" type="button" data-trip-replace>교체</button><button class="ui-button" type="button" data-trip-remove>삭제</button></div></article>`;
       }).join('') || '<div class="empty-state"><strong>일정 항목이 없습니다.</strong></div>'}`;

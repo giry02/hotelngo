@@ -6,14 +6,14 @@
   <title>일정 공개·공유 · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
-  <link rel="stylesheet" href="styles/main.css?v=30">
-  <link rel="stylesheet" href="styles/pages.css?v=19">
-  <script src="scripts/site-shell.js?v=15" defer></script>
+  <link rel="stylesheet" href="styles/main.css?v=31">
+  <link rel="stylesheet" href="styles/pages.css?v=21">
+  <script src="scripts/site-shell.js?v=16" defer></script>
   <script src="scripts/mock-api.js?v=7" defer></script>
-  <script src="scripts/platform-flows.js?v=7" defer></script>
-  <script src="scripts/auth.js?v=4" defer></script>
+  <script src="scripts/platform-flows.js?v=17" defer></script>
+  <script src="scripts/auth.js?v=6" defer></script>
   <script src="scripts/main.js?v=13" defer></script>
-  <script src="scripts/community-trips.js?v=4" defer></script>
+  <script src="scripts/community-trips.js?v=7" defer></script>
 </head>
 <body data-auth-required>
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -33,7 +33,12 @@
             <label>동행<input required name="companions" value="친구 2명"></label>
             <label>태그<input required name="tags" value="골목, 저녁산책, 로컬맛집"></label>
           </div>
-          <label>커버 이미지 경로<input required name="cover" value="assets/images/landmark-kyoto.jpg"></label>
+          <div class="publish-cover-field">
+            <span>대표 이미지</span>
+            <div class="publish-cover-preview"><img data-publish-cover-preview src="assets/images/landmark-kyoto.jpg" alt="선택한 대표 이미지"></div>
+            <div class="publish-cover-options" data-publish-cover-options aria-label="일정 사진에서 대표 이미지 선택"></div>
+            <input required type="hidden" name="cover" value="assets/images/landmark-kyoto.jpg">
+          </div>
           <fieldset class="publish-visibility">
             <legend>공개 방식</legend>
             <label class="publish-choice">
@@ -46,13 +51,21 @@
             </label>
           </fieldset>
           <label class="publish-consent">
+            <input checked type="checkbox" name="allowCopy">
+            <span>다른 사용자가 이 가이드를 자기 여행으로 복사하고 자유롭게 변경할 수 있습니다.</span>
+          </label>
+          <label class="publish-consent">
             <input required type="checkbox" name="privacyConfirmed">
             <span>일정에 포함된 개인정보와 예약번호를 확인했고 공개 데이터에서 제외하겠습니다.</span>
           </label>
-          <button class="ui-button primary" type="submit">공개 설정 저장</button>
+          <div class="publish-actions">
+            <button class="ui-button" type="button" data-preview-guide>가이드 미리보기</button>
+            <button class="ui-button primary" type="submit">가이드 발행</button>
+          </div>
         </form>
       </section>
       <aside class="publish-side">
+        <div class="publish-preview" data-publish-preview hidden></div>
         <strong>공개 전 확인</strong>
         <ul>
           <li>장소·영업시간 출처</li>
