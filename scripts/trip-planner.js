@@ -61,6 +61,8 @@
   let routeAnimationFrame = null;
   let autosaveTimer = null;
   let saveStatus = 'saved';
+  let mapRenderToken = 0;
+  const roadRouteCache = new Map();
 
   const canonicalCategory = (value) => ({
     HOTEL: 'STAY',
@@ -317,6 +319,63 @@
       .sort((a, b) => a.distance - b.distance)
       .slice(0, 6);
   };
+  const requestRoadRoute = async (group) => {
+    if (group.length <= 1) return null;
+    const key = group.map((item) => `${Number(item.lng).toFixed(6)},${Number(item.lat).toFixed(6)}`).join(';');
+    if (!roadRouteCache.has(key)) {
+      const request = fetch(`https://router.project-osrm.org/route/v1/driving/${key}?alternatives=false&steps=false&overview=full&geometries=geojson`)
+        .then((response) => {
+          if (!response.ok) throw new Error(`route response ${response.status}`);
+          return response.json();
+        })
+        .then((payload) => {
+          const route = payload?.routes?.[0];
+          const coordinates = route?.geometry?.coordinates;
+          if (!Array.isArray(coordinates) || coordinates.length < 2) return null;
+          return {
+            coordinates: coordinates.map(([lng, lat]) => [lat, lng]),
+            distance: Number(route.distance || 0),
+            duration: Number(route.duration || 0)
+          };
+        })
+        .catch(() => null);
+      roadRouteCache.set(key, request);
+    }
+    const result = await roadRouteCache.get(key);
+    if (!result) roadRouteCache.delete(key);
+    return result;
+  };
+  const animateRoadRoute = (activeMap, route) => {
+    if (route.length <= 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const segmentLengths = route.slice(1).map((item, index) => distanceKm(
+      { lat: route[index][0], lng: route[index][1] },
+      { lat: item[0], lng: item[1] }
+    ));
+    const totalLength = segmentLengths.reduce((sum, value) => sum + value, 0) || 1;
+    const traveler = window.L.marker(route[0], {
+      zIndexOffset: 1200,
+      icon: window.L.divIcon({ className: 'planner-route-traveler-wrap', html: '<span class="planner-route-traveler">➜</span>', iconSize: [38, 38], iconAnchor: [19, 19] })
+    }).addTo(activeMap);
+    const startedAt = performance.now();
+    const animate = (now) => {
+      if (mapInstance !== activeMap) return;
+      let distanceAt = (((now - startedAt) % 12000) / 12000) * totalLength;
+      let segmentIndex = 0;
+      while (segmentIndex < segmentLengths.length - 1 && distanceAt > segmentLengths[segmentIndex]) {
+        distanceAt -= segmentLengths[segmentIndex];
+        segmentIndex += 1;
+      }
+      const from = route[segmentIndex];
+      const to = route[segmentIndex + 1];
+      const ratio = Math.min(1, distanceAt / (segmentLengths[segmentIndex] || 1));
+      traveler.setLatLng([
+        from[0] + (to[0] - from[0]) * ratio,
+        from[1] + (to[1] - from[1]) * ratio
+      ]);
+      routeAnimationFrame = requestAnimationFrame(animate);
+    };
+    routeAnimationFrame = requestAnimationFrame(animate);
+  };
   const renderMap = () => {
     const element = root.querySelector('[data-planner-map]');
     if (!element) return;
@@ -329,7 +388,9 @@
       element.innerHTML = '<div class="planner-map-fallback"><strong>지도를 불러오지 못했습니다.</strong><span>일정 목록의 장소명과 좌표는 그대로 저장됩니다. 네트워크 연결 후 다시 열어 주세요.</span></div>';
       return;
     }
+    const renderToken = ++mapRenderToken;
     mapInstance = window.L.map(element, { zoomControl: true, scrollWheelZoom: false });
+    const activeMap = mapInstance;
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
@@ -382,49 +443,45 @@
       ? [...new Set(points.map((item) => item.day))].map((day) => points.filter((item) => item.day === day))
       : [points];
     const routeColors = ['#2f6bff', '#10a58f', '#ef8d32', '#8b5cf6', '#e34d73', '#3276d9'];
-    routeGroups.forEach((group, index) => {
-      if (group.length <= 1) return;
-      const color = routeColors[index % routeColors.length];
-      const latLngs = group.map((item) => [item.lat, item.lng]);
-      window.L.polyline(latLngs, { color: '#ffffff', weight: 8, opacity: .9 }).addTo(mapInstance);
-      window.L.polyline(latLngs, { color, weight: 4, opacity: .9 }).addTo(mapInstance);
-      group.slice(1).forEach((item, itemIndex) => {
-        const previous = group[itemIndex];
-        const middle = [(previous.lat + item.lat) / 2, (previous.lng + item.lng) / 2];
-        window.L.marker(middle, {
-          interactive: false,
-          icon: window.L.divIcon({ className: 'planner-route-arrow-wrap', html: `<span class="planner-route-arrow" style="--route-color:${color}">›</span>`, iconSize: [24, 24], iconAnchor: [12, 12] })
-        }).addTo(mapInstance);
-      });
-    });
     const animationGroup = state.mapDay === 'ALL'
       ? routeGroups.find((group) => group[0]?.day === state.selectedDay) || routeGroups.find((group) => group.length > 1)
       : routeGroups[0];
-    if (animationGroup?.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const route = animationGroup.map((item) => ({ lat: item.lat, lng: item.lng }));
-      const segmentLengths = route.slice(1).map((item, index) => distanceKm(route[index], item));
-      const totalLength = segmentLengths.reduce((sum, value) => sum + value, 0) || 1;
-      const traveler = window.L.marker([route[0].lat, route[0].lng], {
-        zIndexOffset: 1200,
-        icon: window.L.divIcon({ className: 'planner-route-traveler-wrap', html: '<span class="planner-route-traveler">➜</span>', iconSize: [38, 38], iconAnchor: [19, 19] })
-      }).addTo(mapInstance);
-      const startedAt = performance.now();
-      const animate = (now) => {
-        if (!mapInstance) return;
-        let distanceAt = (((now - startedAt) % 10000) / 10000) * totalLength;
-        let segmentIndex = 0;
-        while (segmentIndex < segmentLengths.length - 1 && distanceAt > segmentLengths[segmentIndex]) {
-          distanceAt -= segmentLengths[segmentIndex];
-          segmentIndex += 1;
+    const routeMetricElement = root.querySelector('.planner-route-metric');
+    const routableGroups = routeGroups.filter((group) => group.length > 1);
+    if (routableGroups.length && routeMetricElement) routeMetricElement.textContent = '도로 경로 계산 중…';
+    Promise.all(routeGroups.map(async (group, index) => ({
+      group,
+      index,
+      road: await requestRoadRoute(group)
+    }))).then((results) => {
+      if (mapInstance !== activeMap || renderToken !== mapRenderToken) return;
+      let totalRoadDistance = 0;
+      let totalRoadDuration = 0;
+      let failedRoutes = 0;
+      results.forEach(({ group, index, road }) => {
+        if (group.length <= 1) return;
+        if (!road) {
+          failedRoutes += 1;
+          return;
         }
-        const from = route[segmentIndex];
-        const to = route[segmentIndex + 1];
-        const ratio = Math.min(1, distanceAt / (segmentLengths[segmentIndex] || 1));
-        traveler.setLatLng([from.lat + (to.lat - from.lat) * ratio, from.lng + (to.lng - from.lng) * ratio]);
-        routeAnimationFrame = requestAnimationFrame(animate);
-      };
-      routeAnimationFrame = requestAnimationFrame(animate);
-    }
+        const color = routeColors[index % routeColors.length];
+        totalRoadDistance += road.distance;
+        totalRoadDuration += road.duration;
+        window.L.polyline(road.coordinates, { color: '#ffffff', weight: 8, opacity: .94 }).addTo(activeMap);
+        window.L.polyline(road.coordinates, { color, weight: 4, opacity: .92 }).addTo(activeMap);
+        const middle = road.coordinates[Math.floor(road.coordinates.length / 2)];
+        window.L.marker(middle, {
+          interactive: false,
+          icon: window.L.divIcon({ className: 'planner-route-arrow-wrap', html: `<span class="planner-route-arrow" style="--route-color:${color}">›</span>`, iconSize: [24, 24], iconAnchor: [12, 12] })
+        }).addTo(activeMap);
+        if (group === animationGroup) animateRoadRoute(activeMap, road.coordinates);
+      });
+      if (routeMetricElement && routableGroups.length) {
+        routeMetricElement.textContent = failedRoutes
+          ? '도로 경로 일부를 불러오지 못해 해당 구간은 핀만 표시합니다.'
+          : `도로 기준 약 ${(totalRoadDistance / 1000).toFixed(1)}km · 차량 약 ${Math.max(1, Math.round(totalRoadDuration / 60))}분`;
+      }
+    });
     if (!bounds.length) {
       const fallback = destination().items.find((item) => item.lat && item.lng);
       mapInstance.setView(fallback ? [fallback.lat, fallback.lng] : [16.0544, 108.2022], 11);
@@ -453,10 +510,9 @@
     const routeGroups = state.mapDay === 'ALL'
       ? [...new Set(routePoints.map((item) => item.day))].map((day) => routePoints.filter((item) => item.day === day))
       : [routePoints];
-    const routeDistance = routeGroups.reduce((total, group) => total + group.slice(1).reduce((sum, item, index) => sum + distanceKm(group[index], item), 0), 0);
     const routeMetric = state.mapDay === 'ALL'
-      ? `${dayCount()}일 · 지도 장소 ${routePoints.length}곳 · 일자별 연결선`
-      : `DAY ${state.mapDay} · ${routePoints.length}곳 · 직선 동선 약 ${routeDistance.toFixed(1)}km`;
+      ? `${dayCount()}일 · 지도 장소 ${routePoints.length}곳 · 도로 경로 표시`
+      : `DAY ${state.mapDay} · ${routePoints.length}곳 · 도로 경로 표시`;
     const landmarkItems = state.items.filter((item) => item.category === 'LANDMARK');
     const landmarkDays = new Set(landmarkItems.map((item) => item.day));
     const selectedDiagnostics = scheduleDiagnostics(state.selectedDay);
@@ -466,7 +522,7 @@
       return accumulator;
     }, {});
     const stepLabels = ['기본정보', '랜드마크', '시간·동선', '상세 서비스', '저장·공유'];
-    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 검색해 날짜에 담으세요' : '랜드마크 주변 서비스를 추가하세요';
+    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 찾아 소개를 보고, 일정에 담으세요' : '랜드마크 주변 서비스를 추가하세요';
     const mapSearchDescription = state.activeStep === 2
       ? '여행의 뼈대가 되는 장소만 먼저 고릅니다. 숙소와 식사는 다음 단계에서 선택합니다.'
       : `${mapFocus?.title || `${currentDestination.name} 일정`}을 기준으로 숙소·식사·골프·스파·투어를 찾습니다.`;
@@ -480,7 +536,7 @@
       <article class="planner-search-result" data-catalog-item="${escapeHtml(item.id)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}">
         <div><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}${proximity !== null ? ` · 기준 장소에서 약 ${proximity.toFixed(1)}km` : ''}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span><em>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`}</em></div>
-        <footer><button type="button" data-focus-catalog-item>${icon('pin')}소개·위치 보기</button><button type="button" data-add-item>${icon('plus')}일정에 담기</button></footer>
+        <footer><button type="button" data-focus-catalog-item>${icon('pin')}소개·지도 확인</button><button type="button" data-add-item>${icon('plus')}날짜·시간 정해 담기</button></footer>
       </article>`;
     }).join('');
     const timeline = selectedItems.length ? selectedItems.map((item, index) => {
@@ -520,8 +576,8 @@
       </section>
       <section class="planner-route${[2,3,4].includes(state.activeStep) ? '' : ' is-hidden-step'}" aria-labelledby="planner-route-title">
         <div class="planner-route-head"><div><span class="page-eyebrow">${state.activeStep === 2 ? 'STEP 2 · LANDMARKS FIRST' : state.activeStep === 3 ? 'STEP 3 · TIME & ROUTE' : 'STEP 4 · SERVICES NEAR YOUR ROUTE'}</span><h2 id="planner-route-title">${state.activeStep === 2 ? '날짜별 핵심 랜드마크를 먼저 고르세요' : state.activeStep === 3 ? '선택한 순서대로 실제 가능한지 확인하세요' : '확정한 랜드마크 동선에 서비스를 붙이세요'}</h2><p>${state.activeStep === 2 ? `${dayCount()}일 동안 방문하고 싶은 장소를 날짜와 시간에 담으면 지도가 자동으로 연결됩니다.` : state.activeStep === 3 ? '장소 사이의 예상 이동시간과 체류시간을 비교해 겹치는 일정을 알려드립니다.' : '숙소·식사·골프·스파·투어는 핵심 동선이 정해진 뒤 추가합니다.'}</p></div><div class="planner-route-controls"><span class="planner-route-metric">${escapeHtml(routeMetric)}</span><div class="planner-map-days"><button class="${state.mapDay === 'ALL' ? 'is-active' : ''}" type="button" data-map-day="ALL">전체</button>${days.map((day) => `<button class="${state.mapDay === day ? 'is-active' : ''}" type="button" data-map-day="${day}">DAY ${day}</button>`).join('')}</div></div></div>
-        <div class="planner-route-legend"><span><i class="route-number"></i>일정에 담은 장소</span><span><i class="route-candidate"></i>검색 후보</span><span><i class="route-motion">➜</i>시간순 이동</span></div>
-        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크가 있는 날 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div>${state.activeStep === 2 ? `<ol class="planner-use-guide"><li><b>1</b><span>위에서 추가할 <strong>DAY를 먼저 선택</strong></span></li><li><b>2</b><span>장소의 <strong>소개와 위치를 확인</strong></span></li><li><b>3</b><span>날짜·시간을 정해 <strong>일정에 담기</strong></span></li></ol>` : ''}<label class="planner-catalog-search"><span>장소 검색</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
+        <div class="planner-route-legend"><span><i class="route-number"></i>일정에 담은 장소</span><span><i class="route-candidate"></i>검색 후보</span><span><i class="route-motion">➜</i>도로 기준 예상 이동</span></div>
+        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크 탐색·일정 추가 · 선택 완료 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div>${state.activeStep === 2 ? `<ol class="planner-use-guide"><li><b>1</b><span><strong>검색 또는 후보 선택</strong><br>장소를 먼저 찾습니다.</span></li><li><b>2</b><span><strong>소개와 지도 위치 확인</strong><br>갈 곳인지 판단합니다.</span></li><li><b>3</b><span><strong>DAY·시간을 정해 담기</strong><br>지도 동선에 반영합니다.</span></li></ol>` : ''}<label class="planner-catalog-search"><span>${state.activeStep === 2 ? '1. 랜드마크 찾기' : '장소 검색'}</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${focusedCandidate ? `<div class="planner-selected-place-label"><b>2</b><span><strong>선택한 랜드마크 확인</strong><small>소개를 읽고 아래 버튼에서 날짜와 시간을 정해 담으세요.</small></span></div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크 선택' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
         ${state.activeStep === 2 ? `<footer class="planner-stage-actions"><span>랜드마크 ${landmarkItems.length}곳 · ${landmarkDays.size}일에 배치됨</span><button class="ui-button primary" type="button" data-planner-step="3" ${landmarkItems.length ? '' : 'disabled'}>랜드마크 선택 완료 · 동선 확인</button></footer>` : state.activeStep === 4 ? `<footer class="planner-stage-actions"><button class="ui-button" type="button" data-planner-step="3">이전: 동선 확인</button><button class="ui-button primary" type="button" data-planner-step="5">다음: 전체 일정 저장</button></footer>` : ''}
       </section>
       <div class="planner-workspace${[3,5].includes(state.activeStep) ? '' : ' is-hidden-step'}">
