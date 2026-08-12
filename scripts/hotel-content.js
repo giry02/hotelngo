@@ -78,6 +78,21 @@
   };
   const content = await getContent();
   const property = content.property;
+  const travelCardButton = document.querySelector('[data-text-save]');
+  if (travelCardButton) {
+    travelCardButton.removeAttribute('data-save-item');
+    travelCardButton.textContent = '여행 카드에 담기';
+    travelCardButton.addEventListener('click', () => {
+      window.HotelNGoTripCard?.add({
+        sourceId: 'danang_hotel_ocean', category: 'STAY', destinationId: 'danang', destination: '다낭',
+        title: property.name, area: property.address || '다낭 해변', image: property.media[0]?.src,
+        description: property.summary || '여행 동선의 기준이 되는 숙소입니다.', basePrice: lowestStayTotal,
+        priceLabel: `${selectedNights}박 ${lowestStayTotal.toLocaleString('ko-KR')}원부터`, bookingType: 'INSTANT'
+      });
+      travelCardButton.textContent = '여행 카드에 담김';
+      travelCardButton.disabled = true;
+    });
+  }
   document.querySelector('[data-stay-summary]')?.replaceChildren(document.createTextNode(`${selectedCheckIn.replaceAll('-', '.')}–${selectedCheckOut.replaceAll('-', '.')} · ${selectedNights}박 · 객실 1 · ${selectedGuests}`));
   document.querySelector('[data-side-checkin]')?.replaceChildren(document.createTextNode(dateLabel(selectedCheckIn)));
   document.querySelector('[data-side-checkout]')?.replaceChildren(document.createTextNode(dateLabel(selectedCheckOut)));

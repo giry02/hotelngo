@@ -18,6 +18,12 @@
     searchScript.dataset.hotelngoSearch = '';
     document.head.append(searchScript);
   }
+  if (!document.querySelector('script[data-hotelngo-trip-card]')) {
+    const tripCardScript = document.createElement('script');
+    tripCardScript.src = 'scripts/trip-card-store.js?v=1';
+    tripCardScript.dataset.hotelngoTripCard = '';
+    document.head.append(tripCardScript);
+  }
 
   const logo = (_assetId, ariaLabel = 'HotelnGo Ocean Route 로고') => `
     <img class="brand-logo" src="assets/brand/official/hotelngo-logo-web.png?v=2" width="504" height="138" alt="${ariaLabel}" decoding="async">`;
@@ -27,7 +33,6 @@
     ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
-    ['ai', 'AI 여행', 'ai-travel.html'],
     ['trips', '내 여행', 'trips.html']
   ];
 
@@ -39,7 +44,7 @@
           ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}"${key === 'trips' ? ' data-member-only' : ''}>${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
         </nav>
         <div class="header-actions">
-          <a class="cart-link" href="cart.html">여행 카트</a>
+          <a class="cart-link" href="cart.html">여행 카드</a>
           <a class="reservation-link" href="bookings.html">예약 조회</a>
           <a class="login-button" href="login.html">로그인</a>
           <button class="menu-button" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" data-menu-trigger><span></span><span></span><span></span></button>
@@ -50,7 +55,7 @@
     <aside class="mobile-menu" role="dialog" aria-modal="true" aria-label="전체 메뉴" data-mobile-menu hidden>
       <div class="mobile-menu-head"><div><small>HOTELNGO MENU</small><strong>여행을 어디서 이어갈까요?</strong></div><button type="button" aria-label="전체 메뉴 닫기" data-menu-close>×</button></div>
       <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}${key === 'trips' ? ' data-member-only' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
-      <div class="mobile-menu-actions"><a href="cart.html">여행 카트</a><a href="bookings.html">예약 조회</a><a class="primary" href="login.html">로그인·회원가입</a></div>
+      <div class="mobile-menu-actions"><a href="cart.html">여행 카드</a><a href="booking-cart.html">예약 카트</a><a href="bookings.html">예약 조회</a><a class="primary" href="login.html">로그인·회원가입</a></div>
       <p>해외 호텔과 여행 장면을 저장하고 하나의 일정으로 연결하세요.</p>
     </aside>`;
 
@@ -83,6 +88,9 @@
   });
   document.querySelectorAll('[data-brand-lockup]').forEach((target, index) => {
     target.innerHTML = logo(`hotelngo-ocean-route-showcase-${index}`);
+  });
+  document.querySelectorAll('a[href="cart.html"]').forEach((link) => {
+    if (link.textContent.trim() === '여행 카트') link.textContent = '여행 카드';
   });
   if (!document.querySelector('[data-toast]')) {
     document.body.insertAdjacentHTML('beforeend', '<div class="toast" role="status" aria-live="polite" data-toast></div>');

@@ -88,7 +88,7 @@
   };
   const renderSummary = () => {
     const nightsCount = dateDiff();
-    document.querySelector('[data-guided-summary]').innerHTML = `<strong>${state.destination} · ${nightsCount}박 ${nightsCount + 1}일</strong><span>${formatDate(startInput.value)} 출발 · ${form.elements.travelers.value} · ${state.interests.join(' · ')} · ${selectedPaceLabel()}</span>`;
+    document.querySelector('[data-guided-summary]').innerHTML = `<strong>${state.destination} · ${nightsCount}박 ${nightsCount + 1}일</strong><span>${formatDate(startInput.value)} 출발 · ${form.elements.travelers.value} · ${state.interests.join(' · ')} · ${selectedPaceLabel()}</span><div class="guided-draft-sources"><b>추천 초안에 반영</b><span>내 여행 카드의 저장 장소</span><span>다른 여행자의 인기 동선</span><span>이동거리·영업시간·식사 공백</span></div>`;
     const interestLabels = {
       바다: ['바다에서 쉬는 날', '해변과 가까운 장소를 여유 있게 둘러봐요.'],
       미식: ['현지 음식 즐기는 날', '이동이 짧은 맛집과 카페를 함께 묶어요.'],

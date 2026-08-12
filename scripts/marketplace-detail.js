@@ -56,7 +56,7 @@
           <p class="marketplace-summary">${h(data.summary)}</p>
           <div class="place-price-line"><strong>${h(profile.priceLine)}</strong><span>${h(profile.booking)}</span></div>
           <div class="page-head-actions">
-            <button class="ui-button" type="button" data-save-item data-save-id="${h(data.providerId)}">저장</button>
+            <button class="ui-button" type="button" data-add-place-to-trip-card>여행 카드에 담기</button>
             <a class="ui-button" href="place-detail.html?id=${encodeURIComponent(data.providerId)}">업체 정보</a>
             <a class="ui-button primary" href="#choose">옵션 선택</a>
           </div>
@@ -99,7 +99,7 @@
             <div class="option-extras"><span>추가 선택</span>${data.extras.map((extra) => (
               `<label><input type="checkbox" value="${h(extra.id)}" data-extra-price="${h(extra.price)}"> ${h(extra.name)}${extra.price ? ` +${Number(extra.price).toLocaleString('ko-KR')}원` : ''}</label>`
             )).join('')}</div>
-            <button class="ui-button primary" type="button" data-add-marketplace="${h(option.id)}" data-option-name="${h(option.name)}" data-price="${h(option.price)}">여행 카트에 담기</button>
+            <button class="ui-button primary" type="button" data-add-marketplace="${h(option.id)}" data-option-name="${h(option.name)}" data-price="${h(option.price)}">예약 카트에 담기</button>
           </div>
         </article>`).join('')}</div>
       </section>
@@ -120,6 +120,26 @@
           <div><small>최종 확인</small><strong>${h(catalog.updatedAt.slice(0, 10))}</strong><p>가격과 이용 가능 여부는 예약 요청 또는 결제 전에 다시 확인합니다.</p></div>
         </div>
       </section>`;
+
+    root.querySelector('[data-add-place-to-trip-card]')?.addEventListener('click', (event) => {
+      const item = {
+        sourceId: data.providerId,
+        category: type,
+        destinationId: String(data.location || '').includes('다낭') ? 'danang' : String(data.location || '').includes('방콕') ? 'bangkok' : String(data.location || '').includes('발리') ? 'bali' : 'danang',
+        destination: data.location,
+        title: data.name,
+        area: data.location,
+        image: data.cover,
+        description: data.summary,
+        price: Number(data.options[0]?.price || 0),
+        priceLabel: profile.priceLine,
+        bookingType: profile.booking
+      };
+      window.HotelNGoTripCard?.add(item);
+      event.currentTarget.textContent = '여행 카드에 담김';
+      event.currentTarget.disabled = true;
+      window.HotelNGoUI?.toast?.(`${data.name}을 여행 카드에 담았습니다.`);
+    });
 
     root.querySelectorAll('[data-add-marketplace]').forEach((button) => button.addEventListener('click', () => {
       const card = button.closest('.marketplace-option');
@@ -149,7 +169,7 @@
         addedAt: new Date().toISOString()
       });
       localStorage.setItem('hotelngo.marketplace.cart.v1', JSON.stringify(cart));
-      window.HotelNGoUI?.toast?.(`${button.dataset.optionName}을 여행 카트에 담았습니다.`);
+      window.HotelNGoUI?.toast?.(`${button.dataset.optionName}을 예약 카트에 담았습니다.`);
     }));
   };
 

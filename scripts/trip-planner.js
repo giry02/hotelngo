@@ -177,6 +177,45 @@
     .filter((entry) => entry.day <= dayCount())
     .map((entry, index) => makeInstance(entry.itemId, entry.day, entry.time, index))
     .filter(Boolean);
+  const tripCardItems = () => {
+    const requested = new Set(String(query.get('cardIds') || '').split(',').filter(Boolean));
+    return (api.list('trip-card', []) || []).filter((item) => item.destinationId === state.destinationId && (!requested.size || requested.has(item.sourceId)));
+  };
+  const tripCardSourceIds = () => new Set(tripCardItems().map((item) => item.sourceId));
+  const recommendedDraftItems = () => {
+    const card = tripCardItems();
+    const savedIds = new Set(card.map((item) => item.sourceId));
+    const base = templateItems().filter((item) => !savedIds.has(item.sourceId));
+    let landmarkIndex = 0;
+    const preferred = card.map((saved, index) => {
+      let source = itemById(saved.sourceId);
+      if (!source) {
+        source = {
+          id: saved.sourceId,
+          category: canonicalCategory(saved.category || saved.sourceType),
+          title: saved.title,
+          area: saved.area || destination().name,
+          image: saved.image || destination().cover,
+          description: saved.description || '내 여행 카드에서 가져온 장소입니다.',
+          duration: Number(saved.duration || 60),
+          recommendedTime: saved.recommendedTime || '10:00',
+          price: Number(saved.basePrice || saved.price || 0),
+          priceLabel: saved.priceLabel || '조건 확인',
+          bookingType: saved.bookingType || 'INFORMATION_ONLY',
+          status: saved.status || 'CHECK_REQUIRED',
+          lat: Number(saved.lat) || null,
+          lng: Number(saved.lng) || null
+        };
+        destination().items.push(source);
+      }
+      const preferredDay = source.category === 'LANDMARK' ? 0 : Number(saved.options?.preferredDay || 0);
+      const day = preferredDay || (source.category === 'LANDMARK'
+        ? Math.min(dayCount(), 2 + (landmarkIndex++ % Math.max(1, dayCount() - 1)))
+        : source.category === 'STAY' || source.category === 'TRANSPORT' ? 1 : Math.min(dayCount(), 2 + (index % Math.max(1, dayCount() - 1))));
+      return makeInstance(source.id, day, saved.options?.preferredTime || source.recommendedTime, index);
+    }).filter(Boolean);
+    return [...preferred, ...base];
+  };
   const defaultDates = () => {
     const start = addDays(new Date(), 30);
     const nights = Math.max(2, Number(query.get('nights') || 4));
@@ -291,9 +330,13 @@
       const searchMatches = !normalized || `${item.title} ${item.area} ${item.description}`.toLowerCase().includes(normalized);
       return stageMatches && categoryMatches && searchMatches;
     });
+    const savedIds = tripCardSourceIds();
+    matches.sort((a, b) => Number(savedIds.has(b.id)) - Number(savedIds.has(a.id)));
     if (state.activeStep === 4) {
       const focus = focusedMapSource();
       if (focus) matches.sort((a, b) => {
+        const savedDifference = Number(savedIds.has(b.id)) - Number(savedIds.has(a.id));
+        if (savedDifference) return savedDifference;
         const distanceA = a.lat && a.lng ? distanceKm(focus, a) : Number.POSITIVE_INFINITY;
         const distanceB = b.lat && b.lng ? distanceKm(focus, b) : Number.POSITIVE_INFINITY;
         return distanceA - distanceB;
@@ -526,9 +569,11 @@
       return accumulator;
     }, {});
     const stepLabels = ['기본정보', '랜드마크', '시간·동선', '상세 서비스', '저장·공유'];
-    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 찾아 소개를 보고, 일정에 담으세요' : '선택한 서비스를 확인하고 일정에 배치하세요';
+    const cardCount = tripCardItems().length;
+    const cardLandmarkCount = tripCardItems().filter((item) => canonicalCategory(item.category || item.sourceType) === 'LANDMARK').length;
+    const mapSearchTitle = state.activeStep === 2 ? (cardLandmarkCount ? '내 여행 카드의 랜드마크부터 확인하세요' : '추천 랜드마크를 바꾸거나 더 담으세요') : '선택한 서비스를 확인하고 일정에 배치하세요';
     const mapSearchDescription = state.activeStep === 2
-      ? '여행의 뼈대가 되는 장소만 먼저 고릅니다. 숙소와 식사는 다음 단계에서 선택합니다.'
+      ? `${cardLandmarkCount ? `여행 카드 ${cardCount}곳 중 랜드마크 ${cardLandmarkCount}곳을 먼저 보여줍니다. ` : ''}추천 초안에서 빼거나 바꾸고 싶은 장소만 수정하면 됩니다.`
       : `${mapFocus?.title || `${currentDestination.name} 일정`}을 기준으로 숙소·식사·골프·스파·투어를 찾습니다.`;
     const categoryTabs = catalog.categories.filter((category) => state.activeStep === 2 ? category.id === 'ALL' : category.id !== 'LANDMARK');
     const focusedCandidate = visibleCatalog.find((item) => item.id === state.focusLocationId) || visibleCatalog[0] || null;
@@ -556,6 +601,7 @@
     root.innerHTML = `
       ${state.sourceGuideId ? `<section class="planner-remix-banner"><div><span>REMIXED GUIDE</span><strong>${escapeHtml(state.sourceGuideTitle || '다른 여행자의 일정')}을 바탕으로 만든 내 여행입니다.</strong><p>여기서 변경한 내용은 원본 가이드에 영향을 주지 않습니다.</p></div><a href="trip-guide-detail.html?id=${encodeURIComponent(state.sourceGuideId)}">원본 가이드 보기</a></section>` : ''}
       ${state.sourceType === 'AI_DRAFT' ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>AI DRAFT REVIEW</span><strong>AI가 제안한 초안을 편집기로 가져왔습니다.</strong><p>아직 예약된 내용은 없습니다. 날짜·시간·장소와 지도 동선을 확인하고 원하는 대로 수정하세요.</p></div><a href="ai-travel.html${state.sourcePrompt ? `?prompt=${encodeURIComponent(state.sourcePrompt)}` : ''}">AI 조건 다시 만들기</a></section>` : ''}
+      ${['RECOMMENDED_DRAFT','CARD_RECOMMENDATION'].includes(state.sourceType) ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>GOOD DRAFT FIRST</span><strong>${state.sourceType === 'CARD_RECOMMENDATION' ? `내 여행 카드 ${tripCardItems().length}곳을 먼저 반영했습니다.` : '선택한 취향으로 추천 일정을 먼저 만들었습니다.'}</strong><p>다른 여행자 일정과 HotelnGo 추천으로 빈 시간을 채웠습니다. 처음부터 만들지 말고 필요 없는 곳만 빼거나 교체하세요.</p></div><a href="cart.html?destination=${encodeURIComponent(state.destinationId)}">여행 카드 확인</a></section>` : ''}
       <section class="planner-hero">
         <div class="planner-hero-row">
           <div><span class="page-eyebrow">LANDMARK FIRST TRIP BUILDER</span><h1>랜드마크부터 고르면,<br>시간과 동선은 쉽게 이어집니다</h1><p>여행의 목적이 되는 장소를 날짜별로 먼저 정하고, 이동 가능한 시간 안에서 숙소·식사·활동을 차례로 붙입니다.</p></div>
@@ -739,7 +785,7 @@
     }
     state.destinationId = nextId;
     state.title = `${destination().name} ${dayCount() - 1}박 ${dayCount()}일`;
-    state.items = query.get('mode') === 'ai' ? templateItems() : [];
+    state.items = ['ai', 'guided', 'recommended'].includes(query.get('mode')) || query.get('fromCard') === '1' ? recommendedDraftItems() : [];
     state.selectedDay = 1;
     state.mapDay = 1;
     state.category = 'ALL';
@@ -997,7 +1043,7 @@
       startDate: storedTrip?.startDate || query.get('startDate') || query.get('checkIn') || dates.start,
       endDate: storedTrip?.endDate || query.get('endDate') || query.get('checkOut') || dates.end,
       travelers: storedTrip?.travelers || query.get('travelers') || '성인 2명',
-      sourceType: storedTrip?.sourceType || (query.get('mode') === 'ai' ? 'AI_DRAFT' : 'USER_CREATED'),
+      sourceType: storedTrip?.sourceType || (query.get('mode') === 'ai' ? 'AI_DRAFT' : query.get('fromCard') === '1' ? 'CARD_RECOMMENDATION' : ['guided','recommended'].includes(query.get('mode')) ? 'RECOMMENDED_DRAFT' : 'USER_CREATED'),
       sourcePrompt: storedTrip?.sourcePrompt || query.get('prompt') || null,
       sourceTripId: storedTrip?.sourceTripId || null,
       sourceGuideId: storedTrip?.sourceGuideId || (storedTrip?.sourceType === 'COMMUNITY_COPY' ? storedTrip?.sourceTripId : null) || null,
@@ -1006,7 +1052,7 @@
       sourcePublishedVersion: storedTrip?.sourcePublishedVersion || null,
       category: 'ALL',
       catalogSearch: '',
-      activeStep: query.get('focus') ? 2 : storedTrip ? 3 : 1,
+      activeStep: query.get('focus') ? 2 : storedTrip ? 3 : (['ai','guided','recommended'].includes(query.get('mode')) || query.get('fromCard') === '1') ? 3 : 1,
       selectedDay: 1,
       mapDay: 'ALL',
       focusLocationId: '',
@@ -1032,7 +1078,7 @@
     }
     state.items = storedTrip?.items?.length
       ? storedTrip.items.map(normalizeStoredItem)
-      : query.get('mode') === 'ai' ? templateItems() : [];
+      : (['ai', 'guided', 'recommended'].includes(query.get('mode')) || query.get('fromCard') === '1') ? recommendedDraftItems() : [];
     const focusedItem = itemById(query.get('focus'));
     if (focusedItem) {
       state.category = focusedItem.category;

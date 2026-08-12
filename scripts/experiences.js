@@ -53,7 +53,8 @@
 
   const renderCatalog = () => {
     const selected = destination();
-    const products = selected.items.filter((item) => item.category !== 'STAY' && (category === 'ALL' || item.category === category));
+    const savedIds = new Set((window.HotelNGoTripCard?.list() || []).filter((item) => item.destinationId === destinationId).map((item) => item.sourceId));
+    const products = selected.items.filter((item) => item.category !== 'STAY' && (category === 'ALL' || item.category === category)).sort((a, b) => Number(savedIds.has(b.id)) - Number(savedIds.has(a.id)));
     document.title = `${selected.name} 즐길거리 · HotelnGo`;
     const hotelHref = `hotels.html?destination=${encodeURIComponent(selected.name)}`;
     root.innerHTML = `
@@ -63,7 +64,7 @@
       </section>
       <div class="experience-context-note"><strong>현재 여행지: ${escapeHtml(selected.name)}</strong><span>일정 날짜가 있으면 운영시간·예약 가능 여부·이동시간 순으로 다시 정렬합니다.</span></div>
       <nav class="experience-category-nav" aria-label="즐길거리 분류"><button class="${category === 'ALL' ? 'is-active' : ''}" type="button" data-category="ALL">전체</button>${Object.entries(categoryLabels).map(([id, label]) => `<button class="${category === id ? 'is-active' : ''}" type="button" data-category="${id}">${escapeHtml(label)}</button>`).join('')}</nav>
-      <section class="experience-product-grid">${products.map((item) => `<article class="experience-product-card"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"><div><small>${escapeHtml(categoryLabels[item.category])} · ${escapeHtml(item.area)}</small><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><dl><div><dt>소요시간</dt><dd>${item.duration ? `${item.duration}분` : '숙박 구간'}</dd></div><div><dt>예상금액</dt><dd>${escapeHtml(item.priceLabel)}</dd></div><div><dt>예약방식</dt><dd>${escapeHtml(bookingLabels[item.bookingType] || '조건 확인')}</dd></div></dl><div class="page-head-actions"><a class="ui-button primary" href="${tripHref(item.id)}">상세 보고 일정에 추가</a><button class="ui-button" type="button" data-save-candidate="${escapeHtml(item.id)}">후보 저장</button></div></div></article>`).join('')}</section>`;
+      <section class="experience-product-grid">${products.map((item) => `<article class="experience-product-card"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}"><div><small>${savedIds.has(item.id) ? '내 여행 카드 · ' : ''}${escapeHtml(categoryLabels[item.category])} · ${escapeHtml(item.area)}</small><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p><dl><div><dt>소요시간</dt><dd>${item.duration ? `${item.duration}분` : '숙박 구간'}</dd></div><div><dt>기본 표시 금액</dt><dd>${escapeHtml(item.priceLabel)}</dd></div><div><dt>예약방식</dt><dd>${escapeHtml(bookingLabels[item.bookingType] || '조건 확인')}</dd></div></dl><div class="page-head-actions"><button class="ui-button primary" type="button" data-save-candidate="${escapeHtml(item.id)}" ${savedIds.has(item.id) ? 'disabled' : ''}>${savedIds.has(item.id) ? '여행 카드에 담김' : '여행 카드에 담기'}</button><a class="ui-button" href="${tripHref(item.id)}">소개·지도 보기</a></div></div></article>`).join('')}</section>`;
   };
 
   root.addEventListener('click', (event) => {
@@ -94,9 +95,9 @@
     const saveButton = event.target.closest('[data-save-candidate]');
     if (saveButton) {
       const item = destination().items.find((candidate) => candidate.id === saveButton.dataset.saveCandidate);
-      const saved = api.list('saved-items');
-      if (!saved.some((candidate) => candidate.id === item.id)) api.upsert('saved-items', { id: item.id, memberId: 'LOCAL_GUEST', title: item.title, destination: destination().name, type: item.category, image: item.image });
-      saveButton.textContent = '저장됨';
+      if (window.HotelNGoTripCard) window.HotelNGoTripCard.add({ ...item, sourceId: item.id, destinationId, destination: destination().name });
+      else api.upsert('trip-card', { ...item, id: `${destinationId}_${item.id}`, sourceId: item.id, destinationId, destination: destination().name, basePrice: item.price });
+      saveButton.textContent = '여행 카드에 담김';
       saveButton.disabled = true;
     }
   });

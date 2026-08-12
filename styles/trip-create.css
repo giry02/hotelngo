@@ -76,3 +76,4 @@
   .guided-step { min-height: 440px; padding-inline: 17px; }
   .pace-choice { grid-template-columns: 1fr; }
 }
+.guided-draft-sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.guided-draft-sources b{width:100%;font-size:12px;color:#66748a}.guided-draft-sources span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#eef4ff;color:#285aca;font-size:12px;font-weight:700}

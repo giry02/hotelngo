@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="예약할 객실과 현지 서비스의 옵션·가격·재고를 확인하는 HotelnGo 예약 카트">
+  <title>예약 카트 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/tokens.css?v=10">
+  <link rel="stylesheet" href="styles/main.css?v=31">
+  <link rel="stylesheet" href="styles/pages.css?v=20">
+  <script src="scripts/site-shell.js?v=19" defer></script>
+  <script src="scripts/mock-api.js?v=7" defer></script>
+  <script src="scripts/platform-flows.js?v=18" defer></script>
+  <script src="scripts/auth.js?v=6" defer></script>
+  <script src="scripts/main.js?v=14" defer></script>
+  <script src="scripts/commerce.js?v=11" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div data-site-header></div>
+  <main class="page-main" id="main-content">
+    <section class="flow-header"><div class="shell flow-header-row"><div><span class="page-eyebrow">BOOKING CART</span><h1>예약 카트</h1><p>여행 일정과 별개로, 실제 예약할 객실·서비스 옵션만 확인합니다.</p></div><div class="flow-stepper" aria-label="예약 단계"><span class="is-active">예약 상품</span><span>예약자 정보</span><span>가격·재고 재확인</span><span>결제</span></div></div></section>
+    <div class="shell"><div class="checkout-layout">
+      <form class="checkout-main" data-cart-form>
+        <section class="checkout-card"><div class="checkout-card-head"><div><h2>예약할 항목 <span data-cart-count>0</span>개</h2><p>객실·티타임·프로그램처럼 확정할 옵션과 공급자 상태를 확인합니다.</p></div></div><div class="cart-list" data-cart-list></div></section>
+        <section class="checkout-card"><div class="checkout-card-head"><div><h2>여행 일정과 예약은 분리됩니다</h2><p>일정에서 장소를 빼더라도 이미 접수한 예약은 자동 취소되지 않습니다.</p></div></div><label class="check-row"><input type="checkbox" checked> 확정된 예약 정보를 내 여행 일정에 연결</label></section>
+      </form>
+      <aside class="checkout-side"><div class="checkout-card-head"><div><h2>결제 예상</h2><p>결제 직전 가격과 재고를 다시 확인합니다.</p></div></div><div class="price-lines"><div><span>선택 상품</span><span><b data-cart-count>0</b>개</span></div><div><span>상품 합계</span><strong data-cart-total>0원</strong></div><div><span>쿠폰</span><span>결제 단계에서 적용</span></div><div class="total"><span>예상 총액</span><strong data-cart-total>0원</strong></div></div><a class="ui-button primary" href="booking-guests.html" data-cart-checkout>예약자 정보 입력</a><a class="ui-button" href="cart.html">여행 카드로 돌아가기</a><div class="prototype-note">현재 예약 카트는 JSON Mock입니다. 실제 hold·가격 스냅샷·복수 공급자 주문은 서버 API로 연결합니다.</div></aside>
+    </div></div>
+  </main>
+  <div data-site-footer></div><div data-site-mobile-nav data-active="my"></div>
+</body>
+</html>

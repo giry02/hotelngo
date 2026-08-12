@@ -801,7 +801,7 @@
         side.querySelector('.empty-state')?.remove();
         side.insertAdjacentHTML('afterbegin', `<div class="checkout-selection-items">${itemCards}</div><div class="price-lines"><div><span>상품 ${checkout.items?.length || 0}개</span><span>${Number(total).toLocaleString('ko-KR')}원</span></div><div class="total"><span>예상 결제금액</span><strong>${Number(total).toLocaleString('ko-KR')}원</strong></div></div>`);
         if (!checkout.items?.length && actions[0]) {
-          actions[0].href = 'cart.html';
+          actions[0].href = 'booking-cart.html';
           actions[0].textContent = '카트에서 상품 선택';
         }
       }
