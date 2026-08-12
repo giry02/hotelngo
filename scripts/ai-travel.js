@@ -7,6 +7,7 @@
   const api = window.HotelNGoMockAPI;
   const session = () => window.HotelNGoAuth?.getSession?.() || null;
   let knowledge;
+  let plannerCatalog;
   let currentPlan;
   let generationOffset = 0;
   let selectedDestinationId = null;
@@ -64,6 +65,69 @@
     const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     return local.toISOString().slice(0, 10);
   };
+  const addDays = (value, days) => {
+    const date = value instanceof Date ? new Date(value) : new Date(`${value}T12:00:00`);
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+  const selectedNights = () => Math.min(10, Math.max(2, Number(document.querySelector('[name="nights"]')?.value || 4)));
+  const selectedStartDate = () => document.querySelector('[name="startDate"]')?.value || formatDate(addDays(new Date(), 30));
+  const selectedTravelers = () => document.querySelector('[name="travelers"]')?.value || '성인 2명';
+  const paceLabel = (value) => ({ RELAXED: '여유롭게', BALANCED: '균형 있게', ACTIVE: '촘촘하게' }[value] || '균형 있게');
+  const budgetLabel = (value) => ({ VALUE: '실속', STANDARD: '보통', PREMIUM: '프리미엄' }[value] || '보통');
+  const plannerDestinationFor = (destination) => plannerCatalog?.destinations?.find((item) => item.name === destination?.name) || null;
+  const compactId = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
+  const plannerItemFor = (destination, place, usedIds = new Set()) => {
+    const plannerDestination = plannerDestinationFor(destination);
+    if (!plannerDestination) return null;
+    const candidates = plannerDestination.items.filter((item) => !usedIds.has(item.id));
+    const sourceId = place.sourceId || place.id;
+    const exactId = candidates.find((item) => compactId(item.id) === compactId(sourceId));
+    if (exactId) return exactId;
+    const nameKey = compactId(place.name || place.title);
+    const nameMatch = candidates.find((item) => {
+      const itemKey = compactId(item.title);
+      return itemKey.includes(nameKey) || nameKey.includes(itemKey);
+    });
+    if (nameMatch) return nameMatch;
+    const category = place.type === 'HOTEL' ? 'STAY' : place.type;
+    return candidates.find((item) => item.category === category) || null;
+  };
+  const requestedServiceCategories = (text) => [
+    [/숙소|호텔|리조트/, 'STAY'],
+    [/공항|픽업|차량|이동/, 'TRANSPORT'],
+    [/맛집|식사|음식|미식|카페/, 'FOOD'],
+    [/골프/, 'GOLF'],
+    [/마사지|스파/, 'SPA']
+  ].filter(([pattern]) => pattern.test(text)).map(([, category]) => category);
+  const addRequestedServices = (plan, destination, text) => {
+    const plannerDestination = plannerDestinationFor(destination);
+    if (!plannerDestination) return plan;
+    const dayFor = { TRANSPORT: 1, STAY: 1, FOOD: Math.min(2, plan.days.length), GOLF: Math.min(3, plan.days.length), SPA: Math.min(3, plan.days.length) };
+    const timeFor = { TRANSPORT: '12:00', STAY: '15:00', FOOD: '18:30', GOLF: '08:00', SPA: '18:30' };
+    requestedServiceCategories(text).forEach((category) => {
+      const source = plannerDestination.items.find((item) => item.category === category);
+      if (!source || plan.days.some((day) => day.items.some((item) => (item.sourceId || item.id) === source.id))) return;
+      const day = plan.days.find((item) => item.day === dayFor[category]) || plan.days[0];
+      day.items.push({
+        id: source.id,
+        sourceId: source.id,
+        name: source.title,
+        type: source.category,
+        tags: [category],
+        score: 86,
+        rankScore: 86,
+        estimatedMinutes: Number(source.duration || 60),
+        bestTime: source.recommendedTime || timeFor[category],
+        bookingType: source.bookingType || 'INFORMATION_ONLY',
+        confidence: source.status === 'AVAILABLE' ? 'CATALOG_VERIFIED' : 'INVENTORY_CHECK_REQUIRED',
+        reason: source.description || '요청한 여행 조건에 맞춰 일정에 포함했습니다.',
+        alternatives: []
+      });
+      day.items.sort((a, b) => String(a.bestTime).localeCompare(String(b.bestTime)));
+    });
+    return plan;
+  };
 
   const hotelSearchHref = () => {
     const params = new URLSearchParams({ destination: currentPlan.destination });
@@ -76,30 +140,6 @@
     }
     return `hotels.html?${params.toString()}`;
   };
-
-  const openFullTripPlanner = (destination) => {
-    const text = prompt.value.trim();
-    const durationMatch = text.match(/(\d+)\s*박/);
-    const nights = Math.min(10, Math.max(2, Number(durationMatch?.[1] || 4)));
-    const params = new URLSearchParams({
-      destination: destination.name,
-      nights: String(nights),
-      source: 'ai',
-      pace: document.querySelector('[name="pace"]')?.value || 'BALANCED',
-      prompt: text
-    });
-    if (/오늘/.test(text)) {
-      const start = new Date();
-      const end = new Date(start);
-      end.setDate(end.getDate() + nights);
-      params.set('startDate', formatDate(start));
-      params.set('endDate', formatDate(end));
-    }
-    location.href = `trip-create.html?${params.toString()}`;
-  };
-
-  const supportsFullTripPlanner = (destination) =>
-    ['다낭', '방콕', '발리'].includes(destination?.name);
 
   const buildPlan = (destination) => {
     const text = prompt.value.trim();
@@ -115,8 +155,7 @@
       }))
       .sort((a, b) => b.rankScore - a.rankScore);
     const rotated = [...ranked.slice(generationOffset), ...ranked.slice(0, generationOffset)];
-    const durationMatch = text.match(/(\d+)\s*박/);
-    const nights = Math.min(5, Math.max(2, Number(durationMatch?.[1] || 3)));
+    const nights = selectedNights();
     const dayCount = nights + 1;
     const startsToday = /오늘/.test(text);
     const days = Array.from({ length: dayCount }, (_, dayIndex) => {
@@ -127,7 +166,7 @@
       const items = rotated.slice(start, start + stopsPerDay);
       return { day: dayIndex + 1, items };
     });
-    return {
+    const plan = {
       id: `ai_plan_${Date.now()}`,
       title: `${destination.name} ${nights}박 ${dayCount}일 · 취향 기반 여행 초안`,
       destination: destination.name,
@@ -137,8 +176,12 @@
       days,
       sourceType: 'AI_RULE_RANKER',
       modelMode: 'RULE_BASED_MOCK',
+      startDate: selectedStartDate(),
+      endDate: formatDate(addDays(selectedStartDate(), nights)),
+      travelers: selectedTravelers(),
       createdAt: new Date().toISOString()
     };
+    return addRequestedServices(plan, destination, text);
   };
 
   const alternativeOptions = (destination, place, excludedIds = []) => {
@@ -192,13 +235,17 @@
         <div>
           <span class="page-eyebrow">STEP 2 · ITINERARY</span>
           <h2>${escapeHtml(currentPlan.title)}</h2>
-          <p>${escapeHtml(currentPlan.preferences.join(' · ') || '기본 추천')} · ${escapeHtml(currentPlan.pace)} · ${escapeHtml(currentPlan.budget)}</p>
+          <p>${escapeHtml(currentPlan.preferences.join(' · ') || '기본 추천')} · ${escapeHtml(paceLabel(currentPlan.pace))} · ${escapeHtml(budgetLabel(currentPlan.budget))}</p>
         </div>
         <button class="ui-button" type="button" data-ai-change-destination>도시 다시 고르기</button>
       </div>
+      <section class="ai-review-card" aria-label="AI가 이해한 여행 조건">
+        <div><span>AI가 이해한 여행</span><strong>${escapeHtml(currentPlan.destination)} · ${currentPlan.days.length - 1}박 ${currentPlan.days.length}일 · ${escapeHtml(currentPlan.travelers)}</strong><p>${escapeHtml(currentPlan.startDate)} 출발 · ${escapeHtml(paceLabel(currentPlan.pace))} · ${escapeHtml(budgetLabel(currentPlan.budget))} 예산</p></div>
+        <button class="ui-button" type="button" data-ai-edit-request>요청 조건 다시 쓰기</button>
+      </section>
       <div class="ai-plan-explanation">
         <strong>이렇게 구성했어요</strong>
-        <p>입력한 취향과 여행 속도를 반영하고 같은 장소는 한 번만 넣었습니다. 장소가 없는 날은 이동과 휴식을 위한 여유 일정으로 남겨두었습니다.</p>
+        <p>랜드마크를 여행의 뼈대로 잡고, 요청한 숙소·공항 이동·식사·골프·스파를 가능한 날짜에 함께 배치했습니다. 아래에서 장소를 바꾸거나 다른 조합을 확인한 뒤 편집기로 넘길 수 있습니다.</p>
       </div>
       ${/오늘/.test(prompt.value) ? '<div class="supplier-notice ai-urgent-notice"><strong>당일 출발 확인 필요:</strong> 항공·입국 조건·당일 객실 재고는 현재 실시간 연결 전입니다. 예약 전 반드시 다시 확인합니다.</div>' : ''}
       ${currentPlan.days.map((day) => `
@@ -215,7 +262,7 @@
                   <span class="ai-stop-meta"><i>${bookingLabel(place.bookingType)}</i><i>${confidenceLabel(place.confidence)}</i><i>추천 ${place.rankScore}점</i></span>
                 </span>
                 <em>${escapeHtml(place.type)}</em>
-                <div class="ai-alternative">
+                ${alternatives.length ? `<div class="ai-alternative">
                   <label>
                     <span>다른 곳으로 변경</span>
                     <select data-ai-alternative>
@@ -224,7 +271,7 @@
                     </select>
                   </label>
                   <button class="ui-button" type="button" data-ai-replace>선택한 곳으로 교체</button>
-                </div>
+                </div>` : '<div class="ai-stop-fixed"><span>일정 편집기에서 날짜와 시간을 자유롭게 바꿀 수 있습니다.</span></div>'}
               </div>`;
             }).join('') : `<div class="ai-day-empty"><strong>${day.day === 1 && /오늘/.test(prompt.value) ? '출발·도착 및 체크인' : '숙소와 이동을 위한 여유 시간'}</strong><span>${escapeHtml(day.note || '체크인·공항 이동시간을 확인한 뒤 가까운 장소를 추가할 수 있어요.')}</span></div>`}
           </div>
@@ -235,17 +282,13 @@
         <strong>데이터 사용</strong>
         <span>장소·태그 JSON</span><span>규칙 점수화</span><span>예약 가능성 분리</span><span>${escapeHtml(knowledge.plannerVersion)}</span>
       </div>
-      <section class="ai-booking-next" aria-label="여행 준비 다음 단계">
-        <div><span class="page-eyebrow">STEP 3 · CHECK & BOOK</span><h3>이제 실제 이동과 숙소를 확인하세요</h3><p>일정 후보와 예약 가능한 상품은 분리되어 있습니다. 특히 오늘 출발은 아래 순서로 실시간 가능 여부를 확인해야 합니다.</p></div>
-        <ol>
-          <li><span>1</span><div><strong>항공편 확인</strong><small>출발 가능 시간과 도착 시각부터 확인</small></div><a class="ui-button" href="flights.html?destination=${encodeURIComponent(currentPlan.destination)}${/오늘/.test(prompt.value) ? '&depart=today' : ''}">항공 보기</a></li>
-          <li><span>2</span><div><strong>숙소·당일 재고 확인</strong><small>도착 시각에 맞는 체크인과 객실 비교</small></div><a class="ui-button" href="${hotelSearchHref()}">호텔 보기</a></li>
-          <li><span>3</span><div><strong>현지 이동·즐길거리</strong><small>공항 픽업과 장소별 예약 가능성 확인</small></div><a class="ui-button" href="places.html?destination=${encodeURIComponent(currentPlan.destination)}">현지 상품 보기</a></li>
-        </ol>
+      <section class="ai-acceptance" aria-label="AI 일정 초안 확인">
+        <div><span class="page-eyebrow">STEP 3 · REVIEW</span><h3>이 구성으로 여행을 시작할까요?</h3><p>아직 예약이 아니라 수정 가능한 초안입니다. 다음 화면에서 날짜·시간·장소와 지도 동선을 확인하고 바꿀 수 있습니다.</p></div>
+        <ul><li><strong>${currentPlan.days.length}일</strong><span>날짜별 일정</span></li><li><strong>${currentPlan.days.reduce((sum, day) => sum + day.items.length, 0)}개</strong><span>추천 장소·서비스</span></li><li><strong>수정 가능</strong><span>지도·시간·순서</span></li></ul>
       </section>
       <div class="page-head-actions">
-        <button class="ui-button primary" type="button" data-ai-copy>내 여행에 독립 사본 만들기</button>
-        <button class="ui-button" type="button" data-ai-regenerate>다른 조합 보기</button>
+        <button class="ui-button primary" type="button" data-ai-copy>이 초안으로 일정 편집 시작</button>
+        <button class="ui-button" type="button" data-ai-regenerate>다른 초안 보기</button>
       </div>`;
     output.hidden = false;
     output.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -286,53 +329,98 @@
   };
 
   const copyPlan = async (button) => {
-    if (!session()) {
-      location.href = `login.html?returnUrl=${encodeURIComponent('ai-travel.html#planner-result')}`;
+    const destination = knowledge.destinations.find((item) => item.name === currentPlan.destination);
+    const plannerDestination = plannerDestinationFor(destination);
+    if (!plannerDestination) {
+      const params = new URLSearchParams({
+        destination: currentPlan.destination,
+        nights: String(currentPlan.days.length - 1),
+        startDate: currentPlan.startDate,
+        endDate: currentPlan.endDate,
+        travelers: currentPlan.travelers,
+        source: 'ai-review',
+        pace: currentPlan.pace,
+        prompt: prompt.value.trim()
+      });
+      button.textContent = '단계별 편집 화면 여는 중…';
+      button.disabled = true;
+      setTimeout(() => { location.href = `trip-create.html?${params.toString()}`; }, 250);
       return;
     }
-    const trip = {
-      id: `trip_ai_${Date.now()}`,
-      ownerId: session().user.id,
-      title: currentPlan.title,
-      destination: currentPlan.destination,
-      status: 'DRAFT',
-      sourceType: 'AI_RULE_RANKER',
-      sourcePlanId: currentPlan.id,
-      preferences: currentPlan.preferences,
-      items: currentPlan.days.flatMap((day) => day.items.map((place) => ({
-        id: `trip_item_${day.day}_${place.id}`,
+    const usedSourceIds = new Set();
+    const items = currentPlan.days.flatMap((day) => day.items.map((place, index) => {
+      const source = plannerItemFor(destination, place, usedSourceIds);
+      if (source) usedSourceIds.add(source.id);
+      return {
+        id: `trip_item_${day.day}_${source?.id || place.id}_${index}`,
+        sourceId: source?.id || place.sourceId || place.id,
+        type: source?.category || place.type,
+        category: source?.category || place.type,
         day: day.day,
         time: place.bestTime,
-        type: place.type,
-        title: place.name,
-        sourceId: place.id,
-        bookingType: place.bookingType,
+        title: source?.title || place.name,
+        area: source?.area || currentPlan.destination,
+        image: source?.image || plannerDestination.cover,
+        duration: Number(source?.duration || place.estimatedMinutes || 60),
+        price: Number(source?.price || 0),
+        priceLabel: source?.priceLabel || '가격 재확인',
+        bookingType: source?.bookingType || place.bookingType,
+        status: source?.status || 'CHECK_REQUIRED',
         bookingStatus: 'NOT_BOOKED',
         confidence: place.confidence,
-        reason: place.reason,
-        alternatives: place.alternatives
-      }))),
+        note: place.reason,
+        lat: Number(source?.lat) || null,
+        lng: Number(source?.lng) || null
+      };
+    }));
+    const trip = {
+      id: `trip_ai_${Date.now()}`,
+      ownerId: session()?.user?.id || 'LOCAL_GUEST',
+      title: currentPlan.title,
+      destination: currentPlan.destination,
+      destinationId: plannerDestination.id,
+      startDate: currentPlan.startDate,
+      endDate: currentPlan.endDate,
+      travelers: currentPlan.travelers,
+      duration: `${currentPlan.days.length - 1}박 ${currentPlan.days.length}일`,
+      status: 'DRAFT',
+      sourceType: 'AI_DRAFT',
+      sourcePlanId: currentPlan.id,
+      sourcePrompt: prompt.value.trim(),
+      preferences: currentPlan.preferences,
+      items,
       updatedAt: new Date().toISOString()
     };
     api.upsert('trips', trip);
     api.appendAudit({
-      actor: session().user.id,
-      action: 'AI_PLAN_COPIED_TO_TRIP',
+      actor: session()?.user?.id || 'LOCAL_GUEST',
+      action: 'AI_DRAFT_ACCEPTED_FOR_EDITING',
       entityType: 'TRIP',
       entityId: trip.id,
       payload: { sourcePlanId: currentPlan.id, itemCount: trip.items.length }
     });
-    button.textContent = '내 여행에 저장됨';
+    button.textContent = '초안 적용 중…';
     button.disabled = true;
-    setTimeout(() => { location.href = `trip-editor.html?tripId=${encodeURIComponent(trip.id)}&source=ai`; }, 350);
+    setTimeout(() => { location.href = `trip-planner.html?tripId=${encodeURIComponent(trip.id)}&source=ai-review`; }, 350);
   };
 
   const initialize = async () => {
-    knowledge = await api.get('ai/travel-knowledge.json');
+    [knowledge, plannerCatalog] = await Promise.all([
+      api.get('ai/travel-knowledge.json'),
+      api.get('trip-planner-catalog.json')
+    ]);
     const version = document.querySelector('[data-ai-version]');
     if (version) version.textContent = `${knowledge.plannerVersion} · 여행 조건 기반 일정 설계`;
     const promptFromQuery = new URLSearchParams(location.search).get('prompt');
     if (promptFromQuery) prompt.value = promptFromQuery;
+    const startInput = document.querySelector('[name="startDate"]');
+    if (startInput) {
+      startInput.min = formatDate(new Date());
+      startInput.value = new URLSearchParams(location.search).get('startDate') || formatDate(addDays(new Date(), 30));
+    }
+    const nightsMatch = prompt.value.match(/(\d+)\s*박/);
+    const nightsSelect = document.querySelector('[name="nights"]');
+    if (nightsSelect && nightsMatch && [...nightsSelect.options].some((option) => option.value === nightsMatch[1])) nightsSelect.value = nightsMatch[1];
   };
 
   generateButton.addEventListener('click', () => {
@@ -343,11 +431,6 @@
     }
     prompt.removeAttribute('aria-invalid');
     selectedDestinationId = null;
-    const explicitDestination = detectDestination(prompt.value.trim());
-    if (supportsFullTripPlanner(explicitDestination)) {
-      openFullTripPlanner(explicitDestination);
-      return;
-    }
     render();
   });
 
@@ -361,11 +444,6 @@
   output.addEventListener('click', (event) => {
     const destinationButton = event.target.closest('[data-ai-destination]');
     if (destinationButton) {
-      const destination = knowledge.destinations.find((item) => item.id === destinationButton.dataset.aiDestination);
-      if (supportsFullTripPlanner(destination)) {
-        openFullTripPlanner(destination);
-        return;
-      }
       selectedDestinationId = destinationButton.dataset.aiDestination;
       render();
       return;
@@ -374,6 +452,12 @@
     if (changeDestinationButton) {
       selectedDestinationId = null;
       renderDestinationChoices();
+      return;
+    }
+    const editRequestButton = event.target.closest('[data-ai-edit-request]');
+    if (editRequestButton) {
+      prompt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      prompt.focus({ preventScroll: true });
       return;
     }
     const replaceButton = event.target.closest('[data-ai-replace]');

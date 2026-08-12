@@ -522,7 +522,7 @@
       return accumulator;
     }, {});
     const stepLabels = ['기본정보', '랜드마크', '시간·동선', '상세 서비스', '저장·공유'];
-    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 찾아 소개를 보고, 일정에 담으세요' : '랜드마크 주변 서비스를 추가하세요';
+    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 찾아 소개를 보고, 일정에 담으세요' : '선택한 서비스를 확인하고 일정에 배치하세요';
     const mapSearchDescription = state.activeStep === 2
       ? '여행의 뼈대가 되는 장소만 먼저 고릅니다. 숙소와 식사는 다음 단계에서 선택합니다.'
       : `${mapFocus?.title || `${currentDestination.name} 일정`}을 기준으로 숙소·식사·골프·스파·투어를 찾습니다.`;
@@ -551,6 +551,7 @@
     }).join('') : '<div class="planner-empty-day"><strong>이 날짜에는 아직 일정이 없습니다.</strong><span>이전 단계에서 랜드마크를 추가하거나 상세 서비스 단계에서 주변 장소를 담아보세요.</span></div>';
     root.innerHTML = `
       ${state.sourceGuideId ? `<section class="planner-remix-banner"><div><span>REMIXED GUIDE</span><strong>${escapeHtml(state.sourceGuideTitle || '다른 여행자의 일정')}을 바탕으로 만든 내 여행입니다.</strong><p>여기서 변경한 내용은 원본 가이드에 영향을 주지 않습니다.</p></div><a href="trip-guide-detail.html?id=${encodeURIComponent(state.sourceGuideId)}">원본 가이드 보기</a></section>` : ''}
+      ${state.sourceType === 'AI_DRAFT' ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>AI DRAFT REVIEW</span><strong>AI가 제안한 초안을 편집기로 가져왔습니다.</strong><p>아직 예약된 내용은 없습니다. 날짜·시간·장소와 지도 동선을 확인하고 원하는 대로 수정하세요.</p></div><a href="ai-travel.html${state.sourcePrompt ? `?prompt=${encodeURIComponent(state.sourcePrompt)}` : ''}">AI 조건 다시 만들기</a></section>` : ''}
       <section class="planner-hero">
         <div class="planner-hero-row">
           <div><span class="page-eyebrow">LANDMARK FIRST TRIP BUILDER</span><h1>랜드마크부터 고르면,<br>시간과 동선은 쉽게 이어집니다</h1><p>여행의 목적이 되는 장소를 날짜별로 먼저 정하고, 이동 가능한 시간 안에서 숙소·식사·활동을 차례로 붙입니다.</p></div>
@@ -577,7 +578,7 @@
       <section class="planner-route${[2,3,4].includes(state.activeStep) ? '' : ' is-hidden-step'}" aria-labelledby="planner-route-title">
         <div class="planner-route-head"><div><span class="page-eyebrow">${state.activeStep === 2 ? 'STEP 2 · LANDMARKS FIRST' : state.activeStep === 3 ? 'STEP 3 · TIME & ROUTE' : 'STEP 4 · SERVICES NEAR YOUR ROUTE'}</span><h2 id="planner-route-title">${state.activeStep === 2 ? '날짜별 핵심 랜드마크를 먼저 고르세요' : state.activeStep === 3 ? '선택한 순서대로 실제 가능한지 확인하세요' : '확정한 랜드마크 동선에 서비스를 붙이세요'}</h2><p>${state.activeStep === 2 ? `${dayCount()}일 동안 방문하고 싶은 장소를 날짜와 시간에 담으면 지도가 자동으로 연결됩니다.` : state.activeStep === 3 ? '장소 사이의 예상 이동시간과 체류시간을 비교해 겹치는 일정을 알려드립니다.' : '숙소·식사·골프·스파·투어는 핵심 동선이 정해진 뒤 추가합니다.'}</p></div><div class="planner-route-controls"><span class="planner-route-metric">${escapeHtml(routeMetric)}</span><div class="planner-map-days"><button class="${state.mapDay === 'ALL' ? 'is-active' : ''}" type="button" data-map-day="ALL">전체</button>${days.map((day) => `<button class="${state.mapDay === day ? 'is-active' : ''}" type="button" data-map-day="${day}">DAY ${day}</button>`).join('')}</div></div></div>
         <div class="planner-route-legend"><span><i class="route-number"></i>일정에 담은 장소</span><span><i class="route-candidate"></i>검색 후보</span><span><i class="route-motion">➜</i>도로 기준 예상 이동</span></div>
-        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크 탐색·일정 추가 · 선택 완료 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div>${state.activeStep === 2 ? `<ol class="planner-use-guide"><li><b>1</b><span><strong>검색 또는 후보 선택</strong><br>장소를 먼저 찾습니다.</span></li><li><b>2</b><span><strong>소개와 지도 위치 확인</strong><br>갈 곳인지 판단합니다.</span></li><li><b>3</b><span><strong>DAY·시간을 정해 담기</strong><br>지도 동선에 반영합니다.</span></li></ol>` : ''}<label class="planner-catalog-search"><span>${state.activeStep === 2 ? '1. 랜드마크 찾기' : '장소 검색'}</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${focusedCandidate ? `<div class="planner-selected-place-label"><b>2</b><span><strong>선택한 랜드마크 확인</strong><small>소개를 읽고 아래 버튼에서 날짜와 시간을 정해 담으세요.</small></span></div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크 선택' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
+        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크 탐색·일정 추가 · 선택 완료 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div><ol class="planner-use-guide">${state.activeStep === 2 ? '<li><b>1</b><span><strong>검색 또는 후보 선택</strong><br>장소를 먼저 찾습니다.</span></li><li><b>2</b><span><strong>소개와 지도 위치 확인</strong><br>갈 곳인지 판단합니다.</span></li><li><b>3</b><span><strong>DAY·시간을 정해 담기</strong><br>지도 동선에 반영합니다.</span></li>' : '<li><b>1</b><span><strong>서비스 내용 확인</strong><br>가격·체류시간을 확인합니다.</span></li><li><b>2</b><span><strong>DAY·시간 선택</strong><br>방문할 날짜와 시간을 정합니다.</span></li><li><b>3</b><span><strong>일정에 담기</strong><br>지도 동선과 충돌 여부를 확인합니다.</span></li>'}</ol><label class="planner-catalog-search"><span>${state.activeStep === 2 ? '1. 랜드마크 찾기' : '다른 서비스 찾기'}</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${focusedCandidate ? `<div class="planner-selected-place-label"><b>2</b><span><strong>${state.activeStep === 2 ? '선택한 랜드마크 확인' : '선택한 서비스 확인'}</strong><small>소개를 읽고 아래 버튼에서 날짜와 시간을 정해 담으세요.</small></span></div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크 선택' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
         ${state.activeStep === 2 ? `<footer class="planner-stage-actions"><span>랜드마크 ${landmarkItems.length}곳 · ${landmarkDays.size}일에 배치됨</span><button class="ui-button primary" type="button" data-planner-step="3" ${landmarkItems.length ? '' : 'disabled'}>랜드마크 선택 완료 · 동선 확인</button></footer>` : state.activeStep === 4 ? `<footer class="planner-stage-actions"><button class="ui-button" type="button" data-planner-step="3">이전: 동선 확인</button><button class="ui-button primary" type="button" data-planner-step="5">다음: 전체 일정 저장</button></footer>` : ''}
       </section>
       <div class="planner-workspace${[3,5].includes(state.activeStep) ? '' : ' is-hidden-step'}">
@@ -617,6 +618,7 @@
       duration: `${dayCount() - 1}박 ${dayCount()}일`,
       status: 'DRAFT',
       sourceType: state.sourceType || (query.get('mode') === 'ai' ? 'AI_DRAFT' : 'USER_CREATED'),
+      sourcePrompt: state.sourcePrompt || null,
       sourceTripId: state.sourceTripId || null,
       sourceGuideId: state.sourceGuideId || null,
       sourceGuideTitle: state.sourceGuideTitle || null,
@@ -992,6 +994,7 @@
       endDate: storedTrip?.endDate || query.get('endDate') || query.get('checkOut') || dates.end,
       travelers: storedTrip?.travelers || query.get('travelers') || '성인 2명',
       sourceType: storedTrip?.sourceType || (query.get('mode') === 'ai' ? 'AI_DRAFT' : 'USER_CREATED'),
+      sourcePrompt: storedTrip?.sourcePrompt || query.get('prompt') || null,
       sourceTripId: storedTrip?.sourceTripId || null,
       sourceGuideId: storedTrip?.sourceGuideId || (storedTrip?.sourceType === 'COMMUNITY_COPY' ? storedTrip?.sourceTripId : null) || null,
       sourceGuideTitle: storedTrip?.sourceGuideTitle || (storedTrip?.sourceType === 'COMMUNITY_COPY' ? String(storedTrip?.title || '').replace(/\s*·\s*내 버전$/, '') : null) || null,
@@ -1013,7 +1016,7 @@
         category: typeMap[query.get('candidateType')] || query.get('candidateType') || 'LANDMARK',
         title: query.get('candidateTitle'),
         area: destination().name,
-        image: destination().cover,
+        image: query.get('candidateImage') || destination().cover,
         description: '이전 화면에서 선택한 후보입니다. 날짜와 시간을 정한 뒤 일정에 추가하고 상세 정보를 다시 확인하세요.',
         duration: 90,
         recommendedTime: '10:00',
@@ -1027,7 +1030,10 @@
       ? storedTrip.items.map(normalizeStoredItem)
       : query.get('mode') === 'ai' ? templateItems() : [];
     const focusedItem = itemById(query.get('focus'));
-    if (focusedItem) state.category = focusedItem.category;
+    if (focusedItem) {
+      state.category = focusedItem.category;
+      state.activeStep = focusedItem.category === 'LANDMARK' ? 2 : 4;
+    }
     render();
   };
 

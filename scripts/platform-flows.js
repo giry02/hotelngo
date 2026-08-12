@@ -87,6 +87,19 @@
     toast.classList.add('is-visible');
     toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2800);
   };
+  const openTripContextDialog = ({ title, message, confirmLabel, onConfirm }) => {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'page-confirm-dialog';
+    dialog.innerHTML = `<header><div><small>ADD TO TRIP</small><strong>${escapeHtml(title)}</strong></div><button type="button" aria-label="닫기">×</button></header><div class="page-confirm-body">${message}</div><footer><button class="ui-button" type="button" data-trip-dialog-cancel>취소</button><button class="ui-button primary" type="button" data-trip-dialog-confirm>${escapeHtml(confirmLabel)}</button></footer>`;
+    document.body.append(dialog);
+    const close = () => dialog.close();
+    dialog.querySelector('header button').addEventListener('click', close);
+    dialog.querySelector('[data-trip-dialog-cancel]').addEventListener('click', close);
+    dialog.querySelector('[data-trip-dialog-confirm]').addEventListener('click', () => { onConfirm(); close(); });
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) close(); });
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.showModal();
+  };
 
   const seedDomains = async () => {
     if (seeds) return seeds;
@@ -237,21 +250,64 @@
     if (tripButton) {
       event.preventDefault();
       event.stopImmediatePropagation();
+      const scope = tripButton.closest('article, section, .detail-panel, .story-route-card') || document;
       const title = tripButton.dataset.tripTitle
+        || scope.querySelector('h3, h2, h1, strong')?.textContent.trim()
         || document.querySelector('h1')?.textContent.trim()
-        || tripButton.closest('article')?.querySelector('h2, h3, strong')?.textContent.trim()
         || document.title;
       const sourceId = tripButton.dataset.tripId || `${route}:${new URLSearchParams(location.search).get('id') || 'page'}`;
       let context = {};
       try { context = JSON.parse(localStorage.getItem('hotelngo.trip.context.v1') || '{}'); } catch {}
+      const queryDestination = new URLSearchParams(location.search).get('destination');
+      const knownCities = ['다낭', '방콕', '발리', '교토', '오사카', '도쿄', '파리'];
+      const pageDestination = queryDestination || knownCities.find((city) => scope.textContent.includes(city) || document.title.includes(city));
+      const destination = context.destination || pageDestination;
+      if (!destination) {
+        openTripContextDialog({
+          title: '먼저 여행의 도시와 날짜를 정해주세요',
+          message: `<p><strong>${escapeHtml(title)}</strong>을(를) 담으려면 어느 여행의 몇 번째 날인지 먼저 정해야 합니다.</p><p>목적지와 기간을 정한 뒤 이 장소를 날짜·시간과 함께 추가할 수 있습니다.</p>`,
+          confirmLabel: '새 여행 만들기',
+          onConfirm: () => { location.href = 'trip-create.html'; }
+        });
+        return;
+      }
+      if (pageDestination && context.destination && pageDestination !== context.destination) {
+        openTripContextDialog({
+          title: '편집 중인 여행과 도시가 달라요',
+          message: `<p><strong>${escapeHtml(title)}</strong>은(는) ${escapeHtml(pageDestination)}의 장소지만, 현재 편집 중인 일정은 ${escapeHtml(context.destination)}입니다.</p><p>잘못된 동선을 만들지 않도록 기존 일정에는 바로 담지 않습니다. ${escapeHtml(pageDestination)} 여행을 새로 만든 뒤 날짜와 시간을 정해주세요.</p>`,
+          confirmLabel: `${pageDestination} 여행 새로 만들기`,
+          onConfirm: () => { location.href = `trip-create.html?destination=${encodeURIComponent(pageDestination)}`; }
+        });
+        return;
+      }
+      const image = scope.querySelector('img')?.getAttribute('src') || document.querySelector('main img')?.getAttribute('src') || '';
+      const path = location.pathname.toLowerCase();
+      const scopeText = scope.textContent;
+      const candidateType = tripButton.dataset.tripType
+        || (path.includes('hotel') || /호텔|리조트/.test(scopeText) ? 'HOTEL'
+          : path.includes('restaurant') || path.includes('food') || /음식점|맛집|카페|다이닝/.test(scopeText) ? 'RESTAURANT'
+            : /골프/.test(scopeText) ? 'GOLF'
+              : /마사지|스파/.test(scopeText) ? 'SPA'
+                : /차량|픽업|트랜스퍼/.test(scopeText) ? 'VEHICLE'
+                  : /투어|체험|크루즈/.test(scopeText) ? 'TOUR'
+                    : 'PLACE');
       const next = new URLSearchParams({
-        destination: new URLSearchParams(location.search).get('destination') || context.destination || '다낭',
+        destination,
         focus: sourceId,
         candidateTitle: title,
-        candidateType: tripButton.dataset.tripType || 'LANDMARK'
+        candidateType
       });
+      if (context.startDate) next.set('startDate', context.startDate);
+      if (context.endDate) next.set('endDate', context.endDate);
+      if (context.travelers) next.set('travelers', context.travelers);
       if (context.tripId) next.set('tripId', context.tripId);
-      location.href = `trip-planner.html?${next.toString()}`;
+      if (image) next.set('candidateImage', image);
+      openTripContextDialog({
+        title: `${destination} 일정에 담을까요?`,
+        message: `<p><strong>${escapeHtml(title)}</strong>을(를) 최근 편집 중인 ${escapeHtml(destination)} 여행에 연결합니다.</p><p>다음 화면에서 장소 소개를 확인하고 <strong>DAY와 시작 시간</strong>을 정해야 지도 동선에 반영됩니다. 여행지가 다르면 취소하고 새 여행을 만들어주세요.</p>`,
+        confirmLabel: '날짜·시간 정하러 가기',
+        onConfirm: () => { location.href = `trip-planner.html?${next.toString()}`; }
+      });
       return;
     }
 
