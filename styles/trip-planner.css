@@ -201,6 +201,30 @@
 .planner-workspace{grid-template-columns:minmax(0,1fr)}.planner-board{width:100%}
 .planner-travel-segment{display:grid;grid-template-columns:54px auto 1fr;align-items:center;gap:9px;margin:-2px 0 -2px 14px;color:#6b778a}.planner-travel-segment::before{position:absolute;width:1px;height:24px;background:#cbd5e1;content:""}.planner-travel-segment span{justify-self:end;border-radius:999px;background:#edf3ff;padding:4px 7px;color:#2f6bff;font-size:9px;font-weight:900}.planner-travel-segment strong{font-size:11px}.planner-travel-segment small{font-size:10px}
 
+/* Unified planner typography: every step uses the same readable scale. */
+.trip-planner-page{font-family:var(--font-sans)}
+.planner-route-head p,.planner-map-search-head p{font-size:14px;line-height:1.65}
+.planner-route-metric,.planner-route-legend,.planner-map-search-head small{font-size:12px}
+.planner-stepper button strong{font-size:14px}
+.planner-use-guide li{padding:10px}.planner-use-guide li>b{width:22px;height:22px;font-size:11px}.planner-use-guide li>span{font-size:12px;line-height:1.5}
+.planner-catalog-search span{font-size:13px}.planner-catalog-search input{font-size:14px}
+.planner-selected-place-label strong{font-size:14px}.planner-selected-place-label small{font-size:12px;line-height:1.55}
+.planner-selected-place-copy>small{font-size:12px}.planner-selected-place-copy h4{font-size:18px}.planner-selected-place-copy>p{font-size:13px;line-height:1.65}
+.planner-selected-place-copy>ul li{font-size:11px}.planner-selected-place-copy>div span{font-size:12px}.planner-selected-place-copy>div b{font-size:11px}
+.planner-selected-place>footer button{font-size:13px}
+.planner-search-list-title strong{font-size:14px}.planner-search-list-title span{font-size:12px}
+.planner-search-result small{font-size:12px}.planner-search-result strong{font-size:15px}.planner-search-result span{font-size:13px;line-height:1.55}.planner-search-result em{font-size:12px}.planner-search-result footer button{font-size:13px}
+.planner-route-check>small{font-size:12px}.planner-route-check p{font-size:13px;line-height:1.6}
+.planner-stage-actions>span{font-size:13px}
+.planner-summary span,.planner-day-tab small,.planner-day-title span{font-size:12px}
+.planner-stop time{font-size:14px}.planner-stop-copy small{font-size:12px}.planner-stop-copy strong{font-size:15px}.planner-stop-copy span{font-size:13px}
+.planner-stop-actions .ui-select__trigger,.planner-stop-actions button[data-remove-item],.planner-stop-actions button[data-edit-item]{font-size:13px}
+.planner-empty-day span,.planner-validation article{font-size:13px}.planner-cost small,.planner-save-status{font-size:12px}
+.planner-category-tabs button{font-size:13px}.planner-product-copy small{font-size:12px}.planner-product-copy strong{font-size:15px}.planner-product-copy>span{font-size:13px;line-height:1.55}.planner-product-meta{font-size:12px}
+.planner-product-add .ui-select__trigger,.planner-product-add input,.planner-product-add button[data-add-item],.planner-product-detail{font-size:13px}
+.planner-booking-readiness span{font-size:12px}
+.planner-travel-segment span{font-size:11px}.planner-travel-segment strong,.planner-travel-segment small{font-size:12px}
+
 @media(max-width:980px){
   .planner-stepper{top:64px;overflow:auto;grid-template-columns:repeat(5,minmax(150px,1fr));scrollbar-width:none}.planner-stepper::-webkit-scrollbar{display:none}
   .planner-route-grid{grid-template-columns:1fr}.planner-map{position:relative;top:auto;height:470px}.planner-map-search{max-height:none;overflow:visible}.planner-search-results{grid-template-columns:1fr 1fr;max-height:none}.planner-route-check{min-height:auto}
@@ -212,7 +236,7 @@
   .planner-date-assist{align-items:flex-start;flex-direction:column}.planner-date-assist>div:last-child{display:grid;grid-template-columns:repeat(3,1fr);width:100%}.planner-date-assist button{min-height:42px;padding:0 6px}
   .planner-stage-actions{position:sticky;z-index:15;bottom:72px;align-items:stretch;flex-direction:column;margin-inline:-14px;padding:12px 14px;border-radius:14px 14px 0 0;background:rgba(255,255,255,.97);box-shadow:0 -10px 24px rgba(23,42,74,.08);backdrop-filter:blur(10px)}.planner-stage-actions .ui-button{width:100%}
   .planner-context{align-items:flex-start}.planner-context>button{width:100%}
-  .planner-route-grid{display:flex;flex-direction:column}.planner-map{height:390px;order:0}.planner-map-search,.planner-route-check{order:1;width:100%}.planner-use-guide{grid-template-columns:1fr;margin-top:10px}.planner-use-guide li>span{font-size:11px}.planner-selected-place-label{margin-top:16px}.planner-selected-place>img{height:170px}.planner-selected-place-copy>p{font-size:12px}.planner-selected-place-copy>div{grid-template-columns:repeat(3,1fr)}.planner-selected-place>footer button{min-height:44px}.planner-search-results{grid-template-columns:1fr;max-height:none}.planner-search-result{grid-template-columns:80px minmax(0,1fr)}.planner-search-result>img{width:80px;height:88px}.planner-search-result footer button{min-height:42px;flex:1;justify-content:center}
+  .planner-route-grid{display:flex;flex-direction:column}.planner-map{height:390px;order:0}.planner-map-search,.planner-route-check{order:1;width:100%}.planner-use-guide{grid-template-columns:1fr;margin-top:10px}.planner-use-guide li>span{font-size:12px}.planner-selected-place-label{margin-top:16px}.planner-selected-place>img{height:170px}.planner-selected-place-copy>p{font-size:13px}.planner-selected-place-copy>div{grid-template-columns:repeat(3,1fr)}.planner-selected-place>footer button{min-height:44px}.planner-search-results{grid-template-columns:1fr;max-height:none}.planner-search-result{grid-template-columns:80px minmax(0,1fr)}.planner-search-result>img{width:80px;height:88px}.planner-search-result footer button{min-height:42px;flex:1;justify-content:center}
   .planner-route-legend{gap:9px}.planner-route-legend span{font-size:10px}.planner-map-days button{height:40px}
   .planner-stop{grid-template-columns:52px 4px minmax(0,1fr)}.planner-stop-actions{grid-column:3}.planner-stop-actions button[data-edit-item],.planner-stop-actions button[data-remove-item]{min-height:40px}.planner-travel-segment{grid-template-columns:45px auto 1fr;margin-left:8px}.planner-travel-segment small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .planner-booking-readiness{grid-template-columns:1fr 1fr 1fr}.planner-booking-readiness article{padding:10px 8px}.planner-board{padding:15px}
