@@ -58,6 +58,7 @@
   let toastTimer;
   let undoSnapshot = null;
   let mapInstance = null;
+  let routeAnimationFrame = null;
   let autosaveTimer = null;
   let saveStatus = 'saved';
 
@@ -246,6 +247,54 @@
     const value = Math.sin(dLat / 2) ** 2 + Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
     return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
   };
+  const timeToMinutes = (value = '00:00') => {
+    const [hours, minutes] = String(value).split(':').map(Number);
+    return (hours || 0) * 60 + (minutes || 0);
+  };
+  const travelEstimate = (from, to) => {
+    if (!from?.lat || !from?.lng || !to?.lat || !to?.lng) return null;
+    const distance = distanceKm(from, to);
+    const minutes = Math.max(5, Math.ceil(((distance / 25) * 60 + 8) / 5) * 5);
+    return { distance, minutes };
+  };
+  const scheduleDiagnostics = (day) => {
+    const items = state.items.filter((item) => item.day === day).sort((a, b) => a.time.localeCompare(b.time));
+    const diagnostics = [];
+    items.slice(1).forEach((item, index) => {
+      const previous = items[index];
+      const travel = travelEstimate(previous, item);
+      if (!travel) return;
+      const previousEnd = timeToMinutes(previous.time) + Number(previous.duration || 0);
+      const available = timeToMinutes(item.time) - previousEnd;
+      if (available < travel.minutes) {
+        diagnostics.push({
+          tone: 'error',
+          message: `${previous.title}에서 ${item.title}까지 이동에 약 ${travel.minutes}분이 필요하지만 일정에는 ${Math.max(0, available)}분만 비어 있습니다.`
+        });
+      }
+    });
+    if (!items.some((item) => item.category === 'LANDMARK')) diagnostics.push({ tone: 'warning', message: `DAY ${day}에 핵심 랜드마크가 없습니다.` });
+    return diagnostics;
+  };
+  const visibleCatalogItems = () => {
+    const normalized = String(state.catalogSearch || '').trim().toLowerCase();
+    const landmarkStage = state.activeStep === 2;
+    const matches = destination().items.filter((item) => {
+      const stageMatches = landmarkStage ? item.category === 'LANDMARK' : item.category !== 'LANDMARK';
+      const categoryMatches = state.category === 'ALL' || item.category === state.category;
+      const searchMatches = !normalized || `${item.title} ${item.area} ${item.description}`.toLowerCase().includes(normalized);
+      return stageMatches && categoryMatches && searchMatches;
+    });
+    if (state.activeStep === 4) {
+      const focus = focusedMapSource();
+      if (focus) matches.sort((a, b) => {
+        const distanceA = a.lat && a.lng ? distanceKm(focus, a) : Number.POSITIVE_INFINITY;
+        const distanceB = b.lat && b.lng ? distanceKm(focus, b) : Number.POSITIVE_INFINITY;
+        return distanceA - distanceB;
+      });
+    }
+    return matches;
+  };
   const mapDayItems = () => state.items
     .filter((item) => (state.mapDay === 'ALL' || item.day === state.mapDay) && item.lat && item.lng)
     .sort((a, b) => a.day - b.day || a.time.localeCompare(b.time));
@@ -267,6 +316,10 @@
   const renderMap = () => {
     const element = root.querySelector('[data-planner-map]');
     if (!element) return;
+    if (routeAnimationFrame) {
+      cancelAnimationFrame(routeAnimationFrame);
+      routeAnimationFrame = null;
+    }
     const points = mapDayItems();
     if (!window.L) {
       element.innerHTML = '<div class="planner-map-fallback"><strong>지도를 불러오지 못했습니다.</strong><span>일정 목록의 장소명과 좌표는 그대로 저장됩니다. 네트워크 연결 후 다시 열어 주세요.</span></div>';
@@ -277,11 +330,31 @@
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(mapInstance);
-    if (!points.length) {
-      mapInstance.setView([16.0544, 108.2022], 11);
-      return;
-    }
     const bounds = [];
+    const scheduledSourceIds = new Set(points.map((item) => item.sourceId));
+    if ([2, 4].includes(state.activeStep)) {
+      visibleCatalogItems().filter((item) => item.lat && item.lng && !scheduledSourceIds.has(item.id)).forEach((item) => {
+        const marker = window.L.marker([item.lat, item.lng], {
+          icon: window.L.divIcon({
+            className: 'planner-candidate-marker-wrap',
+            html: `<span class="planner-candidate-marker" style="--marker-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}">${icon(categoryIcons[item.category])}</span>`,
+            iconSize: [34, 34],
+            iconAnchor: [17, 17]
+          })
+        }).addTo(mapInstance);
+        const popup = document.createElement('div');
+        popup.className = 'planner-map-popup';
+        popup.innerHTML = `<small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong>`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = state.activeStep === 2 ? '랜드마크 일정에 담기' : '상세 확인 후 담기';
+        button.addEventListener('click', () => openCatalogItem(item));
+        popup.append(button);
+        marker.bindPopup(popup);
+        marker.on('click', () => { state.focusLocationId = item.id; });
+        bounds.push([item.lat, item.lng]);
+      });
+    }
     points.forEach((item, index) => {
       const color = categoryMeta[item.category]?.[1] || '#2f6bff';
       const marker = window.L.marker([item.lat, item.lng], {
@@ -306,10 +379,59 @@
       : [points];
     const routeColors = ['#2f6bff', '#10a58f', '#ef8d32', '#8b5cf6', '#e34d73', '#3276d9'];
     routeGroups.forEach((group, index) => {
-      if (group.length > 1) window.L.polyline(group.map((item) => [item.lat, item.lng]), { color: routeColors[index % routeColors.length], weight: 4, opacity: .76, dashArray: '8 7' }).addTo(mapInstance);
+      if (group.length <= 1) return;
+      const color = routeColors[index % routeColors.length];
+      const latLngs = group.map((item) => [item.lat, item.lng]);
+      window.L.polyline(latLngs, { color: '#ffffff', weight: 8, opacity: .9 }).addTo(mapInstance);
+      window.L.polyline(latLngs, { color, weight: 4, opacity: .9 }).addTo(mapInstance);
+      group.slice(1).forEach((item, itemIndex) => {
+        const previous = group[itemIndex];
+        const middle = [(previous.lat + item.lat) / 2, (previous.lng + item.lng) / 2];
+        window.L.marker(middle, {
+          interactive: false,
+          icon: window.L.divIcon({ className: 'planner-route-arrow-wrap', html: `<span class="planner-route-arrow" style="--route-color:${color}">›</span>`, iconSize: [24, 24], iconAnchor: [12, 12] })
+        }).addTo(mapInstance);
+      });
     });
-    mapInstance.fitBounds(bounds, { padding: [34, 34], maxZoom: 13 });
-    setTimeout(() => mapInstance?.invalidateSize(), 0);
+    const animationGroup = state.mapDay === 'ALL'
+      ? routeGroups.find((group) => group[0]?.day === state.selectedDay) || routeGroups.find((group) => group.length > 1)
+      : routeGroups[0];
+    if (animationGroup?.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const route = animationGroup.map((item) => ({ lat: item.lat, lng: item.lng }));
+      const segmentLengths = route.slice(1).map((item, index) => distanceKm(route[index], item));
+      const totalLength = segmentLengths.reduce((sum, value) => sum + value, 0) || 1;
+      const traveler = window.L.marker([route[0].lat, route[0].lng], {
+        zIndexOffset: 1200,
+        icon: window.L.divIcon({ className: 'planner-route-traveler-wrap', html: '<span class="planner-route-traveler">➜</span>', iconSize: [38, 38], iconAnchor: [19, 19] })
+      }).addTo(mapInstance);
+      const startedAt = performance.now();
+      const animate = (now) => {
+        if (!mapInstance) return;
+        let distanceAt = (((now - startedAt) % 10000) / 10000) * totalLength;
+        let segmentIndex = 0;
+        while (segmentIndex < segmentLengths.length - 1 && distanceAt > segmentLengths[segmentIndex]) {
+          distanceAt -= segmentLengths[segmentIndex];
+          segmentIndex += 1;
+        }
+        const from = route[segmentIndex];
+        const to = route[segmentIndex + 1];
+        const ratio = Math.min(1, distanceAt / (segmentLengths[segmentIndex] || 1));
+        traveler.setLatLng([from.lat + (to.lat - from.lat) * ratio, from.lng + (to.lng - from.lng) * ratio]);
+        routeAnimationFrame = requestAnimationFrame(animate);
+      };
+      routeAnimationFrame = requestAnimationFrame(animate);
+    }
+    if (!bounds.length) {
+      const fallback = destination().items.find((item) => item.lat && item.lng);
+      mapInstance.setView(fallback ? [fallback.lat, fallback.lng] : [16.0544, 108.2022], 11);
+    } else {
+      mapInstance.fitBounds(bounds, { padding: [34, 34], maxZoom: 13 });
+    }
+    setTimeout(() => {
+      mapInstance?.invalidateSize();
+      const focus = itemById(state.focusLocationId);
+      if (focus?.lat && focus?.lng) mapInstance?.flyTo([focus.lat, focus.lng], 14, { duration: .55 });
+    }, 0);
   };
 
   const render = () => {
@@ -317,18 +439,12 @@
     const currentDestination = destination();
     const totalsData = totals();
     const days = Array.from({ length: dayCount() }, (_, index) => index + 1);
+    root.dataset.activeStep = String(state.activeStep || 1);
     const selectedItems = state.items
       .filter((item) => item.day === state.selectedDay)
       .sort((a, b) => a.time.localeCompare(b.time));
-    const focusedItemId = query.get('focus');
-    const searchTerm = String(state.catalogSearch || '').trim().toLowerCase();
-    const visibleCatalog = currentDestination.items.filter((item) => {
-      const categoryMatches = state.category === 'ALL' || item.category === state.category;
-      const searchMatches = !searchTerm || `${item.title} ${item.area} ${item.description}`.toLowerCase().includes(searchTerm);
-      return categoryMatches && searchMatches;
-    });
+    const visibleCatalog = visibleCatalogItems();
     const mapFocus = focusedMapSource();
-    const nearby = nearbyItems();
     const routePoints = mapDayItems();
     const routeGroups = state.mapDay === 'ALL'
       ? [...new Set(routePoints.map((item) => item.day))].map((day) => routePoints.filter((item) => item.day === day))
@@ -337,21 +453,49 @@
     const routeMetric = state.mapDay === 'ALL'
       ? `${dayCount()}일 · 지도 장소 ${routePoints.length}곳 · 일자별 연결선`
       : `DAY ${state.mapDay} · ${routePoints.length}곳 · 직선 동선 약 ${routeDistance.toFixed(1)}km`;
+    const landmarkItems = state.items.filter((item) => item.category === 'LANDMARK');
+    const landmarkDays = new Set(landmarkItems.map((item) => item.day));
+    const selectedDiagnostics = scheduleDiagnostics(state.selectedDay);
+    const allDiagnostics = days.flatMap((day) => scheduleDiagnostics(day));
     const categoryCounts = state.items.reduce((accumulator, item) => {
       accumulator[item.category] = (accumulator[item.category] || 0) + 1;
       return accumulator;
     }, {});
-    const hotelHref = `hotels.html?destination=${encodeURIComponent(currentDestination.name)}&checkIn=${state.startDate}&checkOut=${state.endDate}&tripId=${encodeURIComponent(state.id)}`;
-    const experienceHref = `experiences.html?destination=${encodeURIComponent(currentDestination.name)}&startDate=${state.startDate}&endDate=${state.endDate}&tripId=${encodeURIComponent(state.id)}`;
+    const stepLabels = ['기본정보', '랜드마크', '시간·동선', '상세 서비스', '저장·공유'];
+    const mapSearchTitle = state.activeStep === 2 ? '랜드마크를 검색해 날짜에 담으세요' : '랜드마크 주변 서비스를 추가하세요';
+    const mapSearchDescription = state.activeStep === 2
+      ? '여행의 뼈대가 되는 장소만 먼저 고릅니다. 숙소와 식사는 다음 단계에서 선택합니다.'
+      : `${mapFocus?.title || `${currentDestination.name} 일정`}을 기준으로 숙소·식사·골프·스파·투어를 찾습니다.`;
+    const categoryTabs = catalog.categories.filter((category) => state.activeStep === 2 ? category.id === 'ALL' : category.id !== 'LANDMARK');
+    const candidateCards = visibleCatalog.slice(0, 12).map((item) => {
+      const proximity = mapFocus && item.lat && item.lng ? distanceKm(mapFocus, item) : null;
+      return `
+      <article class="planner-search-result" data-catalog-item="${escapeHtml(item.id)}">
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}">
+        <div><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}${proximity !== null ? ` · 기준 장소에서 약 ${proximity.toFixed(1)}km` : ''}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span><em>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`}</em></div>
+        <footer><button type="button" data-focus-catalog-item>${icon('pin')}지도에서 보기</button><button type="button" data-add-item>${icon('plus')}일정에 담기</button></footer>
+      </article>`;
+    }).join('');
+    const timeline = selectedItems.length ? selectedItems.map((item, index) => {
+      const previous = selectedItems[index - 1];
+      const travel = previous ? travelEstimate(previous, item) : null;
+      return `${travel ? `<div class="planner-travel-segment"><span>이동</span><strong>차량 약 ${travel.minutes}분</strong><small>${travel.distance.toFixed(1)}km · 직선거리 기반 예상</small></div>` : ''}
+        <article class="planner-stop" style="--category-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}" data-instance-id="${escapeHtml(item.instanceId)}">
+          <time>${escapeHtml(item.time)}</time><span class="planner-stop-line"></span>
+          <div class="planner-stop-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분 체류` : `${dayCount() - 1}박`} · ${escapeHtml(bookingTypeLabel(item.bookingType))}</span></div>
+          <div class="planner-stop-actions"><button type="button" data-edit-item><span>시간·날짜 수정</span></button><button type="button" data-remove-item>${icon('trash')}<span>삭제</span></button></div>
+        </article>`;
+    }).join('') : '<div class="planner-empty-day"><strong>이 날짜에는 아직 일정이 없습니다.</strong><span>이전 단계에서 랜드마크를 추가하거나 상세 서비스 단계에서 주변 장소를 담아보세요.</span></div>';
     root.innerHTML = `
       ${state.sourceGuideId ? `<section class="planner-remix-banner"><div><span>REMIXED GUIDE</span><strong>${escapeHtml(state.sourceGuideTitle || '다른 여행자의 일정')}을 바탕으로 만든 내 여행입니다.</strong><p>여기서 변경한 내용은 원본 가이드에 영향을 주지 않습니다.</p></div><a href="trip-guide-detail.html?id=${encodeURIComponent(state.sourceGuideId)}">원본 가이드 보기</a></section>` : ''}
       <section class="planner-hero">
         <div class="planner-hero-row">
-          <div><span class="page-eyebrow">${query.get('mode') === 'ai' ? 'AI DRAFT · EDIT EVERYTHING' : 'BUILD ONE COMPLETE JOURNEY'}</span><h1>하나를 고르는 예약이 아니라,<br>여행 전체를 날짜별로 만드세요</h1><p>${query.get('mode') === 'ai' ? 'AI가 만든 다카테고리 초안입니다. 모든 항목을 직접 추가·이동·삭제하고 예약 전에 다시 검증할 수 있습니다.' : '목적지와 기간을 먼저 정하고 숙소·랜드마크·식사·골프·스파·이동을 같은 4박 5일 안에 여러 개 조합합니다.'}</p></div>
-          <div class="planner-hero-actions"><a class="ui-button" href="trip-create.html?destination=${encodeURIComponent(currentDestination.name)}&startDate=${encodeURIComponent(state.startDate)}&endDate=${encodeURIComponent(state.endDate)}">${icon('arrow-left')}<span>단계별로 다시 시작</span></a><a class="ui-button" href="community.html">${icon('users')}<span>다른 여행자 일정</span></a></div>
+          <div><span class="page-eyebrow">LANDMARK FIRST TRIP BUILDER</span><h1>랜드마크부터 고르면,<br>시간과 동선은 쉽게 이어집니다</h1><p>여행의 목적이 되는 장소를 날짜별로 먼저 정하고, 이동 가능한 시간 안에서 숙소·식사·활동을 차례로 붙입니다.</p></div>
+          <a class="ui-button" href="community.html">${icon('users')}<span>다른 여행자 가이드 보기</span></a>
         </div>
       </section>
-      <section class="planner-setup" aria-labelledby="planner-setup-title">
+      <nav class="planner-stepper" aria-label="여행 일정 만들기 단계">${stepLabels.map((label, index) => { const step = index + 1; return `<button type="button" data-planner-step="${step}" class="${state.activeStep === step ? 'is-active' : ''}${state.activeStep > step ? ' is-complete' : ''}" aria-current="${state.activeStep === step ? 'step' : 'false'}"><span>${state.activeStep > step ? '✓' : step}</span><strong>${label}</strong></button>`; }).join('')}</nav>
+      <section class="planner-setup${state.activeStep === 1 ? '' : ' is-hidden-step'}" aria-labelledby="planner-setup-title">
         <div class="planner-setup-head"><h2 id="planner-setup-title">1. 어디로, 언제, 누구와 가나요?</h2><span>이 정보가 호텔·즐길거리·AI 추천에 공통으로 적용됩니다.</span></div>
         <div class="planner-fields">
           <label class="planner-field"><span>여행 이름</span><input name="title" value="${escapeHtml(state.title)}"></label>
@@ -360,40 +504,28 @@
           <label class="planner-field"><span>여행 인원</span><select name="travelers"><option${state.travelers === '혼자' ? ' selected' : ''}>혼자</option><option${state.travelers === '성인 2명' ? ' selected' : ''}>성인 2명</option><option${state.travelers === '가족 4명' ? ' selected' : ''}>가족 4명</option><option${state.travelers === '친구 4명' ? ' selected' : ''}>친구 4명</option></select></label>
         </div>
         <div class="destination-strip" aria-label="여행지 선택">${catalog.destinations.map((item) => `<button class="destination-choice${item.id === state.destinationId ? ' is-active' : ''}" type="button" data-destination-id="${escapeHtml(item.id)}"><img src="${escapeHtml(item.cover)}" alt="${escapeHtml(item.name)}"><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.country)} · ${escapeHtml(item.summary)}</small></span></button>`).join('')}</div>
+        <footer class="planner-stage-actions"><span>다음 단계에서는 숙소나 식당보다 먼저 핵심 랜드마크를 고릅니다.</span><button class="ui-button primary" type="button" data-planner-step="2">다음: 랜드마크 선택</button></footer>
       </section>
-      <section class="planner-context">
+      <section class="planner-context${state.activeStep === 1 ? ' is-hidden-step' : ''}">
         <div class="planner-context-main"><span class="planner-context-pin" aria-hidden="true">⌖</span><div><strong>${escapeHtml(currentDestination.name)} · ${dayCount() - 1}박 ${dayCount()}일 · ${escapeHtml(state.travelers)}</strong><span>${escapeHtml(state.startDate)}–${escapeHtml(state.endDate)} · 일정 ${state.items.length}개 · 등록 장소 기준</span></div></div>
-        <div class="planner-context-links"><a href="${hotelHref}">${icon('hotel')}<span>이 날짜의 호텔 찾기</span></a><a href="${experienceHref}">${icon('compass')}<span>이 도시의 즐길거리 찾기</span></a></div>
+        <button type="button" data-planner-step="1">여행 정보 변경</button>
       </section>
-      <section class="planner-route" aria-labelledby="planner-route-title">
-        <div class="planner-route-head"><div><span class="page-eyebrow">MAP & ROUTE</span><h2 id="planner-route-title">날짜별 동선 지도</h2><p>일정에 담은 장소를 시간순으로 연결합니다. 점선은 이동 순서를 보여주는 안내선이며 실제 도로 경로는 모바일 내비게이션 연동 단계에서 계산합니다.</p></div><div class="planner-route-controls"><span class="planner-route-metric">${escapeHtml(routeMetric)}</span><div class="planner-map-days"><button class="${state.mapDay === 'ALL' ? 'is-active' : ''}" type="button" data-map-day="ALL">전체</button>${days.map((day) => `<button class="${state.mapDay === day ? 'is-active' : ''}" type="button" data-map-day="${day}">DAY ${day}</button>`).join('')}</div></div></div>
-        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div><aside class="planner-nearby"><div><small>선택한 기준 장소</small><strong>${mapFocus ? escapeHtml(mapFocus.title) : '지도 마커를 선택하세요'}</strong><span>${mapFocus ? `${escapeHtml(mapFocus.area)} 주변의 숙소·식사·활동을 거리순으로 보여드립니다.` : '일정에 좌표가 있는 장소를 추가하면 주변 후보가 나타납니다.'}</span></div><div class="planner-nearby-list">${nearby.length ? nearby.map((item) => `<button type="button" data-nearby-item="${escapeHtml(item.id)}"><span style="--nearby-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}"></span><div><small>${escapeHtml(categoryLabel(item.category))} · 약 ${item.distance.toFixed(1)}km</small><strong>${escapeHtml(item.title)}</strong></div><em>추가</em></button>`).join('') : '<p>주변 후보를 보려면 지도에서 랜드마크를 선택하세요.</p>'}</div></aside></div>
+      <section class="planner-route${[2,3,4].includes(state.activeStep) ? '' : ' is-hidden-step'}" aria-labelledby="planner-route-title">
+        <div class="planner-route-head"><div><span class="page-eyebrow">${state.activeStep === 2 ? 'STEP 2 · LANDMARKS FIRST' : state.activeStep === 3 ? 'STEP 3 · TIME & ROUTE' : 'STEP 4 · SERVICES NEAR YOUR ROUTE'}</span><h2 id="planner-route-title">${state.activeStep === 2 ? '날짜별 핵심 랜드마크를 먼저 고르세요' : state.activeStep === 3 ? '선택한 순서대로 실제 가능한지 확인하세요' : '확정한 랜드마크 동선에 서비스를 붙이세요'}</h2><p>${state.activeStep === 2 ? `${dayCount()}일 동안 방문하고 싶은 장소를 날짜와 시간에 담으면 지도가 자동으로 연결됩니다.` : state.activeStep === 3 ? '장소 사이의 예상 이동시간과 체류시간을 비교해 겹치는 일정을 알려드립니다.' : '숙소·식사·골프·스파·투어는 핵심 동선이 정해진 뒤 추가합니다.'}</p></div><div class="planner-route-controls"><span class="planner-route-metric">${escapeHtml(routeMetric)}</span><div class="planner-map-days"><button class="${state.mapDay === 'ALL' ? 'is-active' : ''}" type="button" data-map-day="ALL">전체</button>${days.map((day) => `<button class="${state.mapDay === day ? 'is-active' : ''}" type="button" data-map-day="${day}">DAY ${day}</button>`).join('')}</div></div></div>
+        <div class="planner-route-legend"><span><i class="route-number"></i>일정에 담은 장소</span><span><i class="route-candidate"></i>검색 후보</span><span><i class="route-motion">➜</i>시간순 이동</span></div>
+        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크가 있는 날 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div><label class="planner-catalog-search"><span>장소 검색</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}<div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
+        ${state.activeStep === 2 ? `<footer class="planner-stage-actions"><span>랜드마크 ${landmarkItems.length}곳 · ${landmarkDays.size}일에 배치됨</span><button class="ui-button primary" type="button" data-planner-step="3" ${landmarkItems.length ? '' : 'disabled'}>랜드마크 선택 완료 · 동선 확인</button></footer>` : state.activeStep === 4 ? `<footer class="planner-stage-actions"><button class="ui-button" type="button" data-planner-step="3">이전: 동선 확인</button><button class="ui-button primary" type="button" data-planner-step="5">다음: 전체 일정 저장</button></footer>` : ''}
       </section>
-      <div class="planner-workspace">
+      <div class="planner-workspace${[3,5].includes(state.activeStep) ? '' : ' is-hidden-step'}">
         <section class="planner-board" aria-labelledby="planner-board-title">
-          <div class="planner-board-head"><div><span class="page-eyebrow">2. DAY BY DAY</span><h2 id="planner-board-title">날짜별 여행 일정</h2><p>같은 날에 숙소, 관광, 식사와 활동을 여러 개 배치할 수 있습니다.</p></div><div class="planner-summary">${Object.entries(categoryCounts).map(([category, count]) => `<span>${icon(categoryIcons[category])}${categoryLabel(category)} ${count}</span>`).join('') || '<span>아직 일정 없음</span>'}</div></div>
+          <div class="planner-board-head"><div><span class="page-eyebrow">${state.activeStep === 5 ? 'STEP 5 · REVIEW & SHARE' : 'DAY BY DAY'}</span><h2 id="planner-board-title">${state.activeStep === 5 ? '전체 일정을 검토하고 저장하세요' : '날짜별 시간표'}</h2><p>일정을 누르면 날짜·시간·체류시간을 다시 조정할 수 있습니다.</p></div><div class="planner-summary">${Object.entries(categoryCounts).map(([category, count]) => `<span>${icon(categoryIcons[category])}${categoryLabel(category)} ${count}</span>`).join('') || '<span>아직 일정 없음</span>'}</div></div>
           <nav class="planner-day-tabs" aria-label="여행 일자">${days.map((day) => `<button class="planner-day-tab${day === state.selectedDay ? ' is-active' : ''}" type="button" data-day="${day}"><strong>DAY ${day}</strong><small>${escapeHtml(dateLabel(day))} · ${state.items.filter((item) => item.day === day).length}개</small></button>`).join('')}</nav>
           <div class="planner-day-title"><strong>DAY ${state.selectedDay} · ${escapeHtml(dateLabel(state.selectedDay))}</strong><span>시간순 자동 정렬</span></div>
-          <div class="planner-timeline">${selectedItems.length ? selectedItems.map((item) => `
-            <article class="planner-stop" style="--category-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}" data-instance-id="${escapeHtml(item.instanceId)}">
-              <time>${escapeHtml(item.time)}</time><span class="planner-stop-line"></span>
-              <div class="planner-stop-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`} · ${escapeHtml(bookingTypeLabel(item.bookingType))}</span></div>
-              <div class="planner-stop-actions"><select aria-label="${escapeHtml(item.title)} 이동할 일자" data-move-day>${dayOptions(item.day)}</select><button type="button" data-edit-item><span>수정</span></button><button type="button" data-remove-item>${icon('trash')}<span>삭제</span></button></div>
-            </article>`).join('') : '<div class="planner-empty-day"><strong>이 날짜에는 아직 일정이 없습니다.</strong><span>오른쪽 카탈로그에서 숙소·장소·식사·활동을 여러 개 추가하세요.</span></div>'}</div>
-          <div class="planner-validation">${warnings().map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
+          <div class="planner-timeline">${timeline}</div>
+          <div class="planner-validation">${[...selectedDiagnostics.map((item) => [item.tone, item.message]), ...warnings()].map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
           <div class="planner-booking-readiness"><article><span>바로 예약 가능</span><strong>${totalsData.instant}</strong></article><article><span>업체 확인 필요</span><strong>${totalsData.request}</strong></article><article><span>방문 정보</span><strong>${totalsData.info}</strong></article></div>
-          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : '모든 변경사항 저장됨'}</span></div><div class="planner-footer-actions"><button class="ui-button" type="button" data-clear-plan>${icon('trash')}<span>일정 비우기</span></button><button class="ui-button" type="button" data-fill-template>${icon('refresh')}<span>추천 일정 다시 채우기</span></button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>지금 저장</span></button></div></footer>
+          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : `자동 저장됨 · 시간 점검 ${allDiagnostics.length}건`}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">랜드마크 수정</button><button class="ui-button primary" type="button" data-planner-step="4">다음: 주변 서비스 추가</button>` : `<button class="ui-button" type="button" data-planner-step="4">서비스 더 담기</button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
         </section>
-        <aside class="planner-catalog" aria-labelledby="planner-catalog-title">
-          <div class="planner-catalog-head"><div><span class="page-eyebrow">3. ADD TO YOUR DAYS</span><h2 id="planner-catalog-title">${escapeHtml(currentDestination.name)}에서 무엇을 할까요?</h2><p>추가할 날짜와 시간을 선택하세요. 한 날짜에 여러 항목을 담을 수 있습니다.</p></div></div>
-          <label class="planner-catalog-search"><span>장소 검색</span><input type="search" data-catalog-search placeholder="장소명·지역·설명 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>
-          <div class="planner-category-tabs">${catalog.categories.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>
-          <div class="planner-catalog-list">${visibleCatalog.length ? visibleCatalog.map((item) => `
-            <article class="planner-product${focusedItemId === item.id ? ' is-focused' : ''}" data-catalog-item="${escapeHtml(item.id)}">
-              <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}">
-              <div class="planner-product-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span><div class="planner-product-meta"><b>${escapeHtml(item.priceLabel)}</b><span>${item.duration ? `${item.duration}분` : `${dayCount() - 1}박`} · ${escapeHtml(bookingTypeLabel(item.bookingType))}</span></div></div><div class="planner-product-add"><button class="planner-product-detail" type="button" data-view-item>상세 보기</button><button type="button" data-add-item>${icon('plus')}<span>일정에 추가</span></button></div>
-            </article>`).join('') : '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어 또는 카테고리를 선택해 보세요.</span></div>'}</div>
-        </aside>
       </div>`;
     persistContext();
     renderMap();
@@ -531,11 +663,14 @@
     }
     state.destinationId = nextId;
     state.title = `${destination().name} ${dayCount() - 1}박 ${dayCount()}일`;
-    state.items = templateItems();
+    state.items = query.get('mode') === 'ai' ? templateItems() : [];
     state.selectedDay = 1;
+    state.mapDay = 1;
+    state.category = 'ALL';
+    state.focusLocationId = '';
     render();
     scheduleAutosave();
-    showUndo(`${destination().name} 기준 추천 일정으로 변경했습니다.`, previous);
+    showUndo(`${destination().name} 랜드마크 선택 단계로 변경했습니다.`, previous);
   };
 
   root.addEventListener('change', (event) => {
@@ -592,15 +727,39 @@
     });
   });
   root.addEventListener('click', (event) => {
+    const stepButton = event.target.closest('[data-planner-step]');
+    if (stepButton) {
+      const nextStep = Math.max(1, Math.min(5, Number(stepButton.dataset.plannerStep || 1)));
+      if (nextStep >= 3 && !state.items.some((item) => item.category === 'LANDMARK')) {
+        showToast('먼저 지도에서 핵심 랜드마크를 하나 이상 일정에 담아 주세요.');
+        return;
+      }
+      state.activeStep = nextStep;
+      if (nextStep === 2) state.category = 'ALL';
+      if (nextStep === 4 && state.category === 'LANDMARK') state.category = 'ALL';
+      if ([2,3,4].includes(nextStep) && state.mapDay === 'ALL') state.mapDay = state.selectedDay;
+      render();
+      root.querySelector('.planner-stepper')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const destinationButton = event.target.closest('[data-destination-id]');
     if (destinationButton) {
       const nextId = destinationButton.dataset.destinationId;
       if (nextId === state.destinationId) return;
       const nextDestination = catalog.destinations.find((item) => item.id === nextId);
+      if (!state.items.length) {
+        state.destinationId = nextId;
+        state.title = `${nextDestination.name} ${dayCount() - 1}박 ${dayCount()}일`;
+        state.category = 'ALL';
+        state.focusLocationId = '';
+        render();
+        scheduleAutosave();
+        return;
+      }
       openPlannerDialog({
         title: `${nextDestination.name}(으)로 여행지를 바꿀까요?`,
-        message: `<p>현재 ${destination().name} 일정 ${state.items.length}개가 ${nextDestination.name} 추천 일정으로 바뀝니다.</p><div class="planner-change-impact"><span>현재 일정</span><strong>${state.items.length}개</strong><span>변경 후 추천</span><strong>${nextDestination.template.filter((item) => item.day <= dayCount()).length}개</strong></div><p>기존 일정은 별도 여행으로 저장하거나, 변경 후 10초 안에 되돌릴 수 있습니다.</p>`,
-        confirmLabel: '기존 일정 변환',
+        message: `<p>현재 ${destination().name} 일정 ${state.items.length}개를 비우고 ${nextDestination.name} 랜드마크 선택부터 다시 시작합니다.</p><div class="planner-change-impact"><span>현재 일정</span><strong>${state.items.length}개</strong><span>변경 후</span><strong>랜드마크 선택</strong></div><p>변경 후 10초 안에 이전 일정으로 되돌릴 수 있습니다.</p>`,
+        confirmLabel: '여행지 변경',
         alternateLabel: '새 여행으로 만들기',
         onConfirm: () => applyDestination(nextId),
         onAlternate: () => applyDestination(nextId, true)
@@ -625,6 +784,13 @@
     if (nearbyButton) {
       const source = itemById(nearbyButton.dataset.nearbyItem);
       if (source) openCatalogItem(source);
+      return;
+    }
+    const focusCandidateButton = event.target.closest('[data-focus-catalog-item]');
+    if (focusCandidateButton) {
+      const card = focusCandidateButton.closest('[data-catalog-item]');
+      state.focusLocationId = card?.dataset.catalogItem || '';
+      render();
       return;
     }
     const categoryButton = event.target.closest('[data-category]');
@@ -716,6 +882,7 @@
       sourcePublishedVersion: storedTrip?.sourcePublishedVersion || null,
       category: 'ALL',
       catalogSearch: '',
+      activeStep: query.get('focus') ? 2 : storedTrip ? 3 : 1,
       selectedDay: 1,
       mapDay: 'ALL',
       focusLocationId: '',
@@ -741,7 +908,7 @@
     }
     state.items = storedTrip?.items?.length
       ? storedTrip.items.map(normalizeStoredItem)
-      : templateItems();
+      : query.get('mode') === 'ai' ? templateItems() : [];
     const focusedItem = itemById(query.get('focus'));
     if (focusedItem) state.category = focusedItem.category;
     render();
