@@ -488,10 +488,14 @@
     } else {
       mapInstance.fitBounds(bounds, { padding: [34, 34], maxZoom: 13 });
     }
+    const renderedMap = mapInstance;
     setTimeout(() => {
-      mapInstance?.invalidateSize();
+      if (!renderedMap || mapInstance !== renderedMap) return;
+      renderedMap.invalidateSize();
       const focus = itemById(state.focusLocationId);
-      if (focus?.lat && focus?.lng) mapInstance?.flyTo([focus.lat, focus.lng], 14, { duration: .55 });
+      const lat = Number(focus?.lat);
+      const lng = Number(focus?.lng);
+      if (Number.isFinite(lat) && Number.isFinite(lng)) renderedMap.flyTo([lat, lng], 14, { duration: .55 });
     }, 0);
   };
 
