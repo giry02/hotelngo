@@ -215,7 +215,7 @@
         : source.category === 'STAY' || source.category === 'TRANSPORT' ? 1 : Math.min(dayCount(), 2 + (index % Math.max(1, dayCount() - 1))));
       return makeInstance(source.id, day, saved.options?.preferredTime || source.recommendedTime, index);
     }).filter(Boolean);
-    return [...preferred, ...base];
+    return autoScheduleItems([...preferred, ...base]);
   };
   const defaultDates = () => {
     const start = addDays(new Date(), 30);
@@ -293,6 +293,47 @@
     const distance = distanceKm(from, to);
     const minutes = Math.max(5, Math.ceil(((distance / 25) * 60 + 8) / 5) * 5);
     return { distance, minutes };
+  };
+  const roundToFiveMinutes = (value) => Math.ceil(Number(value || 0) / 5) * 5;
+  const suggestPlacement = (candidate, requestedDay, requestedTime, items = state.items, excludeInstanceId = '') => {
+    const candidateDuration = Math.max(0, Number(candidate?.duration || 0));
+    const firstDay = Math.max(1, Math.min(dayCount(), Number(requestedDay) || 1));
+    const originalMinutes = Math.max(7 * 60, timeToMinutes(requestedTime || candidate?.recommendedTime || '10:00'));
+    for (let day = firstDay; day <= dayCount(); day += 1) {
+      let proposedStart = day === firstDay ? originalMinutes : 9 * 60;
+      const dayItems = items
+        .filter((item) => item.day === day && item.instanceId !== excludeInstanceId)
+        .sort((a, b) => a.time.localeCompare(b.time));
+      for (const existing of dayItems) {
+        const existingStart = timeToMinutes(existing.time);
+        const existingEnd = existingStart + Math.max(0, Number(existing.duration || 0));
+        const travelAfterCandidate = travelEstimate(candidate, existing)?.minutes || 0;
+        if (proposedStart + candidateDuration + travelAfterCandidate <= existingStart) break;
+        const travelAfterExisting = travelEstimate(existing, candidate)?.minutes || 0;
+        proposedStart = Math.max(proposedStart, existingEnd + travelAfterExisting);
+      }
+      proposedStart = roundToFiveMinutes(proposedStart);
+      if (proposedStart + candidateDuration <= 23 * 60 + 30) {
+        return {
+          day,
+          time: minutesToTime(proposedStart),
+          adjusted: day !== firstDay || proposedStart !== originalMinutes,
+          requestedDay: firstDay,
+          requestedTime: minutesToTime(originalMinutes)
+        };
+      }
+    }
+    return { day: firstDay, time: minutesToTime(originalMinutes), adjusted: false, requestedDay: firstDay, requestedTime: minutesToTime(originalMinutes) };
+  };
+  const autoScheduleItems = (items) => {
+    const scheduled = [];
+    [...items]
+      .sort((a, b) => a.day - b.day || a.time.localeCompare(b.time))
+      .forEach((item) => {
+        const placement = suggestPlacement(item, item.day, item.time, scheduled);
+        scheduled.push({ ...item, day: placement.day, time: placement.time });
+      });
+    return scheduled;
   };
   const scheduleDiagnostics = (day) => {
     const items = state.items.filter((item) => item.day === day).sort((a, b) => a.time.localeCompare(b.time));
@@ -560,6 +601,8 @@
     const landmarkDays = new Set(landmarkItems.map((item) => item.day));
     const selectedDiagnostics = scheduleDiagnostics(state.selectedDay);
     const allDiagnostics = days.flatMap((day) => scheduleDiagnostics(day));
+    const selectedConflicts = selectedDiagnostics.filter((item) => item.tone === 'error');
+    const allConflicts = allDiagnostics.filter((item) => item.tone === 'error');
     const categoryCounts = state.items.reduce((accumulator, item) => {
       accumulator[item.category] = (accumulator[item.category] || 0) + 1;
       return accumulator;
@@ -615,7 +658,7 @@
     root.innerHTML = `
       ${state.sourceGuideId ? `<section class="planner-remix-banner"><div><span>REMIXED GUIDE</span><strong>${escapeHtml(state.sourceGuideTitle || '다른 여행자의 일정')}을 바탕으로 만든 내 여행입니다.</strong><p>여기서 변경한 내용은 원본 가이드에 영향을 주지 않습니다.</p></div><a href="trip-guide-detail.html?id=${encodeURIComponent(state.sourceGuideId)}">원본 가이드 보기</a></section>` : ''}
       ${state.sourceType === 'AI_DRAFT' ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>AI DRAFT REVIEW</span><strong>AI가 제안한 초안을 편집기로 가져왔습니다.</strong><p>아직 예약된 내용은 없습니다. 날짜·시간·장소와 지도 동선을 확인하고 원하는 대로 수정하세요.</p></div><a href="ai-travel.html${state.sourcePrompt ? `?prompt=${encodeURIComponent(state.sourcePrompt)}` : ''}">AI 조건 다시 만들기</a></section>` : ''}
-      ${['RECOMMENDED_DRAFT','CARD_RECOMMENDATION'].includes(state.sourceType) ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>GOOD DRAFT FIRST</span><strong>${state.sourceType === 'CARD_RECOMMENDATION' ? `내 여행 카드 ${tripCardItems().length}곳을 먼저 반영했습니다.` : '선택한 취향으로 추천 일정을 먼저 만들었습니다.'}</strong><p>다른 여행자 일정과 HotelnGo 추천으로 빈 시간을 채웠습니다. 처음부터 만들지 말고 필요 없는 곳만 빼거나 교체하세요.</p></div><a href="cart.html?destination=${encodeURIComponent(state.destinationId)}">여행 카드 확인</a></section>` : ''}
+      ${['RECOMMENDED_DRAFT','CARD_RECOMMENDATION'].includes(state.sourceType) ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>GOOD DRAFT FIRST</span><strong>${state.sourceType === 'CARD_RECOMMENDATION' ? `내 여행 카드 ${tripCardItems().length}곳을 먼저 반영했습니다.` : '선택한 취향으로 추천 일정을 먼저 만들었습니다.'}</strong><p>체류시간과 이동시간을 반영해 겹치지 않게 배치했습니다. 처음부터 만들지 말고 필요 없는 곳만 빼거나 교체하세요.</p></div><a href="cart.html?destination=${encodeURIComponent(state.destinationId)}">여행 카드 확인</a></section>` : ''}
       <section class="planner-hero">
         <div class="planner-hero-row">
           <div><span class="page-eyebrow">LANDMARK FIRST TRIP BUILDER</span><h1>랜드마크부터 고르면,<br>시간과 동선은 쉽게 이어집니다</h1><p>여행의 목적이 되는 장소를 날짜별로 먼저 정하고, 이동 가능한 시간 안에서 숙소·식사·활동을 차례로 붙입니다.</p></div>
@@ -642,7 +685,7 @@
       <section class="planner-route${[2,3,4].includes(state.activeStep) ? '' : ' is-hidden-step'}" aria-labelledby="planner-route-title">
         <div class="planner-route-head"><div><span class="page-eyebrow">${state.activeStep === 2 ? 'STEP 2 · LANDMARKS FIRST' : state.activeStep === 3 ? 'STEP 3 · TIME & ROUTE' : 'STEP 4 · SERVICES NEAR YOUR ROUTE'}</span><h2 id="planner-route-title">${state.activeStep === 2 ? '날짜별 핵심 랜드마크를 먼저 고르세요' : state.activeStep === 3 ? '선택한 순서대로 실제 가능한지 확인하세요' : '확정한 랜드마크 동선에 서비스를 붙이세요'}</h2><p>${state.activeStep === 2 ? `${dayCount()}일 동안 방문하고 싶은 장소를 날짜와 시간에 담으면 지도가 자동으로 연결됩니다.` : state.activeStep === 3 ? '장소 사이의 예상 이동시간과 체류시간을 비교해 겹치는 일정을 알려드립니다.' : '숙소·식사·골프·스파·투어는 핵심 동선이 정해진 뒤 추가합니다.'}</p></div><div class="planner-route-controls"><span class="planner-route-metric">${escapeHtml(routeMetric)}</span><div class="planner-map-days"><button class="${state.mapDay === 'ALL' ? 'is-active' : ''}" type="button" data-map-day="ALL">전체</button>${days.map((day) => `<button class="${state.mapDay === day ? 'is-active' : ''}" type="button" data-map-day="${day}">DAY ${day}</button>`).join('')}</div></div></div>
         <div class="planner-route-legend"><span><i class="route-number"></i>일정에 담은 장소</span><span><i class="route-candidate"></i>검색 후보</span><span><i class="route-motion">➜</i>도로 기준 예상 이동</span></div>
-        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크 탐색·일정 추가 · 선택 완료 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div><ol class="planner-use-guide">${state.activeStep === 2 ? '<li><b>1</b><span><strong>검색 또는 후보 선택</strong><br>장소를 먼저 찾습니다.</span></li><li><b>2</b><span><strong>소개와 지도 위치 확인</strong><br>갈 곳인지 판단합니다.</span></li><li><b>3</b><span><strong>DAY·시간을 정해 담기</strong><br>지도 동선에 반영합니다.</span></li>' : '<li><b>1</b><span><strong>서비스 내용 확인</strong><br>가격·체류시간을 확인합니다.</span></li><li><b>2</b><span><strong>DAY·시간 선택</strong><br>방문할 날짜와 시간을 정합니다.</span></li><li><b>3</b><span><strong>일정에 담기</strong><br>지도 동선과 충돌 여부를 확인합니다.</span></li>'}</ol><label class="planner-catalog-search"><span>${state.activeStep === 2 ? '1. 랜드마크 찾기' : '다른 서비스 찾기'}</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${focusedCandidate ? `<div class="planner-selected-place-label"><b>2</b><span><strong>${state.activeStep === 2 ? '선택한 랜드마크 확인' : '선택한 서비스 확인'}</strong><small>소개를 읽고 아래 버튼에서 날짜와 시간을 정해 담으세요.</small></span></div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크 선택' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedDiagnostics.length ? `${selectedDiagnostics.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
+        <div class="planner-route-grid"><div class="planner-map" data-planner-map aria-label="${escapeHtml(currentDestination.name)} 일정 지도"></div>${[2,4].includes(state.activeStep) ? `<aside class="planner-map-search"><div class="planner-map-search-head"><small>${state.activeStep === 2 ? `랜드마크 탐색·일정 추가 · 선택 완료 ${landmarkDays.size}/${dayCount()}일` : `기준 장소 ${mapFocus ? escapeHtml(mapFocus.title) : '일정 전체'}`}</small><h3>${mapSearchTitle}</h3><p>${mapSearchDescription}</p></div><ol class="planner-use-guide">${state.activeStep === 2 ? '<li><b>1</b><span><strong>검색 또는 후보 선택</strong><br>장소를 먼저 찾습니다.</span></li><li><b>2</b><span><strong>소개와 지도 위치 확인</strong><br>갈 곳인지 판단합니다.</span></li><li><b>3</b><span><strong>DAY·시간을 정해 담기</strong><br>지도 동선에 반영합니다.</span></li>' : '<li><b>1</b><span><strong>서비스 내용 확인</strong><br>가격·체류시간을 확인합니다.</span></li><li><b>2</b><span><strong>DAY·시간 선택</strong><br>방문할 날짜와 시간을 정합니다.</span></li><li><b>3</b><span><strong>일정에 담기</strong><br>지도 동선과 충돌 여부를 확인합니다.</span></li>'}</ol><label class="planner-catalog-search"><span>${state.activeStep === 2 ? '1. 랜드마크 찾기' : '다른 서비스 찾기'}</span><input type="search" data-catalog-search placeholder="장소명·지역 검색" value="${escapeHtml(state.catalogSearch || '')}"></label>${state.activeStep === 4 ? `<div class="planner-category-tabs">${categoryTabs.map((category) => `<button class="${category.id === state.category ? 'is-active' : ''}" type="button" data-category="${escapeHtml(category.id)}">${icon(categoryIcons[category.id])}<span>${escapeHtml(category.label)}</span></button>`).join('')}</div>` : ''}${focusedCandidate ? `<div class="planner-selected-place-label"><b>2</b><span><strong>${state.activeStep === 2 ? '선택한 랜드마크 확인' : '선택한 서비스 확인'}</strong><small>소개를 읽고 아래 버튼에서 날짜와 시간을 정해 담으세요.</small></span></div>` : ''}${candidatePreview}<div class="planner-search-list-title"><strong>${state.activeStep === 2 ? '다른 랜드마크 선택' : '주변 추천 서비스'}</strong><span>${visibleCatalog.length}곳</span></div><div class="planner-search-results">${candidateCards || '<div class="planner-catalog-empty"><strong>검색 결과가 없습니다.</strong><span>다른 검색어를 입력해 보세요.</span></div>'}</div></aside>` : `<aside class="planner-route-check"><small>DAY ${state.selectedDay} 시간 검토</small><strong>${selectedConflicts.length ? `${selectedConflicts.length}개 조정 필요` : '이동 가능한 일정입니다'}</strong><div>${selectedDiagnostics.map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 좌표와 체류시간 기준으로 겹치는 구간이 없습니다.</p>'}</div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`}</div>
         ${state.activeStep === 2 ? `<footer class="planner-stage-actions"><span>랜드마크 ${landmarkItems.length}곳 · ${landmarkDays.size}일에 배치됨</span><button class="ui-button primary" type="button" data-planner-step="3" ${landmarkItems.length ? '' : 'disabled'}>랜드마크 선택 완료 · 동선 확인</button></footer>` : state.activeStep === 4 ? `<footer class="planner-stage-actions"><button class="ui-button" type="button" data-planner-step="3">이전: 동선 확인</button><button class="ui-button primary" type="button" data-planner-step="5">다음: 전체 일정 저장</button></footer>` : ''}
       </section>
       <div class="planner-workspace${[3,5].includes(state.activeStep) ? '' : ' is-hidden-step'}">
@@ -653,7 +696,7 @@
           <div class="planner-timeline">${timeline}</div>
           <div class="planner-validation">${[...selectedDiagnostics.map((item) => [item.tone, item.message]), ...warnings(state.selectedDay)].map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
           <div class="planner-booking-readiness"><article><span>바로 예약 가능</span><strong>${totalsData.instant}</strong></article><article><span>업체 확인 필요</span><strong>${totalsData.request}</strong></article><article><span>방문 정보</span><strong>${totalsData.info}</strong></article></div>
-          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : `자동 저장됨 · 시간 점검 ${allDiagnostics.length}건`}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">${icon('pin')}<span>랜드마크 수정</span></button><button class="ui-button primary" type="button" data-planner-step="4">${icon('plus')}<span>다음: 주변 서비스 추가</span></button>` : `<button class="ui-button" type="button" data-planner-step="4">${icon('plus')}<span>서비스 더 담기</span></button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
+          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : allConflicts.length ? `자동 저장됨 · 시간 조정 필요 ${allConflicts.length}건` : '자동 저장됨 · 시간 충돌 없음'}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">${icon('pin')}<span>랜드마크 수정</span></button><button class="ui-button primary" type="button" data-planner-step="4">${icon('plus')}<span>다음: 주변 서비스 추가</span></button>` : `<button class="ui-button" type="button" data-planner-step="4">${icon('plus')}<span>서비스 더 담기</span></button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
         </section>
       </div>`;
     if (state.activeStep === 3) {
@@ -737,30 +780,54 @@
   };
 
   const addCatalogItem = (source, selectedDay, time) => {
-    if (source.category === 'STAY') state.items = state.items.filter((item) => item.category !== 'STAY');
-    const instance = makeInstance(source.id, selectedDay, time);
+    const requestedTime = time || source.recommendedTime || '10:00';
+    const placementItems = source.category === 'STAY' ? state.items.filter((item) => item.category !== 'STAY') : state.items;
+    const placement = suggestPlacement(source, selectedDay, requestedTime, placementItems);
+    if (source.category === 'STAY') state.items = placementItems;
+    const instance = makeInstance(source.id, placement.day, placement.time);
     if (instance) state.items.push(instance);
-    state.selectedDay = selectedDay;
-    state.mapDay = selectedDay;
+    state.selectedDay = placement.day;
+    state.mapDay = placement.day;
     if (['LANDMARK', 'TOUR'].includes(source.category)) state.focusLocationId = source.id;
     render();
     scheduleAutosave();
-    showToast(`${source.title}을(를) DAY ${selectedDay} ${time}에 추가했습니다.`);
+    showToast(placement.adjusted
+      ? `${source.title}은(는) 기존 일정과 겹치지 않도록 DAY ${placement.day} ${placement.time}에 배치했습니다.`
+      : `${source.title}을(를) DAY ${placement.day} ${placement.time}에 추가했습니다.`);
   };
   const openCatalogItem = (source) => {
     const dialog = document.createElement('dialog');
     dialog.className = 'planner-dialog planner-add-dialog';
     const highlights = landmarkHighlights(source);
-    dialog.innerHTML = `<header><div><small>${source.category === 'LANDMARK' ? 'LANDMARK GUIDE · ' : ''}${escapeHtml(categoryLabel(source.category))} · ${escapeHtml(source.area)}</small><strong>${escapeHtml(source.title)}</strong></div><button type="button" aria-label="닫기">×</button></header><div class="planner-dialog-body"><img src="${escapeHtml(source.image)}" alt="${escapeHtml(source.title)}"><section class="planner-dialog-introduction"><h3>장소 소개</h3><p>${escapeHtml(landmarkIntroduction(source))}</p><ul>${highlights.map((highlight) => `<li>${escapeHtml(highlight)}</li>`).join('')}</ul>${source.visitTip ? `<div><strong>방문 팁</strong><span>${escapeHtml(source.visitTip)}</span></div>` : ''}</section><div class="planner-dialog-facts"><span><small>추천 시작</small><strong>${escapeHtml(source.recommendedTime || '시간 확인')}</strong></span><span><small>권장 체류</small><strong>${source.duration ? `${source.duration}분` : `${dayCount() - 1}박`}</strong></span><span><small>예상 비용</small><strong>${escapeHtml(source.priceLabel)}</strong></span></div><div class="planner-dialog-howto"><strong>내 일정에 담는 방법</strong><span>추가할 날짜와 시작 시간을 확인하면 시간표와 지도 동선에 바로 반영됩니다.</span></div><div class="planner-dialog-fields"><label><span>추가할 날짜</span><select data-dialog-day>${dayOptions(state.selectedDay)}</select></label><label><span>시작 시간</span><input type="time" data-dialog-time value="${escapeHtml(source.recommendedTime)}"></label></div></div><footer><button class="ui-button" type="button" data-planner-cancel>취소</button><button class="ui-button primary" type="button" data-planner-confirm>${icon('plus')}DAY ${state.selectedDay} 일정에 추가</button></footer>`;
+    const placementItems = () => source.category === 'STAY' ? state.items.filter((item) => item.category !== 'STAY') : state.items;
+    const initialPlacement = suggestPlacement(source, state.selectedDay, source.recommendedTime, placementItems());
+    const placementMessage = (placement) => placement.adjusted
+      ? `기존 일정의 체류시간과 이동시간을 반영해 ${placement.requestedTime} 대신 DAY ${placement.day} · ${placement.time} 시작을 제안합니다.`
+      : `DAY ${placement.day} ${placement.time}은 현재 일정과 겹치지 않는 시간입니다.`;
+    dialog.innerHTML = `<header><div><small>${source.category === 'LANDMARK' ? 'LANDMARK GUIDE · ' : ''}${escapeHtml(categoryLabel(source.category))} · ${escapeHtml(source.area)}</small><strong>${escapeHtml(source.title)}</strong></div><button type="button" aria-label="닫기">×</button></header><div class="planner-dialog-body"><img src="${escapeHtml(source.image)}" alt="${escapeHtml(source.title)}"><section class="planner-dialog-introduction"><h3>장소 소개</h3><p>${escapeHtml(landmarkIntroduction(source))}</p><ul>${highlights.map((highlight) => `<li>${escapeHtml(highlight)}</li>`).join('')}</ul>${source.visitTip ? `<div><strong>방문 팁</strong><span>${escapeHtml(source.visitTip)}</span></div>` : ''}</section><div class="planner-dialog-facts"><span><small>추천 시작</small><strong>${escapeHtml(source.recommendedTime || '시간 확인')}</strong></span><span><small>권장 체류</small><strong>${source.duration ? `${source.duration}분` : `${dayCount() - 1}박`}</strong></span><span><small>예상 비용</small><strong>${escapeHtml(source.priceLabel)}</strong></span></div><div class="planner-dialog-howto"><strong>내 일정에 담는 방법</strong><span>날짜를 선택하면 기존 일정의 체류시간과 이동시간을 계산해 겹치지 않는 시작 시각을 먼저 제안합니다.</span></div><div class="planner-dialog-fields"><label><span>추가할 날짜</span><select data-dialog-day>${dayOptions(initialPlacement.day)}</select></label><label><span>충돌 없는 시작 시간</span><input type="time" data-dialog-time value="${escapeHtml(initialPlacement.time)}"></label></div><p class="planner-dialog-auto-time" data-dialog-auto-note>${escapeHtml(placementMessage(initialPlacement))}</p></div><footer><button class="ui-button" type="button" data-planner-cancel>취소</button><button class="ui-button primary" type="button" data-planner-confirm>${icon('plus')}DAY ${initialPlacement.day} ${initialPlacement.time}에 추가</button></footer>`;
     document.body.append(dialog);
     const close = () => dialog.close();
     dialog.querySelector('header button').addEventListener('click', close);
     dialog.querySelector('[data-planner-cancel]').addEventListener('click', close);
     const confirmButton = dialog.querySelector('[data-planner-confirm]');
     const daySelect = dialog.querySelector('[data-dialog-day]');
+    const timeInput = dialog.querySelector('[data-dialog-time]');
+    const autoNote = dialog.querySelector('[data-dialog-auto-note]');
+    const updatePlacementPreview = ({ replaceTime = false } = {}) => {
+      const placement = suggestPlacement(source, Number(daySelect.value), timeInput.value || source.recommendedTime, placementItems());
+      if (replaceTime) {
+        daySelect.value = String(placement.day);
+        timeInput.value = placement.time;
+      }
+      autoNote.textContent = placementMessage(placement);
+      confirmButton.innerHTML = `${icon('plus')}DAY ${placement.day} ${placement.time}에 추가`;
+      return placement;
+    };
     daySelect.addEventListener('change', () => {
-      confirmButton.innerHTML = `${icon('plus')}DAY ${daySelect.value} 일정에 추가`;
+      timeInput.value = source.recommendedTime || '10:00';
+      updatePlacementPreview({ replaceTime: true });
     });
+    timeInput.addEventListener('change', () => updatePlacementPreview({ replaceTime: true }));
     confirmButton.addEventListener('click', () => {
       addCatalogItem(source, Number(dialog.querySelector('[data-dialog-day]').value), dialog.querySelector('[data-dialog-time]').value || source.recommendedTime);
       close();
@@ -779,15 +846,21 @@
     dialog.querySelector('header button').addEventListener('click', close);
     dialog.querySelector('[data-planner-cancel]').addEventListener('click', close);
     dialog.querySelector('[data-planner-confirm]').addEventListener('click', () => {
-      item.day = Number(dialog.querySelector('[data-edit-day]').value);
-      item.time = dialog.querySelector('[data-edit-time]').value || item.time;
-      item.duration = Math.max(0, Number(dialog.querySelector('[data-edit-duration]').value || 0));
+      const requestedDay = Number(dialog.querySelector('[data-edit-day]').value);
+      const requestedTime = dialog.querySelector('[data-edit-time]').value || item.time;
+      const nextDuration = Math.max(0, Number(dialog.querySelector('[data-edit-duration]').value || 0));
+      const placement = suggestPlacement({ ...item, duration: nextDuration }, requestedDay, requestedTime, state.items, item.instanceId);
+      item.day = placement.day;
+      item.time = placement.time;
+      item.duration = nextDuration;
       item.note = dialog.querySelector('[data-edit-note]').value.trim();
       state.selectedDay = item.day;
       state.mapDay = item.day;
       render();
       scheduleAutosave();
-      showToast(`${item.title} 일정을 수정했습니다.`);
+      showToast(placement.adjusted
+        ? `${item.title}은(는) 겹치지 않도록 DAY ${placement.day} ${placement.time}으로 조정했습니다.`
+        : `${item.title} 일정을 수정했습니다.`);
       close();
     });
     dialog.addEventListener('click', (event) => { if (event.target === dialog) close(); });
@@ -1048,7 +1121,7 @@
         confirmLabel: '추천 일정 적용',
         onConfirm: () => {
           const previous = structuredClone(state);
-          state.items = templateItems();
+          state.items = autoScheduleItems(templateItems());
           state.selectedDay = 1;
           render();
           scheduleAutosave();
@@ -1112,6 +1185,9 @@
     state.items = storedTrip?.items?.length
       ? storedTrip.items.map(normalizeStoredItem)
       : (['ai', 'guided', 'recommended'].includes(query.get('mode')) || query.get('fromCard') === '1') ? recommendedDraftItems() : [];
+    if (['AI_DRAFT', 'RECOMMENDED_DRAFT', 'CARD_RECOMMENDATION'].includes(state.sourceType)) {
+      state.items = autoScheduleItems(state.items);
+    }
     const focusedItem = itemById(query.get('focus'));
     if (focusedItem) {
       state.category = focusedItem.category;
