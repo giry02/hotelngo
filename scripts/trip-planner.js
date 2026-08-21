@@ -39,7 +39,8 @@
     trash: '<path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/>',
     refresh: '<path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 8A7 7 0 0 1 18 6l2 1M18 16a7 7 0 0 1-12 2l-2-1"/>',
     save: '<path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-7h8v7"/>',
-    plus: '<path d="M12 5v14M5 12h14"/>'
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>'
   };
   const categoryIcons = {
     ALL: 'grid',
@@ -249,28 +250,15 @@
     };
   };
 
-  const warnings = () => {
+  const warnings = (day = state.selectedDay) => {
     const results = [];
     const items = state.items;
     if (!items.some((item) => item.category === 'STAY')) results.push(['error', '숙소가 없습니다. 체크인·체크아웃과 숙박 위치를 먼저 정하세요.']);
-    if (!items.some((item) => item.category === 'TRANSPORT')) results.push(['warning', '공항 또는 도시 간 이동이 없습니다. 도착·출발 동선을 확인하세요.']);
     if (!items.some((item) => item.category === 'FOOD')) results.push(['warning', '식사 일정이 없습니다. 이동 동선과 영업시간에 맞는 식당을 추가하세요.']);
-    for (let day = 1; day <= dayCount(); day += 1) {
-      const dayItems = items.filter((item) => item.day === day);
-      if (dayItems.length < 2) results.push(['suggestion', `DAY ${day} 일정이 비어 있거나 항목이 적습니다. 자유시간으로 둘지 확인하세요.`]);
-      const sorted = [...dayItems].filter((item) => item.duration > 0).sort((a, b) => a.time.localeCompare(b.time));
-      for (let index = 1; index < sorted.length; index += 1) {
-        const previous = sorted[index - 1];
-        const [hour, minute] = previous.time.split(':').map(Number);
-        const endMinutes = hour * 60 + minute + Number(previous.duration || 0);
-        const [nextHour, nextMinute] = sorted[index].time.split(':').map(Number);
-        if (endMinutes > nextHour * 60 + nextMinute) {
-          results.push(['error', `DAY ${day} ${previous.title}과(와) ${sorted[index].title} 시간이 겹칩니다.`]);
-        }
-      }
-    }
-    if (!results.length) results.push(['suggestion', '기본 일정 충돌은 없습니다. 실제 운영시간·이동시간·재고는 예약 전에 다시 확인합니다.']);
-    return results.slice(0, 6);
+    const dayItems = items.filter((item) => item.day === day);
+    if (!dayItems.length) results.push(['suggestion', `DAY ${day}는 자유 일정으로 비워두었습니다. 필요한 경우 장소를 추가하세요.`]);
+    if (!results.length && !scheduleDiagnostics(day).length) results.push(['suggestion', `DAY ${day} 일정에는 현재 시간 또는 이동 충돌이 없습니다.`]);
+    return results.slice(0, 3);
   };
   const totals = () => {
     const total = state.items.reduce((sum, item) => sum + Number(item.price || 0), 0);
@@ -296,6 +284,10 @@
     const [hours, minutes] = String(value).split(':').map(Number);
     return (hours || 0) * 60 + (minutes || 0);
   };
+  const minutesToTime = (value) => {
+    const normalized = ((Number(value || 0) % 1440) + 1440) % 1440;
+    return `${String(Math.floor(normalized / 60)).padStart(2, '0')}:${String(normalized % 60).padStart(2, '0')}`;
+  };
   const travelEstimate = (from, to) => {
     if (!from?.lat || !from?.lng || !to?.lat || !to?.lng) return null;
     const distance = distanceKm(from, to);
@@ -310,15 +302,20 @@
       const travel = travelEstimate(previous, item);
       if (!travel) return;
       const previousEnd = timeToMinutes(previous.time) + Number(previous.duration || 0);
-      const available = timeToMinutes(item.time) - previousEnd;
+      const nextStart = timeToMinutes(item.time);
+      const available = nextStart - previousEnd;
       if (available < travel.minutes) {
+        const recommendedStart = minutesToTime(previousEnd + travel.minutes);
+        const overlap = Math.max(0, previousEnd - nextStart);
         diagnostics.push({
           tone: 'error',
-          message: `${previous.title}에서 ${item.title}까지 이동에 약 ${travel.minutes}분이 필요하지만 일정에는 ${Math.max(0, available)}분만 비어 있습니다.`
+          message: overlap
+            ? `DAY ${day} ${previous.title}은 ${minutesToTime(previousEnd)}에 끝나지만 ${item.title}이 ${item.time}에 시작해 ${overlap}분 겹칩니다. 이동 약 ${travel.minutes}분까지 고려해 ${recommendedStart} 이후로 옮겨주세요.`
+            : `DAY ${day} ${previous.title} 종료 후 ${item.title}까지 ${available}분 비어 있지만 이동에는 약 ${travel.minutes}분이 필요합니다. ${recommendedStart} 이후 시작을 권장합니다.`
         });
       }
     });
-    if (!items.some((item) => item.category === 'LANDMARK')) diagnostics.push({ tone: 'warning', message: `DAY ${day}에 핵심 랜드마크가 없습니다.` });
+    if (items.length && !items.some((item) => item.category === 'LANDMARK')) diagnostics.push({ tone: 'suggestion', message: `DAY ${day}는 랜드마크 없이 식사·휴식·서비스 중심으로 구성되어 있습니다. 의도한 일정이라면 그대로 저장해도 됩니다.` });
     return diagnostics;
   };
   const visibleCatalogItems = () => {
@@ -612,7 +609,7 @@
         <article class="planner-stop" style="--category-color:${categoryMeta[item.category]?.[1] || '#2f6bff'}" data-instance-id="${escapeHtml(item.instanceId)}">
           <time>${escapeHtml(item.time)}</time><span class="planner-stop-line"></span>
           <div class="planner-stop-copy"><small>${escapeHtml(categoryLabel(item.category))} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.priceLabel)} · ${item.duration ? `${item.duration}분 체류` : `${dayCount() - 1}박`} · ${escapeHtml(bookingTypeLabel(item.bookingType))}</span></div>
-          <div class="planner-stop-actions"><button type="button" data-edit-item><span>시간·날짜 수정</span></button><button type="button" data-remove-item>${icon('trash')}<span>삭제</span></button></div>
+          <div class="planner-stop-actions"><button type="button" data-edit-item>${icon('calendar')}<span>시간·날짜 수정</span></button><button type="button" data-remove-item>${icon('trash')}<span>삭제</span></button></div>
         </article>`;
     }).join('') : '<div class="planner-empty-day"><strong>이 날짜에는 아직 일정이 없습니다.</strong><span>이전 단계에서 랜드마크를 추가하거나 상세 서비스 단계에서 주변 장소를 담아보세요.</span></div>';
     root.innerHTML = `
@@ -639,7 +636,7 @@
         <footer class="planner-stage-actions"><span>다음 단계에서는 숙소나 식당보다 먼저 핵심 랜드마크를 고릅니다.</span><button class="ui-button primary" type="button" data-planner-step="2">다음: 랜드마크 선택</button></footer>
       </section>
       <section class="planner-context${state.activeStep === 1 ? ' is-hidden-step' : ''}">
-        <div class="planner-context-main"><span class="planner-context-pin" aria-hidden="true">⌖</span><div><strong>${escapeHtml(currentDestination.name)} · ${dayCount() - 1}박 ${dayCount()}일 · ${escapeHtml(state.travelers)}</strong><span>${escapeHtml(state.startDate)}–${escapeHtml(state.endDate)} · 일정 ${state.items.length}개 · 등록 장소 기준</span></div></div>
+        <div class="planner-context-main"><span class="planner-context-pin" aria-hidden="true">⌖</span><div><strong>${escapeHtml(currentDestination.name)} · ${dayCount() - 1}박 ${dayCount()}일 · ${escapeHtml(state.travelers)}</strong><span>${escapeHtml(state.startDate)}–${escapeHtml(state.endDate)} · 일정 ${state.items.length}개 · 현지 도착 후 시작 기준</span></div></div>
         <button type="button" data-planner-step="1">여행 정보 변경</button>
       </section>
       <section class="planner-route${[2,3,4].includes(state.activeStep) ? '' : ' is-hidden-step'}" aria-labelledby="planner-route-title">
@@ -650,13 +647,13 @@
       </section>
       <div class="planner-workspace${[3,5].includes(state.activeStep) ? '' : ' is-hidden-step'}">
         <section class="planner-board" aria-labelledby="planner-board-title">
-          <div class="planner-board-head"><div><span class="page-eyebrow">${state.activeStep === 5 ? 'STEP 5 · REVIEW & SHARE' : 'DAY BY DAY'}</span><h2 id="planner-board-title">${state.activeStep === 5 ? '전체 일정을 검토하고 저장하세요' : '날짜별 시간표'}</h2><p>일정을 누르면 날짜·시간·체류시간을 다시 조정할 수 있습니다.</p></div><div class="planner-summary">${Object.entries(categoryCounts).map(([category, count]) => `<span>${icon(categoryIcons[category])}${categoryLabel(category)} ${count}</span>`).join('') || '<span>아직 일정 없음</span>'}</div></div>
+          <div class="planner-board-head"><div><span class="page-eyebrow">${state.activeStep === 5 ? 'STEP 5 · REVIEW & SHARE' : 'DAY BY DAY'}</span><h2 id="planner-board-title">${state.activeStep === 5 ? '전체 일정을 검토하고 저장하세요' : '날짜별 시간표'}</h2><p>일정을 누르면 날짜·시간·체류시간을 다시 조정할 수 있습니다.</p></div><div class="planner-summary" aria-label="일정 구성 요약">${Object.entries(categoryCounts).map(([category, count]) => `<span style="--summary-color:${categoryMeta[category]?.[1] || '#2f6bff'}">${icon(categoryIcons[category])}<b>${escapeHtml(categoryLabel(category))}</b><em>${count}</em></span>`).join('') || `<span class="is-empty">${icon('calendar')}<b>아직 일정 없음</b></span>`}</div></div>
           <nav class="planner-day-tabs" aria-label="여행 일자">${days.map((day) => `<button class="planner-day-tab${day === state.selectedDay ? ' is-active' : ''}" type="button" data-day="${day}"><strong>DAY ${day}</strong><small>${escapeHtml(dateLabel(day))} · ${state.items.filter((item) => item.day === day).length}개</small></button>`).join('')}</nav>
           <div class="planner-day-title"><strong>DAY ${state.selectedDay} · ${escapeHtml(dateLabel(state.selectedDay))}</strong><span>시간순 자동 정렬</span></div>
           <div class="planner-timeline">${timeline}</div>
-          <div class="planner-validation">${[...selectedDiagnostics.map((item) => [item.tone, item.message]), ...warnings()].map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
+          <div class="planner-validation">${[...selectedDiagnostics.map((item) => [item.tone, item.message]), ...warnings(state.selectedDay)].map(([tone, message]) => `<article class="${tone}">${escapeHtml(message)}</article>`).join('')}</div>
           <div class="planner-booking-readiness"><article><span>바로 예약 가능</span><strong>${totalsData.instant}</strong></article><article><span>업체 확인 필요</span><strong>${totalsData.request}</strong></article><article><span>방문 정보</span><strong>${totalsData.info}</strong></article></div>
-          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : `자동 저장됨 · 시간 점검 ${allDiagnostics.length}건`}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">랜드마크 수정</button><button class="ui-button primary" type="button" data-planner-step="4">다음: 주변 서비스 추가</button>` : `<button class="ui-button" type="button" data-planner-step="4">서비스 더 담기</button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
+          <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : `자동 저장됨 · 시간 점검 ${allDiagnostics.length}건`}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">${icon('pin')}<span>랜드마크 수정</span></button><button class="ui-button primary" type="button" data-planner-step="4">${icon('plus')}<span>다음: 주변 서비스 추가</span></button>` : `<button class="ui-button" type="button" data-planner-step="4">${icon('plus')}<span>서비스 더 담기</span></button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
         </section>
       </div>`;
     if (state.activeStep === 3) {
