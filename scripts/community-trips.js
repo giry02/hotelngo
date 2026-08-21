@@ -333,7 +333,7 @@
 
     const renderItems = () => {
       const current = api.list('trips').find((item) => item.id === trip.id) || trip;
-      panel.innerHTML = `<div class="content-section-head"><div><h2>장소별 일정 편집</h2><p>변경 내용은 내 여행에 즉시 저장됩니다.</p></div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(current.id)}">예약 준비도 확인</a></div>${(current.items || []).map((item) => {
+      panel.innerHTML = `<div class="content-section-head"><div><h2>장소별 일정 편집</h2><p>변경 내용은 내 여행에 즉시 저장됩니다.</p></div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(current.id)}">예약할 서비스 선택</a></div>${(current.items || []).map((item) => {
         const candidates = places.filter((place) => place.id !== item.sourceId).slice(0, 6);
         return `<article data-trip-item="${escapeHtml(item.id)}"><div><small>DAY ${item.day} · ${escapeHtml(item.time || '미정')} · ${escapeHtml(item.type || 'PLACE')}</small><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.bookingStatus || 'NOT_BOOKED')}</span></div><div><select data-trip-replacement><option value="">다른 장소 선택</option>${candidates.map((place) => `<option value="${escapeHtml(place.id)}">${escapeHtml(place.name)} · ${escapeHtml(place.reason)}</option>`).join('')}</select><button class="ui-button" type="button" data-trip-replace>교체</button><button class="ui-button" type="button" data-trip-remove>삭제</button></div></article>`;
       }).join('') || '<div class="empty-state"><strong>일정 항목이 없습니다.</strong></div>'}`;
