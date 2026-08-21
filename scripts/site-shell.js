@@ -33,6 +33,7 @@
     ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
+    ['ai', 'AI 여행', 'ai-travel.html'],
     ['trips', '내 여행', 'trips.html']
   ];
 
