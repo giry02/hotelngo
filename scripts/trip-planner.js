@@ -466,20 +466,14 @@
     points.forEach((item, index) => {
       const color = categoryMeta[item.category]?.[1] || '#2f6bff';
       const marker = window.L.marker([item.lat, item.lng], {
-        icon: window.L.divIcon({ className: 'planner-map-marker-wrap', html: `<span class="planner-map-marker" style="--marker-color:${color}">${index + 1}</span>`, iconSize: [34, 42], iconAnchor: [17, 38] })
+        icon: window.L.divIcon({ className: 'planner-map-marker-wrap', html: `<span class="planner-map-marker${state.focusLocationId === item.sourceId ? ' is-active' : ''}" style="--marker-color:${color}">${index + 1}</span>`, iconSize: [34, 42], iconAnchor: [17, 38] })
       }).addTo(mapInstance);
-      const popup = document.createElement('div');
-      popup.className = 'planner-map-popup';
-      const label = document.createElement('small');
-      label.textContent = `DAY ${item.day} · ${item.time} · ${categoryLabel(item.category)}`;
-      const title = document.createElement('strong');
-      title.textContent = item.title;
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = '주변 장소 보기';
-      button.addEventListener('click', () => { state.focusLocationId = item.sourceId; render(); });
-      popup.append(label, title, button);
-      marker.bindPopup(popup);
+      marker.bindTooltip(`${index + 1}. ${item.title}`, { direction: 'top', offset: [0, -28] });
+      marker.on('click', () => {
+        state.focusLocationId = item.sourceId;
+        state.selectedDay = item.day;
+        render();
+      });
       bounds.push([item.lat, item.lng]);
     });
     const routeGroups = state.mapDay === 'ALL'
@@ -579,6 +573,24 @@
     const focusedCandidate = visibleCatalog.find((item) => item.id === state.focusLocationId) || visibleCatalog[0] || null;
     const focusedCandidateHighlights = landmarkHighlights(focusedCandidate);
     const candidatePreview = focusedCandidate ? `<article class="planner-selected-place" data-catalog-item="${escapeHtml(focusedCandidate.id)}"><img src="${escapeHtml(focusedCandidate.image)}" alt="${escapeHtml(focusedCandidate.title)}"><div class="planner-selected-place-copy"><small>${escapeHtml(categoryLabel(focusedCandidate.category))} · ${escapeHtml(focusedCandidate.area)}</small><h4>${escapeHtml(focusedCandidate.title)}</h4><p>${escapeHtml(landmarkIntroduction(focusedCandidate))}</p><ul>${focusedCandidateHighlights.slice(0, 3).map((highlight) => `<li>${escapeHtml(highlight)}</li>`).join('')}</ul><div><span><b>추천 시간</b>${escapeHtml(focusedCandidate.recommendedTime || '시간 확인')}</span><span><b>체류 시간</b>${focusedCandidate.duration ? `${focusedCandidate.duration}분` : '일정에 맞춰 선택'}</span><span><b>예상 비용</b>${escapeHtml(focusedCandidate.priceLabel)}</span></div></div><footer><button type="button" data-view-item>상세 소개 보기</button><button type="button" data-add-item>${icon('plus')}DAY ${state.selectedDay}에 담기</button></footer></article>` : '';
+    const focusedRouteItem = routePoints.find((item) => item.sourceId === state.focusLocationId)
+      || routePoints.find((item) => item.day === state.selectedDay)
+      || routePoints[0]
+      || null;
+    const focusedRouteSource = focusedRouteItem ? itemById(focusedRouteItem.sourceId) : null;
+    const focusedRouteHighlights = landmarkHighlights(focusedRouteSource).slice(0, 3);
+    const routeDetailPanel = focusedRouteItem && focusedRouteSource ? `<aside class="planner-route-detail" data-instance-id="${escapeHtml(focusedRouteItem.instanceId)}">
+      <div class="planner-route-detail-visual"><img src="${escapeHtml(focusedRouteSource.image)}" alt="${escapeHtml(focusedRouteSource.title)}"><span>지도 ${Math.max(1, routePoints.indexOf(focusedRouteItem) + 1)}번</span></div>
+      <div class="planner-route-detail-body">
+        <small>DAY ${focusedRouteItem.day} · ${escapeHtml(focusedRouteItem.time)} · ${escapeHtml(categoryLabel(focusedRouteItem.category))}</small>
+        <h3>${escapeHtml(focusedRouteSource.title)}</h3>
+        <p>${escapeHtml(landmarkIntroduction(focusedRouteSource))}</p>
+        <ul>${focusedRouteHighlights.map((highlight) => `<li>${escapeHtml(highlight)}</li>`).join('')}</ul>
+        <dl><div><dt>권장 체류</dt><dd>${focusedRouteItem.duration ? `${focusedRouteItem.duration}분` : '시간 확인'}</dd></div><div><dt>예상 비용</dt><dd>${escapeHtml(focusedRouteItem.priceLabel)}</dd></div><div><dt>지역</dt><dd>${escapeHtml(focusedRouteItem.area)}</dd></div></dl>
+      </div>
+      <div class="planner-route-detail-check"><strong>DAY ${focusedRouteItem.day} 동선 점검</strong>${scheduleDiagnostics(focusedRouteItem.day).map((item) => `<p class="${item.tone}">${escapeHtml(item.message)}</p>`).join('') || '<p class="success">현재 체류시간과 이동시간 기준으로 겹치는 일정이 없습니다.</p>'}</div>
+      <footer><button class="ui-button" type="button" data-map-view-item>장소 상세 보기</button><button class="ui-button primary" type="button" data-map-edit-item>날짜·시간 수정</button></footer>
+    </aside>` : `<aside class="planner-route-check"><small>시간·동선 확인</small><strong>표시할 장소가 없습니다</strong><div><p class="warning">이전 단계에서 랜드마크를 일정에 담아 주세요.</p></div><button type="button" class="ui-button" data-planner-step="2">랜드마크 다시 선택</button></aside>`;
     const candidateCards = visibleCatalog.filter((item) => item.id !== focusedCandidate?.id).slice(0, 12).map((item) => {
       const proximity = mapFocus && item.lat && item.lng ? distanceKm(mapFocus, item) : null;
       return `
@@ -642,6 +654,10 @@
           <footer class="planner-board-footer"><div class="planner-cost"><small>표시된 참고가격 합계 · 인원과 옵션에 따라 달라질 수 있음</small><strong>${money(totalsData.total)}</strong><span class="planner-save-status" data-save-status data-state="${saveStatus}">${saveStatus === 'saving' ? '변경사항 저장 중…' : saveStatus === 'error' ? '저장 실패 · 다시 시도해 주세요' : `자동 저장됨 · 시간 점검 ${allDiagnostics.length}건`}</span></div><div class="planner-footer-actions">${state.activeStep === 3 ? `<button class="ui-button" type="button" data-planner-step="2">랜드마크 수정</button><button class="ui-button primary" type="button" data-planner-step="4">다음: 주변 서비스 추가</button>` : `<button class="ui-button" type="button" data-planner-step="4">서비스 더 담기</button><button class="ui-button" type="button" data-share-plan>${icon('users')}<span>가이드 공유</span></button><button class="ui-button primary" type="button" data-save-plan>${icon('save')}<span>내 여행 저장</span></button>`}</div></footer>
         </section>
       </div>`;
+    if (state.activeStep === 3) {
+      const routeCheck = root.querySelector('.planner-route-check');
+      if (routeCheck) routeCheck.outerHTML = routeDetailPanel;
+    }
     persistContext();
     renderMap();
   };
@@ -978,6 +994,21 @@
     const editButton = event.target.closest('[data-edit-item]');
     if (editButton) {
       const instance = editButton.closest('[data-instance-id]')?.dataset.instanceId;
+      const item = state.items.find((candidate) => candidate.instanceId === instance);
+      if (item) openItemEditor(item);
+      return;
+    }
+    const mapViewButton = event.target.closest('[data-map-view-item]');
+    if (mapViewButton) {
+      const instance = mapViewButton.closest('[data-instance-id]')?.dataset.instanceId;
+      const item = state.items.find((candidate) => candidate.instanceId === instance);
+      const source = item ? itemById(item.sourceId) : null;
+      if (source) openCatalogItem(source);
+      return;
+    }
+    const mapEditButton = event.target.closest('[data-map-edit-item]');
+    if (mapEditButton) {
+      const instance = mapEditButton.closest('[data-instance-id]')?.dataset.instanceId;
       const item = state.items.find((candidate) => candidate.instanceId === instance);
       if (item) openItemEditor(item);
       return;

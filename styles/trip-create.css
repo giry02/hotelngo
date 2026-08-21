@@ -16,6 +16,7 @@
 .guided-step { min-height: 430px; padding: 24px 20px 12px; }
 .guided-step-title small { color: #2f6bff; font-size: 11px; font-weight: 850; }
 .guided-step-title h2 { margin: 6px 0 7px; color: #1f2926; font-size: 24px; letter-spacing: -.035em; }
+.guided-step-title h2:focus { outline: none; }
 .guided-step-title p { margin: 0 0 20px; color: #6e7975; font-size: 13px; line-height: 1.65; }
 .guided-choice-grid { display: grid; gap: 10px; }
 .destination-choices button { position: relative; display: grid; grid-template-columns: 92px minmax(0,1fr); align-items: center; gap: 14px; overflow: hidden; min-height: 86px; padding: 0; border: 1px solid #e0e5e4; border-radius: 14px; color: #25302d; background: #fff; cursor: pointer; text-align: left; }
