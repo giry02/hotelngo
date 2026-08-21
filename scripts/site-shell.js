@@ -45,6 +45,7 @@
           ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}"${key === 'trips' ? ' data-member-only' : ''}>${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
         </nav>
         <div class="header-actions">
+          <a class="ai-quick-link${active === 'ai' ? ' is-active' : ''}" href="ai-travel.html"><span aria-hidden="true">✦</span><b>AI 여행</b></a>
           <a class="cart-link" href="cart.html">여행 카드</a>
           <a class="reservation-link" href="bookings.html">예약 조회</a>
           <a class="login-button" href="login.html">로그인</a>
