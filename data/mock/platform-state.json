@@ -194,33 +194,5 @@
       "publishedAt": "2026-07-20T10:00:00+09:00"
     }
   ],
-  "trips": [
-    {
-      "id": "trip_demo_danang",
-      "ownerId": "usr_demo_jiho",
-      "title": "다낭 4박 5일",
-      "destination": "다낭",
-      "status": "DRAFT",
-      "sourceType": "USER_CREATED",
-      "items": [
-        {
-          "id": "trip_item_hotel",
-          "day": 1,
-          "time": "15:00",
-          "type": "HOTEL",
-          "title": "Hyatt Regency Danang Resort",
-          "bookingId": "HNG-2026-000001"
-        },
-        {
-          "id": "trip_item_golf",
-          "day": 2,
-          "time": "07:10",
-          "type": "GOLF",
-          "title": "다낭 힐스 골프 클럽",
-          "bookingId": "HNG-2026-000002"
-        }
-      ],
-      "updatedAt": "2026-07-23T19:05:00+09:00"
-    }
-  ]
+  "trips": []
 }

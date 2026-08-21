@@ -588,11 +588,74 @@
     await seedDomains();
     const main = getMainShell();
     if (!main || main.querySelector('[data-platform-trip-list]')) return;
-    const trips = api.list('trips').filter((item) => item.ownerId === memberId);
+    let trips = api.list('trips').filter((item) => item.ownerId === memberId);
+    if (memberId === 'usr_demo_jiho') {
+      const curated = trips
+        .filter((item) => item.presetId === 'danang-first-4n5d')
+        .sort((a, b) => (b.items?.length || 0) - (a.items?.length || 0))[0];
+      let keeper = curated;
+      if (!keeper) {
+        const catalog = await api.get('trip-planner-catalog.json');
+        const danang = catalog.destinations?.find((item) => item.id === 'danang');
+        const course = danang?.recommendedCourses?.find((item) => item.id === 'danang-first-4n5d');
+        const start = new Date();
+        start.setDate(start.getDate() + 30);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 4);
+        const dateValue = (date) => {
+          const local = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+          return local.toISOString().slice(0, 10);
+        };
+        if (danang && course) {
+          keeper = api.upsert('trips', {
+            id: 'trip_curated_danang_first_4n5d',
+            ownerId: memberId,
+            title: course.name,
+            destination: danang.name,
+            destinationId: danang.id,
+            startDate: dateValue(start),
+            endDate: dateValue(end),
+            travelers: '성인 2명',
+            duration: '4박 5일',
+            status: 'DRAFT',
+            sourceType: 'RECOMMENDED_DRAFT',
+            presetId: course.id,
+            presetName: course.name,
+            items: course.template.map((entry, index) => {
+              const source = danang.items.find((item) => item.id === entry.itemId) || {};
+              return {
+                id: `curated_${entry.itemId}_${index + 1}`,
+                sourceId: entry.itemId,
+                type: source.category,
+                category: source.category,
+                day: entry.day,
+                time: entry.time,
+                title: source.title || '일정 항목',
+                area: source.area || danang.name,
+                image: source.image || danang.cover,
+                duration: source.duration || 60,
+                price: source.price || 0,
+                priceLabel: source.priceLabel || '현지 확인',
+                bookingType: source.bookingType || 'INFORMATION_ONLY',
+                status: source.status || 'CATALOG_VERIFIED',
+                bookingStatus: 'NOT_BOOKED',
+                lat: source.lat,
+                lng: source.lng
+              };
+            })
+          });
+        }
+      }
+      if (keeper) {
+        api.list('trips').filter((item) => item.ownerId === memberId && item.id !== keeper.id)
+          .forEach((item) => api.remove('trips', item.id));
+        trips = [keeper];
+      }
+    }
     const head = main.querySelector('.page-head, .content-section-head');
-    const sourceLabels = { USER_CREATED: '직접 만든 일정', AI_DRAFT: 'AI 추천 초안', COMMUNITY_COPY: '공유 가이드에서 복사' };
+    const sourceLabels = { USER_CREATED: '직접 만든 일정', AI_DRAFT: 'AI 추천 초안', RECOMMENDED_DRAFT: 'HotelnGo 추천 일정', COMMUNITY_COPY: '공유 가이드에서 복사' };
     const statusLabels = { DRAFT: '작성 중', PUBLISHED: '공개됨', LINK_SHARED: '링크 공유' };
-    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIPS</span><h2>저장된 나의 여행</h2><p>직접 만든 일정, 공개 가이드에서 복사한 일정, AI가 만든 초안을 같은 구조로 편집합니다.</p></div></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(sourceLabels[trip.sourceType] || '내 여행')} · ${trip.duration || ''} · ${trip.items?.length || 0}개 장소 · ${escapeHtml(statusLabels[trip.status] || '작성 중')}</small></div><div><a class="ui-button" href="trip-booking-plan.html?tripId=${encodeURIComponent(trip.id)}">예약 준비도</a><a class="ui-button" href="trip-publish.html?tripId=${encodeURIComponent(trip.id)}">공유</a><a class="ui-button primary" href="trip-planner.html?tripId=${encodeURIComponent(trip.id)}">일정 편집</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
+    const html = `<section class="platform-trip-list" data-platform-trip-list><div class="content-section-head"><div><span class="page-eyebrow">MY TRIPS</span><h2>저장된 나의 여행</h2><p>날짜별 동선과 장소를 확인하고, 필요할 때 일정 편집 또는 공유로 이어갈 수 있습니다.</p></div></div>${trips.map((trip) => `<article><div><strong>${escapeHtml(trip.title)}</strong><small>${escapeHtml(sourceLabels[trip.sourceType] || '내 여행')} · ${trip.duration || ''} · ${trip.items?.length || 0}개 장소 · ${escapeHtml(statusLabels[trip.status] || '작성 중')}</small></div><div><a class="ui-button" href="trip-publish.html?tripId=${encodeURIComponent(trip.id)}">공유</a><a class="ui-button primary" href="trip-planner.html?tripId=${encodeURIComponent(trip.id)}">일정 보기·수정</a></div></article>`).join('') || '<div class="empty-state"><strong>아직 저장된 여행이 없습니다.</strong><p>AI 여행 또는 공개 여행에서 초안을 만들어 보세요.</p></div>'}</section>`;
     if (head) head.insertAdjacentHTML('afterend', html);
     else main.insertAdjacentHTML('afterbegin', html);
   };
