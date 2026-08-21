@@ -26,7 +26,7 @@
 
 /* Shared shell adjustments */
 .page-main + .site-footer { margin-top: 0; }
-.footer-brand .brand-logo { width: 126px; height: auto; margin-bottom: 9px; }
+.footer-brand .brand-logo { width: 144px; height: auto; margin-bottom: 9px; }
 .reservation-link { display: inline-flex; align-items: center; height: 38px; padding: 0 13px; font-size: 14px; font-weight: 700; }
 
 /* Search bar */

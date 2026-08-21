@@ -1,19 +1,19 @@
 # HotelnGo 선택 로고
 
-- 확정일: 2026-07-22
-- 선택 시안: `03 · Ocean Route`
+- 확정일: 2026-08-21
+- 선택 시안: `05 · Go Capsule`
 - 상태: `LOCKED`
 - 공식 폴더: `official/`
 
 ## 정본 파일
 
-- 현재 홈페이지 워드마크: `official/hotelngo-logo-web.png`
-- 원본: `n-color-types.html#color-03`의 `actual` SVG 마크업
-- 고정 보관본: `n-color-types-v10-ocean-route.html#color-03`
+- 현재 홈페이지 워드마크: `official/hotelngo-logo-go-capsule.svg`
+- 원본: `exploration-20260801/hotelngo-logo-05-go-capsule.svg`
+- 비교 화면: `exploration-20260801/hotelngo-logo-comparison-v14.html`의 05번
 - 화면용 심볼: `official/hotelngo-symbol-primary.png`
 - 인쇄용 심볼: `official/hotelngo-symbol-primary.svg`
 
-현재 홈페이지 헤더·푸터·로그인·운영 화면은 투명 배경 `official/hotelngo-logo-web.png`를 사용한다. 로고는 이미지 파일로만 표시하며 HTML 텍스트나 웹폰트로 재구성하지 않는다.
+현재 홈페이지 헤더·푸터·로그인·운영 화면은 투명 배경 `official/hotelngo-logo-go-capsule.svg`를 이미지로 사용한다.
 
 ## 자료 관리
 

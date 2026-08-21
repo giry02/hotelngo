@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="420" height="100" viewBox="0 0 420 100" role="img" aria-labelledby="title desc">
   <title id="title">HotelnGo Go Capsule logo</title>
-  <desc id="desc">A compact Hoteln wordmark paired with a bright GO capsule.</desc>
+  <desc id="desc">Hoteln wordmark paired with a bright GO capsule and forward arrow.</desc>
   <defs>
     <linearGradient id="capsule-gradient" x1="230" y1="14" x2="404" y2="90" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#00C6B7"/>

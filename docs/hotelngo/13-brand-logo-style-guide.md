@@ -1,11 +1,11 @@
-# HotelnGo 로고·브랜드 사용 가이드 v1.5
+# HotelnGo 로고·브랜드 사용 가이드 v1.6
 
 ## 1. 확정 상태
 
 - 상태: **LOCKED / 사용 확정**
-- 확정일: 2026-07-22
-- 선택안: **03 · Ocean Route**
-- 화면 원본: `assets/brand/n-color-types.html#color-03`
+- 확정일: 2026-08-21
+- 선택안: **05 · Go Capsule**
+- 화면 원본: `assets/brand/exploration-20260801/hotelngo-logo-comparison-v14.html`의 05번
 
 새로운 로고 시안은 공식 폴더 밖에서만 만든다. 확정 자산은 사용자 승인 없이 다시 그리거나 덮어쓰지 않는다.
 
@@ -13,12 +13,12 @@
 
 | 파일 | 형식 | 용도 | 배경 |
 |---|---|---|---|
-| `assets/brand/official/hotelngo-logo-web.png` | RGBA PNG, 504 × 138px | 웹 헤더·푸터·로그인·운영 화면 정본 | 투명 |
+| `assets/brand/official/hotelngo-logo-go-capsule.svg` | SVG, 420 × 100 viewBox | 웹 헤더·푸터·로그인·운영 화면 정본 | 투명 |
 | `assets/brand/n-color-types-v10-ocean-route.html` | HTML | Ocean Route v10 고정 보관본 | 해당 없음 |
 | `assets/brand/official/hotelngo-symbol-primary.png` | RGBA PNG, 88 × 88px | 파비콘·작은 배너 | 투명 |
 | `assets/brand/official/hotelngo-symbol-primary.svg` | SVG | 인쇄용 단독 심볼 | 투명 |
 
-현재 홈페이지에는 `hotelngo-logo-web.png`를 **실제 헤더 126px**로 표시한다. 글자를 HTML 텍스트나 웹폰트로 렌더링하지 않는다. 디자인 소스 보관본은 `assets/brand/n-color-types-v10-ocean-route.html`이다.
+현재 홈페이지에는 `hotelngo-logo-go-capsule.svg`를 **실제 헤더 144px**로 표시한다. SVG는 `<img>`로 사용하며 HTML 텍스트나 인라인 SVG로 재조립하지 않는다. 디자인 소스는 `assets/brand/exploration-20260801/hotelngo-logo-05-go-capsule.svg`이다.
 
 ## 3. 로고 구성
 
@@ -53,9 +53,9 @@
 
 ## 6. 용도별 선택
 
-- 웹 UI: `assets/brand/official/hotelngo-logo-web.png`
+- 웹 UI: `assets/brand/official/hotelngo-logo-go-capsule.svg`
 - 파비콘·작은 아이콘: `hotelngo-symbol-primary.png`
-- 고정 보관본: `assets/brand/n-color-types-v10-ocean-route.html#color-03`
+- 비교 화면: `assets/brand/exploration-20260801/hotelngo-logo-comparison-v14.html`의 05번
 - 심볼 단독 인쇄: `hotelngo-symbol-primary.svg`
 
 문서·인쇄용 워드마크는 웹 PNG를 확대하지 않고 별도 승인된 벡터 내보내기 자산이 준비될 때까지 보류한다.
@@ -88,7 +88,7 @@
 
 ## 10. 관련 파일
 
-- 웹 PNG 정본: `assets/brand/official/hotelngo-logo-web.png`
-- 디자인 소스 보관본: `assets/brand/n-color-types-v10-ocean-route.html`
+- 웹 SVG 정본: `assets/brand/official/hotelngo-logo-go-capsule.svg`
+- 디자인 소스: `assets/brand/exploration-20260801/hotelngo-logo-05-go-capsule.svg`
 - 시각 가이드: `style-guide.html`
 - 기계 판독 설정: `assets/brand/brand-config.json`

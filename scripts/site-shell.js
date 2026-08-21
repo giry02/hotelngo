@@ -25,8 +25,8 @@
     document.head.append(tripCardScript);
   }
 
-  const logo = (_assetId, ariaLabel = 'HotelnGo Ocean Route 로고') => `
-    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-web.png?v=2" width="504" height="138" alt="${ariaLabel}" decoding="async">`;
+  const logo = (_assetId, ariaLabel = 'HotelnGo Go Capsule 로고') => `
+    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule.svg?v=1" width="420" height="100" alt="${ariaLabel}" decoding="async">`;
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],

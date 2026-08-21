@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="420" height="100" viewBox="0 0 420 100" role="img" aria-labelledby="title desc">
-  <title id="title">HotelnGo Go Capsule logo</title>
-  <desc id="desc">A compact Hoteln wordmark paired with a bright GO capsule.</desc>
+  <title id="title">HotelnGo Go Capsule logo for dark backgrounds</title>
+  <desc id="desc">White Hoteln wordmark paired with a bright GO capsule and forward arrow.</desc>
   <defs>
     <linearGradient id="capsule-gradient" x1="230" y1="14" x2="404" y2="90" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#00C6B7"/>
@@ -9,7 +9,7 @@
     </linearGradient>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@700;800&amp;display=swap');
-      .base{font-family:'Barlow Semi Condensed','Segoe UI',Arial,sans-serif;font-size:78px;font-weight:700;letter-spacing:-.5px;fill:#181B1A}
+      .base{font-family:'Barlow Semi Condensed','Segoe UI',Arial,sans-serif;font-size:78px;font-weight:700;letter-spacing:-.5px;fill:#FFFFFF}
       .go{font-family:'Barlow Semi Condensed','Segoe UI',Arial,sans-serif;font-size:61px;font-weight:800;letter-spacing:0;fill:#FFFFFF}
     </style>
   </defs>

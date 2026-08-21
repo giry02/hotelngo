@@ -1,49 +1,49 @@
 {
-  "version": "1.5.0",
+  "version": "1.6.0",
   "status": "LOCKED",
-  "selectedAt": "2026-07-22",
+  "selectedAt": "2026-08-21",
   "brandName": "HotelnGo",
   "selectedVariant": {
-    "id": "03",
-    "name": "Ocean Route",
-    "sourcePage": "assets/brand/n-color-types.html#color-03",
-    "sourceContext": "actual header 126px"
+    "id": "05",
+    "name": "Go Capsule",
+    "sourcePage": "assets/brand/exploration-20260801/hotelngo-logo-comparison-v14.html",
+    "sourceContext": "comparison option 05, desktop header 144px"
   },
   "primaryAsset": {
-    "path": "assets/brand/official/hotelngo-logo-web.png",
-    "format": "PNG_RGBA",
-    "pixelSize": "504x138",
-    "source": "assets/brand/n-color-types.html#color-03 .actual svg",
+    "path": "assets/brand/official/hotelngo-logo-go-capsule.svg",
+    "format": "SVG",
+    "viewBox": "0 0 420 100",
+    "source": "assets/brand/exploration-20260801/hotelngo-logo-05-go-capsule.svg",
     "background": "transparent",
     "policy": "USE_AS_IMAGE_WITHOUT_LIVE_TEXT"
   },
   "savedDesignSource": {
-    "path": "assets/brand/n-color-types-v10-ocean-route.html",
-    "sha256": "9AF4324CC044FB3D04F1C26962371476AF22D807F91A59A5DB1ADF9FBDE268C4",
-    "purpose": "Use #color-03 when converting the approved logo back to SVG later."
+    "path": "assets/brand/exploration-20260801/hotelngo-logo-05-go-capsule.svg",
+    "sha256": "46416D77F9AE3333FF128D190D48D05131E64AF5FC3A3710764B32F76CD81953",
+    "purpose": "Approved option 05 design source for the website wordmark."
   },
   "headerUsage": {
     "desktop": {
       "minViewport": 801,
-      "logoWidth": 126,
+      "logoWidth": 144,
       "headerHeight": 72
     },
     "tablet": {
       "maxViewport": 800,
-      "logoWidth": 116,
+      "logoWidth": 132,
       "headerHeight": 62
     },
     "mobile": {
       "maxViewport": 560,
-      "logoWidth": 105,
+      "logoWidth": 120,
       "headerHeight": 62
     }
   },
   "rules": [
-    "Use assets/brand/official/hotelngo-logo-web.png in website headers, footers, login screens, and backoffice shells.",
-    "Display it at 126px in the desktop header and preserve the 504:138 ratio.",
+    "Use assets/brand/official/hotelngo-logo-go-capsule.svg in website headers, footers, login screens, and backoffice shells.",
+    "Display it at 144px in the desktop header and preserve the 420:100 ratio.",
     "Do not reconstruct the logo with HTML text, web fonts, or CSS shapes.",
-    "Keep the saved n-color-types v10 HTML unchanged for future SVG work.",
-    "Do not overwrite the saved HTML source or the approved web PNG without a new explicit approval."
+    "Keep the option 05 source SVG and comparison v14 HTML unchanged.",
+    "Do not overwrite the approved official SVG without a new explicit approval."
   ]
 }
