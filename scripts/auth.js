@@ -101,6 +101,21 @@
     }
   };
 
+  const claimGuestTrips = (userId) => {
+    const key = 'hotelngo.api.state.v1.trips';
+    let trips;
+    try { trips = JSON.parse(localStorage.getItem(key) || '[]'); } catch { trips = []; }
+    if (!Array.isArray(trips) || !trips.length) return 0;
+    let claimed = 0;
+    const next = trips.map((trip) => {
+      if (trip?.ownerId !== 'LOCAL_GUEST') return trip;
+      claimed += 1;
+      return { ...trip, ownerId: userId, claimedAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    });
+    if (claimed) localStorage.setItem(key, JSON.stringify(next));
+    return claimed;
+  };
+
   const loginForm = document.querySelector('[data-login-form]');
   loginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -113,7 +128,10 @@
       const user = users.find((item) => item.email.toLowerCase() === email && effectivePasswordHash(item) === passwordHash);
       if (!user) return showMessage(loginForm, '이메일 또는 비밀번호가 일치하지 않습니다. 데모 계정을 확인해 주세요.');
       writeSession(user);
-      showMessage(loginForm, `${user.displayName || user.name}님, 로그인했습니다.`, 'success');
+      const claimedTripCount = claimGuestTrips(user.id);
+      showMessage(loginForm, claimedTripCount
+        ? `${user.displayName || user.name}님, 로그인했습니다. 만들던 여행 ${claimedTripCount}개를 내 여행으로 옮겼습니다.`
+        : `${user.displayName || user.name}님, 로그인했습니다.`, 'success');
       setTimeout(() => { location.href = safeReturnUrl(); }, 180);
     } catch {
       showMessage(loginForm, '계정 JSON을 불러오지 못했습니다. 로컬 서버에서 다시 실행해 주세요.');
