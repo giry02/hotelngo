@@ -468,7 +468,12 @@
       const marker = window.L.marker([item.lat, item.lng], {
         icon: window.L.divIcon({ className: 'planner-map-marker-wrap', html: `<span class="planner-map-marker${state.focusLocationId === item.sourceId ? ' is-active' : ''}" style="--marker-color:${color}">${index + 1}</span>`, iconSize: [34, 42], iconAnchor: [17, 38] })
       }).addTo(mapInstance);
-      marker.bindTooltip(`${index + 1}. ${item.title}`, { direction: 'top', offset: [0, -28] });
+      marker.bindTooltip(`${index + 1}. ${item.title}`, {
+        className: 'planner-route-tooltip',
+        direction: 'top',
+        offset: [0, -28],
+        opacity: 0.96
+      });
       marker.on('click', () => {
         state.focusLocationId = item.sourceId;
         state.selectedDay = item.day;
