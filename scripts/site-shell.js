@@ -25,8 +25,8 @@
     document.head.append(tripCardScript);
   }
 
-  const logo = (_assetId, ariaLabel = 'HotelnGo Go Capsule 로고') => `
-    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule.svg?v=1" width="420" height="100" alt="${ariaLabel}" decoding="async">`;
+  const logo = (_assetId, ariaLabel = 'HotelnGo Go Capsule IBM Plex Sans 로고') => `
+    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg?v=1" width="446" height="100" alt="${ariaLabel}" decoding="async">`;
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
