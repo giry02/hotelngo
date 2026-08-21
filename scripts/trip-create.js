@@ -8,8 +8,10 @@
     maxStep: 1,
     destination: query.get('destination') || '',
     interests: [],
-    prompt: query.get('prompt') || ''
+    prompt: query.get('prompt') || '',
+    selectedCourseId: query.get('preset') || ''
   };
+  let catalog = null;
   const addDays = (value, days) => {
     const date = value instanceof Date ? new Date(value) : new Date(`${value}T12:00:00`);
     date.setDate(date.getDate() + days);
@@ -37,6 +39,16 @@
   if (!state.interests.length && query.get('source') === 'ai') state.interests = ['랜드마크', '미식'];
 
   const selectedPaceLabel = () => ({ RELAXED: '여유롭게', BALANCED: '적당하게', ACTIVE: '알차게' }[form.elements.pace.value]);
+  const destinationData = () => catalog?.destinations?.find((item) => item.name === state.destination || item.id === state.destination);
+  const recommendedCourses = () => destinationData()?.recommendedCourses || [];
+  const selectedCourse = () => recommendedCourses().find((item) => item.id === state.selectedCourseId) || recommendedCourses()[0] || null;
+  const chooseBestCourse = () => {
+    const courses = recommendedCourses();
+    if (!courses.length || courses.some((item) => item.id === state.selectedCourseId)) return;
+    if (state.interests.includes('골프')) state.selectedCourseId = courses.find((item) => item.id.includes('golf'))?.id || courses[0].id;
+    else if (form.elements.pace.value === 'RELAXED' || (state.interests.includes('스파') && state.interests.includes('바다'))) state.selectedCourseId = courses.find((item) => item.id.includes('slow'))?.id || courses[0].id;
+    else state.selectedCourseId = courses[0].id;
+  };
   const dateDiff = () => Math.max(1, Math.round((new Date(`${endInput.value}T12:00:00`) - new Date(`${startInput.value}T12:00:00`)) / 86400000));
   const setChoiceState = () => {
     document.querySelectorAll('[data-choice="destination"]').forEach((button) => {
@@ -76,8 +88,9 @@
       startDate: startInput.value,
       endDate: endInput.value,
       travelers: form.elements.travelers.value,
-      mode: 'guided'
+      mode: 'recommended'
     });
+    if (state.selectedCourseId) params.set('preset', state.selectedCourseId);
     if (state.prompt) params.set('prompt', state.prompt);
     if (state.interests.length) params.set('interests', state.interests.join(','));
     if (target === 'hotels') {
@@ -88,22 +101,17 @@
   };
   const renderSummary = () => {
     const nightsCount = dateDiff();
-    document.querySelector('[data-guided-summary]').innerHTML = `<strong>${state.destination} · ${nightsCount}박 ${nightsCount + 1}일</strong><span>${formatDate(startInput.value)} 출발 · ${form.elements.travelers.value} · ${state.interests.join(' · ')} · ${selectedPaceLabel()}</span><div class="guided-draft-sources"><b>추천 초안에 반영</b><span>내 여행 카드의 저장 장소</span><span>다른 여행자의 인기 동선</span><span>이동거리·영업시간·식사 공백</span></div>`;
-    const interestLabels = {
-      바다: ['바다에서 쉬는 날', '해변과 가까운 장소를 여유 있게 둘러봐요.'],
-      미식: ['현지 음식 즐기는 날', '이동이 짧은 맛집과 카페를 함께 묶어요.'],
-      랜드마크: ['대표 명소 보는 날', '운영시간과 이동거리를 확인해 핵심 장소를 골라요.'],
-      골프: ['골프 일정', '티타임과 왕복 이동시간을 먼저 확인해요.'],
-      스파: ['휴식과 스파', '일정 중간에 쉬어갈 시간을 남겨둬요.'],
-      쇼핑: ['시장과 쇼핑', '귀가 동선과 가까운 시장·쇼핑 지역을 찾아요.']
-    };
-    const dayCount = nightsCount + 1;
-    const days = Array.from({ length: dayCount }, (_, index) => {
-      if (index === 0) return ['도착·체크인', '공항 이동과 숙소 체크인 후 가까운 곳만 둘러봐요.'];
-      if (index === dayCount - 1) return ['체크아웃·귀국', '짐 보관과 공항 이동시간을 확인해요.'];
-      return interestLabels[state.interests[(index - 1) % state.interests.length]];
-    });
-    document.querySelector('[data-guided-days]').innerHTML = days.map((day, index) => `<article class="guided-day"><b>DAY ${index + 1}</b><div><strong>${day[0]}</strong><small>${day[1]}</small></div></article>`).join('');
+    chooseBestCourse();
+    const course = selectedCourse();
+    document.querySelector('[data-guided-summary]').innerHTML = `<strong>${state.destination} · ${nightsCount}박 ${nightsCount + 1}일</strong><span>${formatDate(startInput.value)} 출발 · ${form.elements.travelers.value} · ${state.interests.join(' · ')} · ${selectedPaceLabel()}</span><div class="guided-draft-sources"><b>완성 코스에 반영되는 기준</b><span>대표 랜드마크</span><span>숙소와 식사</span><span>체류·이동시간</span><span>도착·귀국 여유</span></div>`;
+    const list = document.querySelector('[data-guided-courses]');
+    if (!recommendedCourses().length) {
+      list.innerHTML = '<p class="guided-course-loading">추천 코스를 불러오는 중입니다.</p>';
+      document.querySelector('[data-guided-course-preview]').innerHTML = '';
+      return;
+    }
+    list.innerHTML = recommendedCourses().map((item) => `<button type="button" class="guided-course-card${item.id === course?.id ? ' is-selected' : ''}" data-course-id="${item.id}" aria-pressed="${item.id === course?.id}"><img src="${item.image}" alt=""><span><small>${item.badge}</small><strong>${item.name}</strong><em>${item.tags.join(' · ')}</em></span><b>${item.id === course?.id ? '선택됨' : '이 코스 보기'}</b></button>`).join('');
+    document.querySelector('[data-guided-course-preview]').innerHTML = `<header><div><small>선택한 추천안</small><h3>${course.name}</h3><p>${course.summary}</p></div><span>${course.pace}</span></header><div class="guided-course-reason"><b>왜 이렇게 구성했나요?</b><p>${course.reason}</p></div><div class="guided-days">${course.days.slice(0, nightsCount + 1).map((day) => `<article class="guided-day"><b>DAY ${day.day}</b><div><strong>${day.title}</strong><small>${day.summary}</small></div></article>`).join('')}</div><p class="guided-course-notice">아직 예약되거나 결제되는 항목은 없습니다. 다음 화면에서 장소를 빼고, 다른 후보로 교체하고, 시간을 바꿀 수 있습니다.</p>`;
     document.querySelector('[data-open-plan]').href = buildHref('plan');
     document.querySelector('[data-open-advanced]').href = buildHref('plan');
     document.querySelector('[data-find-hotels]').href = buildHref('hotels');
@@ -146,6 +154,12 @@
       state.interests = state.interests.includes(value) ? state.interests.filter((item) => item !== value) : [...state.interests, value];
       document.querySelector('[data-error="interests"]').textContent = '';
       setChoiceState();
+      return;
+    }
+    const course = event.target.closest('[data-course-id]');
+    if (course) {
+      state.selectedCourseId = course.dataset.courseId;
+      renderSummary();
     }
   });
   document.querySelector('[data-next]').addEventListener('click', () => {
@@ -171,4 +185,17 @@
 
   setChoiceState();
   render();
+  fetch('data/mock/trip-planner-catalog.json')
+    .then((response) => {
+      if (!response.ok) throw new Error('catalog');
+      return response.json();
+    })
+    .then((payload) => {
+      catalog = payload;
+      chooseBestCourse();
+      if (state.step === 4) renderSummary();
+    })
+    .catch(() => {
+      if (state.step === 4) document.querySelector('[data-guided-courses]').innerHTML = '<p class="guided-course-loading">추천 코스를 불러오지 못했습니다. GitHub Pages에서 다시 열어주세요.</p>';
+    });
 })();

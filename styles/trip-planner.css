@@ -6,6 +6,7 @@
 .planner-hero-actions{display:flex;gap:8px;flex-wrap:wrap;flex:0 0 auto}
 .planner-hero-actions .ui-button{gap:8px}
 .planner-remix-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:22px;border:1px solid #ccdaf8;border-radius:16px;background:#edf4ff;padding:15px 18px;color:#24416f}.planner-remix-banner span,.planner-remix-banner strong,.planner-remix-banner p{display:block}.planner-remix-banner span{color:#2f6bff;font-size:10px;font-weight:900;letter-spacing:.08em}.planner-remix-banner strong{margin-top:4px;font-size:15px}.planner-remix-banner p{margin:4px 0 0;color:#61708a;font-size:11px}.planner-remix-banner a{flex:0 0 auto;border-radius:9px;background:#fff;padding:10px 12px;color:#2458bf;font-size:12px;font-weight:900;text-decoration:none}
+.planner-course-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.planner-course-tags span{display:inline-flex;padding:6px 9px;border-radius:999px;color:#315cbd;background:#fff;font-size:10px;letter-spacing:0}
 .planner-icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:18px;height:18px}
 .planner-icon svg{display:block;width:100%;height:100%}
 .planner-setup{background:#fff;border:1px solid #dfe5ef;border-radius:22px;padding:22px;box-shadow:0 14px 36px rgba(19,40,79,.06)}

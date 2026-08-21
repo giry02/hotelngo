@@ -88,6 +88,7 @@
   const dayCountFor = (startDate, endDate) => Math.max(2, Math.min(14, Math.round((parseDate(endDate) - parseDate(startDate)) / 86400000) + 1));
   const dayCount = () => dayCountFor(state.startDate, state.endDate);
   const destination = () => catalog.destinations.find((item) => item.id === state.destinationId) || catalog.destinations[0];
+  const recommendedCourse = () => destination().recommendedCourses?.find((item) => item.id === state.presetId) || destination().recommendedCourses?.[0] || null;
   const itemById = (id) => destination().items.find((item) => item.id === id);
   const dayDate = (day) => addDays(state.startDate, day - 1);
   const dateLabel = (day) => new Intl.DateTimeFormat('ko-KR', { month: 'numeric', day: 'numeric', weekday: 'short' }).format(parseDate(dayDate(day)));
@@ -174,7 +175,7 @@
       ,lng: Number(source.lng) || null
     };
   };
-  const templateItems = () => destination().template
+  const templateItems = () => (recommendedCourse()?.template || destination().template)
     .filter((entry) => entry.day <= dayCount())
     .map((entry, index) => makeInstance(entry.itemId, entry.day, entry.time, index))
     .filter(Boolean);
@@ -184,7 +185,7 @@
   };
   const tripCardSourceIds = () => new Set(tripCardItems().map((item) => item.sourceId));
   const recommendedDraftItems = () => {
-    const card = tripCardItems();
+    const card = query.get('fromCard') === '1' ? tripCardItems() : [];
     const savedIds = new Set(card.map((item) => item.sourceId));
     const base = templateItems().filter((item) => !savedIds.has(item.sourceId));
     let landmarkIndex = 0;
@@ -356,7 +357,7 @@
         });
       }
     });
-    if (items.length && !items.some((item) => item.category === 'LANDMARK')) diagnostics.push({ tone: 'suggestion', message: `DAY ${day}는 랜드마크 없이 식사·휴식·서비스 중심으로 구성되어 있습니다. 의도한 일정이라면 그대로 저장해도 됩니다.` });
+    if (items.length && !items.some((item) => ['LANDMARK', 'TOUR'].includes(item.category))) diagnostics.push({ tone: 'suggestion', message: `DAY ${day}는 랜드마크나 투어 없이 식사·휴식·서비스 중심으로 구성되어 있습니다. 의도한 일정이라면 그대로 저장해도 됩니다.` });
     return diagnostics;
   };
   const visibleCatalogItems = () => {
@@ -658,7 +659,7 @@
     root.innerHTML = `
       ${state.sourceGuideId ? `<section class="planner-remix-banner"><div><span>REMIXED GUIDE</span><strong>${escapeHtml(state.sourceGuideTitle || '다른 여행자의 일정')}을 바탕으로 만든 내 여행입니다.</strong><p>여기서 변경한 내용은 원본 가이드에 영향을 주지 않습니다.</p></div><a href="trip-guide-detail.html?id=${encodeURIComponent(state.sourceGuideId)}">원본 가이드 보기</a></section>` : ''}
       ${state.sourceType === 'AI_DRAFT' ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>AI DRAFT REVIEW</span><strong>AI가 제안한 초안을 편집기로 가져왔습니다.</strong><p>아직 예약된 내용은 없습니다. 날짜·시간·장소와 지도 동선을 확인하고 원하는 대로 수정하세요.</p></div><a href="ai-travel.html${state.sourcePrompt ? `?prompt=${encodeURIComponent(state.sourcePrompt)}` : ''}">AI 조건 다시 만들기</a></section>` : ''}
-      ${['RECOMMENDED_DRAFT','CARD_RECOMMENDATION'].includes(state.sourceType) ? `<section class="planner-remix-banner planner-ai-draft-banner"><div><span>GOOD DRAFT FIRST</span><strong>${state.sourceType === 'CARD_RECOMMENDATION' ? `내 여행 카드 ${tripCardItems().length}곳을 먼저 반영했습니다.` : '선택한 취향으로 추천 일정을 먼저 만들었습니다.'}</strong><p>체류시간과 이동시간을 반영해 겹치지 않게 배치했습니다. 처음부터 만들지 말고 필요 없는 곳만 빼거나 교체하세요.</p></div><a href="cart.html?destination=${encodeURIComponent(state.destinationId)}">여행 카드 확인</a></section>` : ''}
+      ${['RECOMMENDED_DRAFT','CARD_RECOMMENDATION'].includes(state.sourceType) ? `<section class="planner-remix-banner planner-ai-draft-banner planner-course-banner"><div><span>${state.sourceType === 'CARD_RECOMMENDATION' ? 'MY TRAVEL CARD DRAFT' : 'HOTELNGO CURATED COURSE'}</span><strong>${state.sourceType === 'CARD_RECOMMENDATION' ? `내 여행 카드 ${tripCardItems().length}곳을 먼저 반영했습니다.` : `${escapeHtml(recommendedCourse()?.name || '선택한 취향의 추천 일정')}을 자동으로 채웠습니다.`}</strong><p>${state.sourceType === 'CARD_RECOMMENDATION' ? '저장한 장소와 추천 동선을 함께 배치했습니다.' : escapeHtml(recommendedCourse()?.reason || '체류시간과 이동시간을 반영해 겹치지 않게 배치했습니다.')} 처음부터 만들지 말고 필요 없는 곳만 빼거나 교체하세요.</p>${recommendedCourse()?.tags?.length ? `<div class="planner-course-tags">${recommendedCourse().tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div>` : ''}</div><a href="${state.sourceType === 'CARD_RECOMMENDATION' ? `cart.html?destination=${encodeURIComponent(state.destinationId)}` : `trip-create.html?destination=${encodeURIComponent(destination().name)}&preset=${encodeURIComponent(state.presetId || '')}`}">${state.sourceType === 'CARD_RECOMMENDATION' ? '여행 카드 확인' : '다른 추천 코스 보기'}</a></section>` : ''}
       <section class="planner-hero">
         <div class="planner-hero-row">
           <div><span class="page-eyebrow">LANDMARK FIRST TRIP BUILDER</span><h1>랜드마크부터 고르면,<br>시간과 동선은 쉽게 이어집니다</h1><p>여행의 목적이 되는 장소를 날짜별로 먼저 정하고, 이동 가능한 시간 안에서 숙소·식사·활동을 차례로 붙입니다.</p></div>
@@ -735,6 +736,8 @@
       sourceGuideTitle: state.sourceGuideTitle || null,
       sourceAuthor: state.sourceAuthor || null,
       sourcePublishedVersion: state.sourcePublishedVersion || null,
+      presetId: state.presetId || null,
+      presetName: recommendedCourse()?.name || state.presetName || null,
       items: state.items.map((item) => ({
         id: item.instanceId,
         sourceId: item.sourceId,
@@ -1144,7 +1147,7 @@
     const storedTrip = query.get('tripId') ? api.list('trips').find((item) => item.id === query.get('tripId')) : null;
     state = {
       id: storedTrip?.id || `trip_plan_${Date.now()}`,
-      title: storedTrip?.title || `${catalog.destinations.find((item) => item.id === destinationId)?.name || '다낭'} 4박 5일`,
+      title: storedTrip?.title || (catalog.destinations.find((item) => item.id === destinationId)?.recommendedCourses?.find((item) => item.id === query.get('preset'))?.name || `${catalog.destinations.find((item) => item.id === destinationId)?.name || '다낭'} 4박 5일`),
       destinationId: storedTrip?.destinationId || findDestinationId(storedTrip?.destination || destinationId),
       startDate: storedTrip?.startDate || query.get('startDate') || query.get('checkIn') || dates.start,
       endDate: storedTrip?.endDate || query.get('endDate') || query.get('checkOut') || dates.end,
@@ -1156,6 +1159,8 @@
       sourceGuideTitle: storedTrip?.sourceGuideTitle || (storedTrip?.sourceType === 'COMMUNITY_COPY' ? String(storedTrip?.title || '').replace(/\s*·\s*내 버전$/, '') : null) || null,
       sourceAuthor: storedTrip?.sourceAuthor || null,
       sourcePublishedVersion: storedTrip?.sourcePublishedVersion || null,
+      presetId: storedTrip?.presetId || query.get('preset') || null,
+      presetName: storedTrip?.presetName || null,
       category: 'ALL',
       catalogSearch: '',
       activeStep: query.get('focus') ? 2 : storedTrip ? 3 : (['ai','guided','recommended'].includes(query.get('mode')) || query.get('fromCard') === '1') ? 3 : 1,
