@@ -20,6 +20,80 @@
       "cover":"assets/images/hero-hotel.jpg",
       "summary":"바다 휴양, 호이안의 저녁, 골프와 미식을 짧은 이동으로 연결하기 좋은 도시",
       "recommendedNights":4,
+      "recommendedCourses":[
+        {
+          "id":"danang-first-4n5d",
+          "name":"처음 만나는 다낭 4박 5일",
+          "badge":"HotelnGo 추천 1순위",
+          "summary":"대표 명소와 바다, 현지 미식, 호이안의 저녁을 무리 없이 한 번씩 경험하는 첫 방문용 코스입니다.",
+          "image":"assets/images/hero-hotel.jpg",
+          "tags":["첫 방문","휴양+관광","성인 2명"],
+          "pace":"균형 있게",
+          "reason":"도착일은 가볍게, 이틀째는 다낭 핵심, 셋째는 바나힐, 넷째는 호이안으로 지역을 나눠 왕복 이동을 줄였습니다.",
+          "days":[
+            {"day":1,"title":"도착과 한강의 밤","summary":"공항 픽업 · 리조트 체크인 · 베트남식 저녁 · 용다리 야경"},
+            {"day":2,"title":"미케 비치와 다낭 핵심","summary":"해변 산책 · 오행산 · 로컬 점심 · 아로마 스파"},
+            {"day":3,"title":"바나힐 하루 여행","summary":"케이블카와 골든브리지를 여유 있게 보는 종일 코스"},
+            {"day":4,"title":"호이안의 낮과 밤","summary":"전용 차량 · 올드타운 · 선셋 · 현지 저녁"},
+            {"day":5,"title":"선짜 반도와 귀국","summary":"영응사 전망 · 마지막 식사 또는 쇼핑 · 공항 이동"}
+          ],
+          "template":[
+            {"day":1,"time":"14:00","itemId":"danang_transfer_airport"},{"day":1,"time":"15:30","itemId":"danang_hotel_ocean"},{"day":1,"time":"18:30","itemId":"danang_food_chao"},{"day":1,"time":"21:00","itemId":"danang_dragon"},
+            {"day":2,"time":"07:30","itemId":"danang_mykhe"},{"day":2,"time":"10:00","itemId":"danang_marble"},{"day":2,"time":"13:30","itemId":"danang_food_local"},{"day":2,"time":"16:00","itemId":"danang_spa_aroma"},
+            {"day":3,"time":"07:30","itemId":"danang_banahill"},
+            {"day":4,"time":"12:30","itemId":"danang_transfer_hoian"},{"day":4,"time":"14:30","itemId":"danang_hoian"},{"day":4,"time":"19:00","itemId":"danang_food_hoian"},
+            {"day":5,"time":"09:30","itemId":"danang_sontra"},{"day":5,"time":"14:00","itemId":"danang_transfer_departure"}
+          ]
+        },
+        {
+          "id":"danang-slow-4n5d",
+          "name":"바다와 쉼이 있는 다낭",
+          "badge":"여유 여행 추천",
+          "summary":"아침 해변, 전망 좋은 반일 코스와 스파를 중심으로 하루에 핵심 한두 곳만 담는 느긋한 일정입니다.",
+          "image":"assets/images/marketplace/spa-treatment.jpg",
+          "tags":["해변","스파","느린 여행"],
+          "pace":"여유롭게",
+          "reason":"긴 종일 투어를 줄이고 숙소와 해변 주변에서 쉬는 시간을 넉넉히 남겨 일정 피로도를 낮췄습니다.",
+          "days":[
+            {"day":1,"title":"체크인하고 쉬는 날","summary":"공항 픽업 · 미케 비치 호텔 · 강변 저녁"},
+            {"day":2,"title":"바다와 스파","summary":"미케 비치 산책 · 로컬 점심 · 아로마 스파 · 용다리"},
+            {"day":3,"title":"선짜 반도 반일","summary":"영응사와 해안 전망 · 오후 자유시간"},
+            {"day":4,"title":"천천히 만나는 호이안","summary":"전용 차량 · 올드타운 · 선셋 · 저녁"},
+            {"day":5,"title":"느린 아침과 귀국","summary":"호텔 조식과 자유시간 · 공항 이동"}
+          ],
+          "template":[
+            {"day":1,"time":"14:00","itemId":"danang_transfer_airport"},{"day":1,"time":"15:30","itemId":"danang_hotel_sala"},{"day":1,"time":"18:30","itemId":"danang_food_chao"},
+            {"day":2,"time":"07:30","itemId":"danang_mykhe"},{"day":2,"time":"12:00","itemId":"danang_food_local"},{"day":2,"time":"16:00","itemId":"danang_spa_aroma"},{"day":2,"time":"20:00","itemId":"danang_dragon"},
+            {"day":3,"time":"09:30","itemId":"danang_sontra"},
+            {"day":4,"time":"12:30","itemId":"danang_transfer_hoian"},{"day":4,"time":"14:30","itemId":"danang_hoian"},{"day":4,"time":"19:00","itemId":"danang_food_hoian"},
+            {"day":5,"time":"14:00","itemId":"danang_transfer_departure"}
+          ]
+        },
+        {
+          "id":"danang-golf-4n5d",
+          "name":"골프와 호이안 다낭",
+          "badge":"액티브 여행 추천",
+          "summary":"18홀 라운드와 해변, 스파, 호이안을 함께 담되 골프 다음 일정에 충분한 휴식 시간을 둔 코스입니다.",
+          "image":"assets/images/marketplace/golf-course.jpg",
+          "tags":["18홀","호이안","미식"],
+          "pace":"알차게",
+          "reason":"오전 라운드 뒤에는 스파만 배치하고, 호이안은 별도 날짜로 분리해 장거리 이동과 체력 부담을 줄였습니다.",
+          "days":[
+            {"day":1,"title":"도착과 체크인","summary":"공항 픽업 · 해변 리조트 · 베트남식 저녁"},
+            {"day":2,"title":"다낭의 바다와 명소","summary":"미케 비치 · 오행산 · 로컬 점심 · 용다리"},
+            {"day":3,"title":"18홀과 회복","summary":"Montgomerie Links 18홀 · 늦은 점심 · 아로마 스파"},
+            {"day":4,"title":"호이안 선셋","summary":"전용 차량 · 올드타운 · 현지 저녁"},
+            {"day":5,"title":"선짜 반도와 귀국","summary":"영응사 전망 · 공항 이동"}
+          ],
+          "template":[
+            {"day":1,"time":"14:00","itemId":"danang_transfer_airport"},{"day":1,"time":"15:30","itemId":"danang_hotel_ocean"},{"day":1,"time":"18:30","itemId":"danang_food_chao"},
+            {"day":2,"time":"07:30","itemId":"danang_mykhe"},{"day":2,"time":"10:00","itemId":"danang_marble"},{"day":2,"time":"13:30","itemId":"danang_food_local"},{"day":2,"time":"20:00","itemId":"danang_dragon"},
+            {"day":3,"time":"07:10","itemId":"danang_golf_ocean"},{"day":3,"time":"14:30","itemId":"danang_food_local"},{"day":3,"time":"17:00","itemId":"danang_spa_aroma"},
+            {"day":4,"time":"12:30","itemId":"danang_transfer_hoian"},{"day":4,"time":"14:30","itemId":"danang_hoian"},{"day":4,"time":"19:00","itemId":"danang_food_hoian"},
+            {"day":5,"time":"09:30","itemId":"danang_sontra"},{"day":5,"time":"14:00","itemId":"danang_transfer_departure"}
+          ]
+        }
+      ],
       "items":[
         {"id":"danang_hotel_ocean","category":"STAY","title":"Furama Resort Danang","area":"응우한선 해변","image":"assets/images/marketplace/hotel-resort.jpg","description":"해변과 라군 수영장을 갖춘 5성급 리조트. 4박 기준 조식 포함 예시 요금입니다.","duration":0,"recommendedTime":"15:00","price":612000,"priceLabel":"4박 612,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE","lat":16.0397489,"lng":108.2513386},
         {"id":"danang_hotel_sala","category":"STAY","title":"Sala Danang Beach Hotel","area":"미케 비치","image":"assets/images/marketplace/hotel-bedroom.jpg","description":"미케 비치 도보권, 루프톱 수영장과 시내 이동이 편한 호텔입니다.","duration":0,"recommendedTime":"15:00","price":438000,"priceLabel":"4박 438,000원","bookingType":"INSTANT","status":"MOCK_AVAILABLE","lat":16.0621113,"lng":108.2451665},
@@ -36,6 +110,7 @@
         {"id":"danang_golf_twilight","category":"GOLF","title":"바나힐 골프클럽 Twilight 9홀","area":"바나힐 인근","image":"assets/images/marketplace/golf-green.jpg","description":"초보와 가족에게 적합한 오후 9홀. 캐디피가 포함됩니다.","duration":180,"recommendedTime":"15:30","price":92000,"priceLabel":"1인 92,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE","lat":15.9734000,"lng":108.0152000},
         {"id":"danang_spa_aroma","category":"SPA","title":"Herbal Spa 아로마 90분","area":"안하이","image":"assets/images/marketplace/spa-treatment.jpg","description":"전신 아로마 마사지, 풋배스와 샤워가 포함된 휴식 프로그램입니다.","duration":120,"recommendedTime":"16:00","price":54000,"priceLabel":"1인 54,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED","lat":16.0691106,"lng":108.2364890},
         {"id":"danang_transfer_airport","category":"TRANSPORT","title":"다낭 공항→호텔 전용 차량","area":"다낭 공항","image":"assets/images/marketplace/vehicle-airport-transfer.png","description":"성인 3명과 수하물 2개 기준 기사 포함 편도 차량입니다.","duration":45,"recommendedTime":"14:00","price":32000,"priceLabel":"차량 1대 32,000원","bookingType":"REQUEST","status":"MOCK_AVAILABLE","lat":16.0425792,"lng":108.1971613},
+        {"id":"danang_transfer_departure","category":"TRANSPORT","title":"호텔→다낭 공항 출국 차량","area":"다낭 공항","image":"assets/images/marketplace/vehicle-airport-transfer.png","description":"항공편 출발 시각을 기준으로 호텔 픽업 시간을 다시 확인하는 기사 포함 편도 차량입니다.","duration":45,"recommendedTime":"14:00","price":32000,"priceLabel":"차량 1대 32,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED","lat":16.0425792,"lng":108.1971613},
         {"id":"danang_transfer_hoian","category":"TRANSPORT","title":"다낭↔호이안 왕복 차량","area":"푸라마 리조트 픽업","image":"assets/images/marketplace/vehicle-sedan.jpg","description":"푸라마 리조트에서 출발해 호이안 반일 일정에 맞춰 이동하는 기사 포함 왕복 차량입니다.","duration":90,"recommendedTime":"13:00","price":68000,"priceLabel":"차량 1대 68,000원","bookingType":"REQUEST","status":"CHECK_REQUIRED","lat":16.0397489,"lng":108.2513386}
       ],
       "template":[
@@ -53,7 +128,7 @@
         {"day":4,"time":"14:30","itemId":"danang_hoian"},
         {"day":4,"time":"19:00","itemId":"danang_food_hoian"},
         {"day":5,"time":"09:30","itemId":"danang_sontra"},
-        {"day":5,"time":"14:00","itemId":"danang_transfer_airport"}
+        {"day":5,"time":"14:00","itemId":"danang_transfer_departure"}
       ]
     },
     {
