@@ -1199,6 +1199,7 @@
       state.activeStep = focusedItem.category === 'LANDMARK' ? 2 : 4;
     }
     render();
+    if (storedTrip || state.items.length) scheduleAutosave();
   };
 
   window.addEventListener('beforeunload', () => {
