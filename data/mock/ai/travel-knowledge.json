@@ -153,6 +153,11 @@
           "bookingType": "INFORMATION_ONLY",
           "confidence": "CATALOG_VERIFIED",
           "reason": "이동 부담이 낮고 아침 바다를 중심으로 하루를 열기 좋습니다.",
+          "image": "assets/images/hero-hotel.jpg",
+          "area": "다낭 · 미케 비치",
+          "summary": "다낭 동쪽 해안을 따라 이어지는 대표 해변으로, 더워지기 전 아침 산책과 주변 카페를 함께 즐기기 좋습니다.",
+          "visitTip": "햇빛이 강해지기 전 이른 아침 방문을 권장합니다. 해변 산책 뒤 아침 식사 장소와 연결해 보세요.",
+          "hoursNote": "해변 상시 개방 · 해양 활동은 날씨 확인 필요",
           "alternatives": [
             "danang_son_tra",
             "danang_hoi_an"
@@ -173,6 +178,11 @@
           "bookingType": "REQUEST",
           "confidence": "TRANSPORT_CHECK_REQUIRED",
           "reason": "해안 전망과 드라이브를 함께 구성할 수 있습니다.",
+          "image": "assets/images/landmark-bali.jpg",
+          "area": "다낭 · 선짜 반도",
+          "summary": "영응사와 해안 전망 포인트를 차량으로 연결하는 반일 코스로, 다낭 시내와 바다를 함께 내려다볼 수 있습니다.",
+          "visitTip": "도보만으로 이동하기 어려운 구간이 있어 왕복 차량 이동시간을 일정에 포함해야 합니다.",
+          "hoursNote": "전망 구간별 접근 시간 상이 · 날씨와 도로 상태 확인 필요",
           "alternatives": [
             "danang_my_khe",
             "danang_ba_na"
@@ -193,6 +203,11 @@
           "bookingType": "REQUEST",
           "confidence": "TRANSPORT_CHECK_REQUIRED",
           "reason": "해질 무렵부터 등불이 켜지는 시간까지 한 장면처럼 이어집니다.",
+          "image": "assets/images/marketplace/tour-kyoto.jpg",
+          "area": "꽝남 · 호이안 올드타운",
+          "summary": "오래된 상점과 강변, 등불이 이어지는 구시가지로 해질 무렵부터 저녁 식사까지 한 번에 연결하기 좋습니다.",
+          "visitTip": "다낭에서 편도 이동시간을 포함해 반나절 이상 확보하세요. 주말과 야시장 시간에는 혼잡할 수 있습니다.",
+          "hoursNote": "구시가지 상시 통행 · 일부 유료 구역과 상점은 개별 운영",
           "alternatives": [
             "danang_son_tra",
             "danang_ba_na"
@@ -213,6 +228,11 @@
           "bookingType": "INSTANT",
           "confidence": "INVENTORY_CHECK_REQUIRED",
           "reason": "가족 여행에서 하루 단위 체험으로 구성하기 좋습니다.",
+          "image": "assets/images/landmark-bali.jpg",
+          "area": "다낭 서쪽 · 바나힐",
+          "summary": "케이블카와 골든브리지를 포함해 하루 전체를 사용하는 산악 테마파크 일정입니다.",
+          "visitTip": "왕복 이동과 케이블카 대기시간을 고려해 이른 출발을 권장하며, 산 정상 날씨를 확인하세요.",
+          "hoursNote": "운영시간·입장권 재고·케이블카 점검 여부 확인 필요",
           "alternatives": [
             "danang_son_tra"
           ]

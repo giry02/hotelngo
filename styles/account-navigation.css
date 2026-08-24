@@ -1,0 +1,129 @@
+[data-auth-only][hidden],
+[data-guest-only][hidden] {
+  display: none !important;
+}
+
+.header-actions .account-header-link,
+.header-actions .header-logout {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 8px;
+  border: 0;
+  color: #343a38;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.header-actions .account-header-link:hover,
+.header-actions .header-logout:hover {
+  color: var(--brand-primary);
+}
+
+.account-context-nav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 92;
+  border-bottom: 1px solid var(--border-soft);
+  background: rgb(255 255 255 / 96%);
+  backdrop-filter: blur(12px);
+}
+
+.account-context-inner {
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.account-context-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.account-context-inner a,
+.account-context-inner button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9px;
+  color: #5d6764;
+  background: transparent;
+  cursor: pointer;
+  font: 700 13px var(--font-sans);
+}
+
+.account-context-inner a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.account-context-inner a:hover,
+.account-context-inner a.is-active {
+  color: var(--brand-primary);
+  background: var(--brand-primary-soft);
+}
+
+.account-context-inner button {
+  margin-left: auto;
+  color: #7b8481;
+}
+
+.has-account-context .account-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.has-account-context .account-layout > .account-nav {
+  display: none;
+}
+
+.mobile-menu-actions button {
+  display: grid;
+  place-items: center;
+  min-height: 43px;
+  padding: 0 10px;
+  border: 1px solid var(--brand-primary);
+  border-radius: 9px;
+  color: #fff;
+  background: var(--brand-primary);
+  cursor: pointer;
+  font: 700 12px var(--font-sans);
+}
+
+.mobile-menu-actions button.primary {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1180px) {
+  .header-actions .account-header-link,
+  .header-actions .header-logout {
+    display: none;
+  }
+
+  html[data-auth-state="authenticated"] .header-actions .menu-button {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 720px) {
+  .account-context-nav {
+    top: var(--header-height);
+  }
+
+  .account-context-inner {
+    min-height: 46px;
+    padding-inline: 14px;
+  }
+
+  .account-context-inner a,
+  .account-context-inner button {
+    min-height: 34px;
+    padding-inline: 11px;
+    font-size: 12px;
+  }
+}

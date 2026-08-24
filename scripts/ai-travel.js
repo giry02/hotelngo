@@ -93,6 +93,7 @@
     const category = place.type === 'HOTEL' ? 'STAY' : place.type;
     return candidates.find((item) => item.category === category) || null;
   };
+  const placeImage = (destination, place) => place?.image || plannerItemFor(destination, place)?.image || destination?.cover || 'assets/images/landmark-kyoto.jpg';
   const requestedServiceCategories = (text) => [
     [/숙소|호텔|리조트/, 'STAY'],
     [/공항|픽업|차량|이동/, 'TRANSPORT'],
@@ -263,14 +264,8 @@
                 </span>
                 <em>${escapeHtml(place.type)}</em>
                 ${alternatives.length ? `<div class="ai-alternative">
-                  <label>
-                    <span>다른 곳으로 변경</span>
-                    <select data-ai-alternative>
-                      <option value="">대안을 선택하세요</option>
-                      ${alternatives.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(item.reason)}</option>`).join('')}
-                    </select>
-                  </label>
-                  <button class="ui-button" type="button" data-ai-replace>선택한 곳으로 교체</button>
+                  <div><strong>다른 장소와 비교할 수 있어요</strong><span>사진과 소개, 권장 체류시간을 확인한 뒤 바꾸세요.</span></div>
+                  <button class="ui-button" type="button" data-ai-open-alternatives>다른 장소 보기 · ${alternatives.length}곳</button>
                 </div>` : '<div class="ai-stop-fixed"><span>일정 편집기에서 날짜와 시간을 자유롭게 바꿀 수 있습니다.</span></div>'}
               </div>`;
             }).join('') : `<div class="ai-day-empty"><strong>${day.day === 1 && /오늘/.test(prompt.value) ? '출발·도착 및 체크인' : '숙소와 이동을 위한 여유 시간'}</strong><span>${escapeHtml(day.note || '체크인·공항 이동시간을 확인한 뒤 가까운 장소를 추가할 수 있어요.')}</span></div>`}
@@ -294,14 +289,8 @@
     output.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const replacePlace = (button) => {
-    const stop = button.closest('[data-ai-stop]');
-    const select = stop?.querySelector('[data-ai-alternative]');
-    const alternativeId = select?.value;
-    if (!alternativeId) {
-      select?.focus();
-      return;
-    }
+  const replacePlace = (stop, alternativeId) => {
+    if (!stop || !alternativeId) return;
     const destination = knowledge.destinations.find((item) => item.name === currentPlan.destination);
     const alternative = destination?.landmarks.find((item) => item.id === alternativeId);
     if (!alternative) return;
@@ -324,8 +313,46 @@
     stop.querySelector('span > small').textContent = alternative.reason;
     stop.querySelector('em').textContent = alternative.type;
     stop.querySelector('.ai-stop-meta').innerHTML = `<i>${bookingLabel(alternative.bookingType)}</i><i>${confidenceLabel(alternative.confidence)}</i><i>추천 ${day.items[index].rankScore}점</i>`;
+    const alternativesButton = stop.querySelector('[data-ai-open-alternatives]');
     const options = alternativeOptions(destination, alternative, day.items.filter((item) => item.id !== alternative.id).map((item) => item.id));
-    select.innerHTML = `<option value="">대안을 선택하세요</option>${options.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)} · ${escapeHtml(item.reason)}</option>`).join('')}`;
+    if (alternativesButton) alternativesButton.textContent = `다른 장소 보기 · ${options.length}곳`;
+  };
+
+  const openAlternatives = (button) => {
+    const stop = button.closest('[data-ai-stop]');
+    const destination = knowledge.destinations.find((item) => item.name === currentPlan.destination);
+    const day = currentPlan.days.find((item) => item.day === Number(stop?.dataset.day));
+    const index = Number(stop?.dataset.index);
+    const current = day?.items[index];
+    if (!stop || !destination || !current) return;
+    const excluded = day.items.filter((item) => item.id !== current.id).map((item) => item.id);
+    const alternatives = alternativeOptions(destination, current, excluded);
+    if (!alternatives.length) return;
+    const dialog = document.createElement('dialog');
+    dialog.className = 'ai-alternative-dialog';
+    dialog.innerHTML = `<form method="dialog">
+      <header><div><small>DAY ${day.day} · 장소 교체</small><h2>${escapeHtml(current.name)} 대신 어디로 갈까요?</h2><p>이름만 보고 바꾸지 않도록 장소의 분위기와 체류시간을 먼저 비교해 보세요.</p></div><button type="button" data-ai-alternative-close aria-label="닫기">×</button></header>
+      <div class="ai-alternative-current"><span>현재 일정</span><strong>${escapeHtml(current.name)}</strong><small>${escapeHtml(current.bestTime)} · 약 ${current.estimatedMinutes}분 · ${escapeHtml(current.reason)}</small></div>
+      <div class="ai-alternative-grid">
+        ${alternatives.map((item, candidateIndex) => `<label class="ai-alternative-card">
+          <input type="radio" name="alternative" value="${escapeHtml(item.id)}" ${candidateIndex === 0 ? 'checked' : ''}>
+          <img src="${escapeHtml(placeImage(destination, item))}" alt="${escapeHtml(item.name)} 이미지">
+          <span class="ai-alternative-card-copy"><small>${escapeHtml(item.area || destination.name)} · ${escapeHtml(item.type)}</small><strong>${escapeHtml(item.name)}</strong><p>${escapeHtml(item.summary || item.reason)}</p><span><b>추천 ${escapeHtml(item.bestTime)}</b><b>약 ${item.estimatedMinutes}분</b><b>${escapeHtml(confidenceLabel(item.confidence))}</b></span><em>${escapeHtml(item.visitTip || item.reason)}</em></span>
+        </label>`).join('')}
+      </div>
+      <footer><button class="ui-button" type="button" data-ai-alternative-close>현재 장소 유지</button><button class="ui-button primary" type="submit">선택한 장소로 교체</button></footer>
+    </form>`;
+    document.body.append(dialog);
+    const close = () => dialog.close();
+    dialog.querySelectorAll('[data-ai-alternative-close]').forEach((closeButton) => closeButton.addEventListener('click', close));
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.querySelector('form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const selected = new FormData(event.currentTarget).get('alternative');
+      replacePlace(stop, String(selected || ''));
+      dialog.close();
+    });
+    dialog.showModal();
   };
 
   const copyPlan = async (button) => {
@@ -460,8 +487,11 @@
       prompt.focus({ preventScroll: true });
       return;
     }
-    const replaceButton = event.target.closest('[data-ai-replace]');
-    if (replaceButton) replacePlace(replaceButton);
+    const alternativesButton = event.target.closest('[data-ai-open-alternatives]');
+    if (alternativesButton) {
+      openAlternatives(alternativesButton);
+      return;
+    }
     const regenerateButton = event.target.closest('[data-ai-regenerate]');
     if (regenerateButton) {
       const destination = detectDestination(prompt.value);
