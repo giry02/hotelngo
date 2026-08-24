@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1100" viewBox="0 0 1400 1100" role="img" aria-labelledby="title desc">
+  <title id="title">HotelNGo travel symbol full logo lockups</title>
+  <desc id="desc">Six full horizontal Hoteln GO logo lockups using the official Hoteln wordmark and different travel symbols.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="58" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6B7"/>
+      <stop offset="0.48" stop-color="#1CB3E5"/>
+      <stop offset="1" stop-color="#2F6BFF"/>
+    </linearGradient>
+    <clipPath id="wordmark-clip"><rect width="238" height="100"/></clipPath>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#12223F" flood-opacity=".08"/></filter>
+    <g id="wordmark">
+      <image href="../../official/hotelngo-logo-go-capsule-ibm-plex.svg" width="446" height="100" clip-path="url(#wordmark-clip)"/>
+    </g>
+    <g id="capsule"><rect width="58" height="30" rx="15" fill="url(#g)"/><text class="go" x="7" y="21" font-size="17">GO</text></g>
+    <g id="paper-plane" transform="translate(-1.5 0)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M35 15.3 49.8 8.2l-4.4 13.9-4.1-4.9-6.3-1.9Z" fill="#fff"/>
+      <path d="m41.3 17.2 5.9-5.3" fill="none" stroke="#1CB3E5" stroke-width="1.2"/>
+    </g>
+    <g id="route" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="35.8" cy="18.2" r="1.4" fill="#fff" stroke="none"/><path d="M38.2 18.2c4.8 0 2.1-6.5 7.8-6.5h2.2"/><path d="m45.7 9.2 2.7 2.5-2.7 2.5"/></g>
+    <g id="compass"><circle cx="43" cy="15" r="7" fill="none" stroke="#fff" stroke-width="1.35"/><path d="m39.8 18.3 2-6.4 5.1-2.4-2.1 6.4-5 2.4Z" fill="#fff"/><circle cx="43.2" cy="14" r="1.1" fill="url(#g)"/></g>
+    <g id="takeoff" transform="translate(34.5 4.2) scale(.72)"><path d="M1 8c2-1.4 4.3-1.7 7-1.8l4-4.9 2 .6-2.2 4.2 5.2-.6L19 7l-5 1 5 1-2 1.5-5.2-.6 2.2 4.2-2 .6-4-4.9C5.3 9.7 3 9.4 1 8Z" fill="#fff"/><path d="M5.5 19.8h13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></g>
+    <g id="pin"><path d="M43 7.5a7 7 0 0 0-7 7c0 5.5 7 10.1 7 10.1s7-4.6 7-10.1a7 7 0 0 0-7-7Z" fill="#fff"/><path d="m40.1 14.2 6.2-2.4-2.4 6.2-.9-2.9-2.9-.9Z" fill="#1BAFE7"/></g>
+    <g id="road" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M35.5 21 40 9.5M50.5 21 46 9.5" stroke-width="1.65"/><path d="M43 20v-2.4m0-2.2V13" stroke-width="1.4"/><path d="m40.5 12.2 2.5-2.7 2.5 2.7" stroke-width="1.65"/></g>
+    <g id="lockup-01"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#paper-plane"/></g></g>
+    <g id="lockup-02"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#route"/></g></g>
+    <g id="lockup-03"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#compass"/></g></g>
+    <g id="lockup-04"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#takeoff"/></g></g>
+    <g id="lockup-05"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#pin"/></g></g>
+    <g id="lockup-06"><use href="#wordmark"/><g transform="translate(244 8) scale(2.8)"><use href="#capsule"/><use href="#road"/></g></g>
+    <style>
+      .ui{font-family:Arial,'Malgun Gothic',sans-serif}.go{font-family:'Arial Narrow',Arial,sans-serif;font-weight:800;letter-spacing:-.8px;fill:#fff}.label{font-size:14px;font-weight:800;letter-spacing:1.2px;fill:#2F6BFF}.name{font-size:22px;font-weight:800;fill:#181B1A}.actual{font-size:12px;font-weight:700;fill:#8A93A3}.card{fill:#fff;stroke:#DDE3EC;stroke-width:1}
+    </style>
+  </defs>
+  <rect width="1400" height="1100" fill="#F5F7FA"/>
+  <text class="ui" x="70" y="68" font-size="31" font-weight="800" fill="#181B1A">Hoteln + GO 여행 심벌 · 풀셋 로고 6안</text>
+  <text class="ui" x="70" y="100" font-size="15" fill="#677186">현재 공식 Hoteln 워드마크에 각 심벌을 결합한 비교용 가로형 로고입니다. 사이트에는 아직 적용하지 않았습니다.</text>
+
+  <g class="ui" transform="translate(70 135)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">01 · PAPER PLANE</text><text class="name" x="28" y="72">종이비행기</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-01"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-01"/></g></g>
+  <g class="ui" transform="translate(730 135)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">02 · ROUTE</text><text class="name" x="28" y="72">여정 경로</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-02"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-02"/></g></g>
+  <g class="ui" transform="translate(70 455)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">03 · COMPASS</text><text class="name" x="28" y="72">나침반</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-03"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-03"/></g></g>
+  <g class="ui" transform="translate(730 455)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">04 · TAKEOFF</text><text class="name" x="28" y="72">반대 방향 이륙 비행기</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-04"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-04"/></g></g>
+  <g class="ui" transform="translate(70 775)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">05 · DESTINATION</text><text class="name" x="28" y="72">목적지 핀</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-05"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-05"/></g></g>
+  <g class="ui" transform="translate(730 775)" filter="url(#shadow)"><rect class="card" width="600" height="280" rx="22"/><text class="label" x="28" y="40">06 · ROAD AHEAD</text><text class="name" x="28" y="72">앞으로 열린 길</text><g transform="translate(55 102) scale(1.2)"><use href="#lockup-06"/></g><text class="actual" x="28" y="250">실제 헤더 축소</text><g transform="translate(140 224) scale(.44)"><use href="#lockup-06"/></g></g>
+</svg>

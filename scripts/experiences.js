@@ -94,9 +94,15 @@
     }
     const saveButton = event.target.closest('[data-save-candidate]');
     if (saveButton) {
+      if (!window.HotelNGoTripCard?.isAuthenticated()) {
+        window.HotelNGoTripCard?.requireLogin();
+        return;
+      }
       const item = destination().items.find((candidate) => candidate.id === saveButton.dataset.saveCandidate);
-      if (window.HotelNGoTripCard) window.HotelNGoTripCard.add({ ...item, sourceId: item.id, destinationId, destination: destination().name });
+      let saved = null;
+      if (window.HotelNGoTripCard) saved = window.HotelNGoTripCard.add({ ...item, sourceId: item.id, destinationId, destination: destination().name });
       else api.upsert('trip-card', { ...item, id: `${destinationId}_${item.id}`, sourceId: item.id, destinationId, destination: destination().name, basePrice: item.price });
+      if (window.HotelNGoTripCard && !saved) return;
       saveButton.textContent = '여행 카드에 담김';
       saveButton.disabled = true;
     }

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">HotelNGo GO travel symbol six proposals</title>
+  <desc id="desc">Six compact GO capsule variants using a paper plane, route, compass, airplane, map pin, and road symbol.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="58" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6B7"/>
+      <stop offset="0.48" stop-color="#1CB3E5"/>
+      <stop offset="1" stop-color="#2F6BFF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#12223F" flood-opacity=".08"/>
+    </filter>
+    <g id="base">
+      <rect width="58" height="30" rx="15" fill="url(#g)"/>
+      <text class="logo" x="7" y="21" font-size="17">GO</text>
+    </g>
+    <g id="paper-plane" transform="translate(-1.5 0)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M35 15.3 49.8 8.2l-4.4 13.9-4.1-4.9-6.3-1.9Z" fill="#fff"/>
+      <path d="m41.3 17.2 5.9-5.3" fill="none" stroke="#1CB3E5" stroke-width="1.2"/>
+    </g>
+    <g id="route-arrow" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="35.8" cy="18.2" r="1.4" fill="#fff" stroke="none"/>
+      <path d="M38.2 18.2c4.8 0 2.1-6.5 7.8-6.5h2.2"/>
+      <path d="m45.7 9.2 2.7 2.5-2.7 2.5"/>
+    </g>
+    <g id="compass">
+      <circle cx="43" cy="15" r="7" fill="none" stroke="#fff" stroke-width="1.35"/>
+      <path d="m39.8 18.3 2-6.4 5.1-2.4-2.1 6.4-5 2.4Z" fill="#fff"/>
+      <circle cx="43.2" cy="14" r="1.1" fill="url(#g)"/>
+    </g>
+    <g id="takeoff-plane" transform="translate(34.5 4.2) scale(.72)">
+      <path d="M1 8c2-1.4 4.3-1.7 7-1.8l4-4.9 2 .6-2.2 4.2 5.2-.6L19 7l-5 1 5 1-2 1.5-5.2-.6 2.2 4.2-2 .6-4-4.9C5.3 9.7 3 9.4 1 8Z" fill="#fff"/>
+      <path d="M5.5 19.8h13" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    <g id="pin-arrow">
+      <path d="M43 7.5a7 7 0 0 0-7 7c0 5.5 7 10.1 7 10.1s7-4.6 7-10.1a7 7 0 0 0-7-7Z" fill="#fff"/>
+      <path d="m40.1 14.2 6.2-2.4-2.4 6.2-.9-2.9-2.9-.9Z" fill="#1BAFE7"/>
+    </g>
+    <g id="road-forward" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M35.5 21 40 9.5M50.5 21 46 9.5" stroke-width="1.65"/>
+      <path d="M43 20v-2.4m0-2.2V13" stroke-width="1.4"/>
+      <path d="m40.5 12.2 2.5-2.7 2.5 2.7" stroke-width="1.65"/>
+    </g>
+    <style>
+      .ui{font-family:Arial,'Malgun Gothic',sans-serif}.logo{font-family:'Arial Narrow',Arial,sans-serif;font-weight:800;letter-spacing:-.8px;fill:#fff}.label{font-size:14px;font-weight:800;letter-spacing:1.2px;fill:#2F6BFF}.name{font-size:23px;font-weight:800;fill:#181B1A}.copy{font-size:15px;fill:#677186}.actual{font-size:12px;font-weight:700;fill:#8A93A3}.card{fill:#fff;stroke:#DDE3EC;stroke-width:1}
+    </style>
+  </defs>
+  <rect width="1200" height="820" fill="#F5F7FA"/>
+  <text class="ui" x="70" y="65" font-size="30" font-weight="800" fill="#181B1A">GO × 여행 심벌 6안</text>
+  <text class="ui" x="70" y="96" font-size="15" fill="#677186">같은 화살표 변형이 아니라 여행 행동을 상징하는 서로 다른 심벌로 비교합니다. 실제 로고에는 적용하지 않았습니다.</text>
+
+  <g class="ui" transform="translate(70 130)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">01 · PAPER PLANE</text><text class="name" x="26" y="72">종이비행기</text><text class="copy" x="26" y="98">떠남·발견·가벼운 이동</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#paper-plane"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#paper-plane"/></g>
+  </g>
+  <g class="ui" transform="translate(435 130)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">02 · ROUTE</text><text class="name" x="26" y="72">여정 경로</text><text class="copy" x="26" y="98">출발점에서 목적지로 이어지는 동선</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#route-arrow"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#route-arrow"/></g>
+  </g>
+  <g class="ui" transform="translate(800 130)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">03 · COMPASS</text><text class="name" x="26" y="72">나침반</text><text class="copy" x="26" y="98">나만의 방향과 가이드</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#compass"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#compass"/></g>
+  </g>
+
+  <g class="ui" transform="translate(70 455)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">04 · TAKEOFF</text><text class="name" x="26" y="72">이륙 비행기</text><text class="copy" x="26" y="98">해외여행과 출발을 가장 직접적으로 표현</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#takeoff-plane"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#takeoff-plane"/></g>
+  </g>
+  <g class="ui" transform="translate(435 455)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">05 · DESTINATION</text><text class="name" x="26" y="72">목적지 핀</text><text class="copy" x="26" y="98">지도·랜드마크·도착점을 한 번에 표현</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#pin-arrow"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#pin-arrow"/></g>
+  </g>
+  <g class="ui" transform="translate(800 455)" filter="url(#shadow)">
+    <rect class="card" width="330" height="285" rx="22"/>
+    <text class="label" x="26" y="39">06 · ROAD AHEAD</text><text class="name" x="26" y="72">앞으로 열린 길</text><text class="copy" x="26" y="98">여행 동선과 앞으로 나아감을 결합</text>
+    <g transform="translate(78 121) scale(3)"><use href="#base"/><use href="#road-forward"/></g>
+    <text class="actual" x="26" y="249">실제 헤더 크기</text><g transform="translate(129 229)"><use href="#base"/><use href="#road-forward"/></g>
+  </g>
+</svg>

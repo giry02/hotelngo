@@ -1,26 +1,25 @@
 {
-  "version": "1.7.0",
+  "version": "1.8.0",
   "status": "LOCKED",
-  "selectedAt": "2026-08-21",
+  "selectedAt": "2026-08-24",
   "brandName": "HotelnGo",
   "selectedVariant": {
-    "id": "07",
-    "name": "Go Capsule · IBM Plex Sans",
-    "sourcePage": "assets/brand/exploration-20260821/hotelngo-logo-07-ibm-plex-go-capsule.svg",
-    "sourceContext": "font comparison option 07, desktop header 152px"
+    "id": "07-01",
+    "name": "Go Paper Plane · IBM Plex Sans",
+    "sourcePage": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/full-lockups.html",
+    "sourceContext": "IBM Plex Sans full lockup with travel symbol option 01, desktop header 152px"
   },
   "primaryAsset": {
     "path": "assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg",
     "format": "SVG",
-    "viewBox": "0 0 446 100",
-    "source": "assets/brand/exploration-20260821/hotelngo-logo-07-ibm-plex-go-capsule.svg",
+    "viewBox": "0 0 407 100",
+    "source": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/go-travel-full-lockups-v1.svg",
     "background": "transparent",
     "policy": "USE_AS_IMAGE_WITHOUT_LIVE_TEXT"
   },
   "savedDesignSource": {
-    "path": "assets/brand/exploration-20260821/hotelngo-logo-07-ibm-plex-go-capsule.svg",
-    "sha256": "BB8939D154386CA6C668F13509FBC7B26570663A4C33E30787C30E38302797F7",
-    "purpose": "Approved option 07 IBM Plex Sans design source for the website wordmark."
+    "path": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/go-travel-full-lockups-v1.svg",
+    "purpose": "Approved option 01 paper-plane full-lockup source for the website wordmark."
   },
   "headerUsage": {
     "desktop": {
@@ -41,9 +40,9 @@
   },
   "rules": [
     "Use assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg in website headers, footers, login screens, and backoffice shells.",
-    "Display it at 152px in the desktop header and preserve the 446:100 ratio.",
+    "Display it at 152px in the desktop header and preserve the 407:100 ratio.",
     "Do not reconstruct the logo with HTML text, web fonts, or CSS shapes.",
-    "Keep the option 07 IBM Plex Sans source SVG unchanged.",
+    "Keep the option 01 paper-plane full-lockup source SVG unchanged.",
     "Do not overwrite the approved official SVG without a new explicit approval."
   ]
 }

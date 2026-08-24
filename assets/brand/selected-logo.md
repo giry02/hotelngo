@@ -1,15 +1,15 @@
 # HotelnGo 선택 로고
 
-- 확정일: 2026-08-21
-- 선택 시안: `07 · IBM Plex Sans Go Capsule`
+- 확정일: 2026-08-24
+- 선택 시안: `07-01 · IBM Plex Sans Go Paper Plane`
 - 상태: `LOCKED`
 - 공식 폴더: `official/`
 
 ## 정본 파일
 
 - 현재 홈페이지 워드마크: `official/hotelngo-logo-go-capsule-ibm-plex.svg`
-- 원본: `exploration-20260821/hotelngo-logo-07-ibm-plex-go-capsule.svg`
-- 선택 근거: 메인 화면 폰트 비교의 07번 IBM Plex Sans
+- 원본: `exploration-20260824/go-travel-symbol-variants-v1/go-travel-full-lockups-v1.svg`
+- 선택 근거: IBM Plex Sans 풀 로고 비교의 01번 종이비행기
 - 화면용 심볼: `official/hotelngo-symbol-primary.png`
 - 인쇄용 심볼: `official/hotelngo-symbol-primary.svg`
 

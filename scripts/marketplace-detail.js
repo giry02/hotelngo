@@ -122,6 +122,10 @@
       </section>`;
 
     root.querySelector('[data-add-place-to-trip-card]')?.addEventListener('click', (event) => {
+      if (!window.HotelNGoTripCard?.isAuthenticated()) {
+        window.HotelNGoTripCard?.requireLogin();
+        return;
+      }
       const item = {
         sourceId: data.providerId,
         category: type,
@@ -135,7 +139,8 @@
         priceLabel: profile.priceLine,
         bookingType: profile.booking
       };
-      window.HotelNGoTripCard?.add(item);
+      const saved = window.HotelNGoTripCard?.add(item);
+      if (!saved) return;
       event.currentTarget.textContent = '여행 카드에 담김';
       event.currentTarget.disabled = true;
       window.HotelNGoUI?.toast?.(`${data.name}을 여행 카드에 담았습니다.`);
