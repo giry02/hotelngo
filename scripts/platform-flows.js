@@ -17,7 +17,7 @@
   if (!document.querySelector('link[data-platform-flows]')) {
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = 'styles/platform-flows.css?v=4';
+    style.href = 'styles/platform-flows.css?v=5';
     style.dataset.platformFlows = '';
     document.head.append(style);
   }

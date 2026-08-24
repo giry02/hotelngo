@@ -1,0 +1,30 @@
+.trip-card-build-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.trip-card-build-steps span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: #44516a;
+  background: #f1f5ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trip-card-build-steps b {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--brand-primary);
+  font-size: 10px;
+}

@@ -983,26 +983,201 @@
   border-top: 1px solid #e3e9ed;
 }
 
-.ai-alternative label,
-.ai-alternative label > span {
+.ai-alternative > div {
   display: grid;
-  gap: 5px;
+  gap: 4px;
 }
 
-.ai-alternative label > span {
+.ai-alternative > div strong {
+  font-size: 13px;
+}
+
+.ai-alternative > div span {
   color: #64748b;
   font-size: 12px;
 }
 
-.ai-alternative select {
-  width: 100%;
-  min-height: 38px;
-  padding: 0 10px;
-  border: 1px solid #d8e0e7;
-  border-radius: 8px;
+.ai-alternative-dialog {
+  width: min(900px, calc(100% - 32px));
+  max-height: min(820px, calc(100dvh - 32px));
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
   background: #fff;
-  font: inherit;
+  box-shadow: 0 26px 80px rgb(12 27 42 / 24%);
+}
+
+.ai-alternative-dialog[open] {
+  display: block;
+}
+
+.ai-alternative-dialog::backdrop {
+  background: rgb(10 20 32 / 58%);
+  backdrop-filter: blur(4px);
+}
+
+.ai-alternative-dialog form {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  max-height: min(820px, calc(100dvh - 32px));
+}
+
+.ai-alternative-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 26px 18px;
+  border-bottom: 1px solid #e5eaee;
+}
+
+.ai-alternative-dialog header small {
+  color: var(--brand-primary);
   font-size: 12px;
+  font-weight: 800;
+}
+
+.ai-alternative-dialog header h2 {
+  margin: 6px 0 5px;
+  font-size: 22px;
+}
+
+.ai-alternative-dialog header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ai-alternative-dialog header > button {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid #dfe5e9;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.ai-alternative-current {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 16px 26px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f5f8ff;
+}
+
+.ai-alternative-current span {
+  color: var(--brand-primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ai-alternative-current strong {
+  font-size: 13px;
+}
+
+.ai-alternative-current small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.ai-alternative-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 26px 24px;
+  overflow-y: auto;
+}
+
+.ai-alternative-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid #dfe5e9;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.ai-alternative-card:has(input:checked) {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgb(47 107 255 / 10%);
+}
+
+.ai-alternative-card > input {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-primary);
+}
+
+.ai-alternative-card > img {
+  width: 150px;
+  height: 100%;
+  min-height: 210px;
+  object-fit: cover;
+}
+
+.ai-alternative-card-copy {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  padding: 15px 38px 15px 15px;
+}
+
+.ai-alternative-card-copy > small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.ai-alternative-card-copy > strong {
+  font-size: 17px;
+}
+
+.ai-alternative-card-copy > p {
+  margin: 0;
+  color: #4e5c69;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.ai-alternative-card-copy > span {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ai-alternative-card-copy > span b {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #415166;
+  background: #f0f4f7;
+  font-size: 11px;
+}
+
+.ai-alternative-card-copy > em {
+  color: #64748b;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.ai-alternative-dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 26px;
+  border-top: 1px solid #e5eaee;
 }
 
 @media (max-width: 720px) {
@@ -1013,5 +1188,33 @@
   .ai-alternative {
     grid-column: 1 / -1;
     grid-template-columns: 1fr;
+  }
+
+  .ai-alternative-dialog header {
+    padding: 18px 18px 14px;
+  }
+
+  .ai-alternative-current {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin: 12px 18px 0;
+  }
+
+  .ai-alternative-grid {
+    grid-template-columns: 1fr;
+    padding: 12px 18px 18px;
+  }
+
+  .ai-alternative-card {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .ai-alternative-card > img {
+    width: 112px;
+    min-height: 190px;
+  }
+
+  .ai-alternative-dialog footer {
+    padding: 14px 18px;
   }
 }

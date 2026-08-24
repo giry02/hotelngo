@@ -24,6 +24,20 @@
     tripCardScript.dataset.hotelngoTripCard = '';
     document.head.append(tripCardScript);
   }
+  if (!document.querySelector('link[data-hotelngo-account-navigation]')) {
+    const accountNavigationStyles = document.createElement('link');
+    accountNavigationStyles.rel = 'stylesheet';
+    accountNavigationStyles.href = 'styles/account-navigation.css?v=1';
+    accountNavigationStyles.dataset.hotelngoAccountNavigation = '';
+    document.head.append(accountNavigationStyles);
+  }
+  if (document.querySelector('[data-trip-card-root]') && !document.querySelector('link[data-hotelngo-trip-card-enhancements]')) {
+    const tripCardEnhancementStyles = document.createElement('link');
+    tripCardEnhancementStyles.rel = 'stylesheet';
+    tripCardEnhancementStyles.href = 'styles/trip-card-enhancements.css?v=1';
+    tripCardEnhancementStyles.dataset.hotelngoTripCardEnhancements = '';
+    document.head.append(tripCardEnhancementStyles);
+  }
 
   const logo = (_assetId, ariaLabel = 'HotelnGo Go Capsule IBM Plex Sans 로고') => `
     <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg?v=2" width="446" height="100" alt="${ariaLabel}" decoding="async">`;
@@ -33,22 +47,46 @@
     ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
-    ['ai', 'AI 여행', 'ai-travel.html'],
-    ['trips', '내 여행', 'trips.html']
+    ['ai', 'AI 여행', 'ai-travel.html']
   ];
+
+  const route = location.pathname.split('/').pop() || 'index.html';
+  const accountRouteGroups = {
+    my: ['my.html', 'notifications.html', 'coupons.html', 'reviews.html', 'my-stories.html', 'inquiries.html'],
+    trips: ['trips.html', 'shared-trips.html'],
+    orders: ['orders.html', 'booking-detail.html'],
+    saved: ['saved.html'],
+    settings: ['account-settings.html', 'travelers.html', 'payment-methods.html', 'password-change.html', 'privacy-request.html']
+  };
+  const accountSection = Object.entries(accountRouteGroups).find(([, routes]) => routes.includes(route))?.[0] || '';
+
+  const accountContextNavigation = () => accountSection ? `
+    <nav class="account-context-nav" aria-label="마이페이지 메뉴" data-auth-only hidden>
+      <div class="shell account-context-inner">
+        <a class="${accountSection === 'my' ? 'is-active' : ''}" href="my.html">마이 홈</a>
+        <a class="${accountSection === 'trips' ? 'is-active' : ''}" href="trips.html">내 여행</a>
+        <a class="${accountSection === 'orders' ? 'is-active' : ''}" href="orders.html">내 예약</a>
+        <a class="${accountSection === 'saved' ? 'is-active' : ''}" href="saved.html">저장한 콘텐츠</a>
+        <a class="${accountSection === 'settings' ? 'is-active' : ''}" href="account-settings.html">계정 설정</a>
+        <button type="button" data-auth-logout>로그아웃</button>
+      </div>
+    </nav>` : '';
 
   const header = (active) => `
     <header class="site-header" data-header>
       <div class="header-inner shell">
         <a class="brand" href="index.html" aria-label="HotelnGo 홈">${logo('hotelngo-ocean-route-shell-header')}</a>
         <nav class="main-nav" aria-label="주요 서비스">
-          ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}"${key === 'trips' ? ' data-member-only' : ''}>${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
+          ${navItems.map(([key, label, href]) => `<a class="${active === key ? 'is-active' : ''}${key === 'ai' ? ' ai-link' : ''}" href="${href}">${key === 'ai' ? '<span aria-hidden="true">✦</span><b>' + label + '</b>' : label}</a>`).join('')}
         </nav>
         <div class="header-actions">
           <a class="ai-quick-link${active === 'ai' ? ' is-active' : ''}" href="ai-travel.html"><span aria-hidden="true">✦</span><b>AI 여행</b></a>
           <a class="cart-link" href="cart.html">여행 카드</a>
+          <a class="account-header-link" href="my.html" data-auth-only hidden>마이 홈</a>
+          <a class="account-header-link" href="trips.html" data-auth-only hidden>내 여행</a>
           <a class="reservation-link" href="bookings.html">예약 조회</a>
-          <a class="login-button" href="login.html">로그인</a>
+          <a class="login-button" href="login.html" data-guest-only>로그인</a>
+          <button class="header-logout" type="button" data-auth-logout data-auth-only hidden>로그아웃</button>
           <button class="menu-button" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" data-menu-trigger><span></span><span></span><span></span></button>
         </div>
       </div>
@@ -56,10 +94,18 @@
     <button class="menu-scrim" type="button" aria-label="메뉴 닫기" data-menu-scrim hidden></button>
     <aside class="mobile-menu" role="dialog" aria-modal="true" aria-label="전체 메뉴" data-mobile-menu hidden>
       <div class="mobile-menu-head"><div><small>HOTELNGO MENU</small><strong>여행을 어디서 이어갈까요?</strong></div><button type="button" aria-label="전체 메뉴 닫기" data-menu-close>×</button></div>
-      <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}${key === 'trips' ? ' data-member-only' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
-      <div class="mobile-menu-actions"><a href="cart.html">여행 카드</a><a href="booking-cart.html">예약 카트</a><a href="bookings.html">예약 조회</a><a class="primary" href="login.html">로그인·회원가입</a></div>
+      <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
+      <div class="mobile-menu-actions">
+        <a href="cart.html">여행 카드</a>
+        <a href="bookings.html" class="reservation-link">예약 조회</a>
+        <a href="my.html" data-auth-only hidden>마이 홈</a>
+        <a href="trips.html" data-auth-only hidden>내 여행</a>
+        <a class="primary" href="login.html" data-guest-only>로그인·회원가입</a>
+        <button class="primary" type="button" data-auth-logout data-auth-only hidden>로그아웃</button>
+      </div>
       <p>해외 호텔과 여행 장면을 저장하고 하나의 일정으로 연결하세요.</p>
-    </aside>`;
+    </aside>
+    ${accountContextNavigation()}`;
 
   const footer = () => `
     <footer class="site-footer">
@@ -82,6 +128,7 @@
   document.querySelectorAll('[data-site-header]').forEach((target) => {
     target.outerHTML = header(target.dataset.active || '');
   });
+  if (accountSection) document.body.classList.add('has-account-context');
   document.querySelectorAll('[data-site-footer]').forEach((target) => {
     target.outerHTML = footer();
   });

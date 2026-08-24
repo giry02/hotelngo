@@ -71,10 +71,16 @@
   const paintSession = () => {
     session = readSession();
     document.documentElement.dataset.authState = session ? 'authenticated' : 'guest';
+    document.querySelectorAll('[data-auth-only]').forEach((element) => {
+      element.hidden = !session;
+    });
+    document.querySelectorAll('[data-guest-only]').forEach((element) => {
+      element.hidden = Boolean(session);
+    });
     document.querySelectorAll('.login-button').forEach((link) => {
-      link.href = session ? 'my.html' : 'login.html';
-      link.textContent = session ? `${session.user.displayName}님` : '로그인';
-      link.setAttribute('aria-label', session ? `${session.user.name} 마이페이지` : '로그인');
+      link.href = 'login.html';
+      link.textContent = '로그인';
+      link.setAttribute('aria-label', '로그인');
     });
     document.querySelectorAll('.reservation-link').forEach((link) => {
       link.href = session ? 'orders.html' : 'bookings.html';
@@ -84,9 +90,9 @@
       link.href = session ? 'orders.html' : 'bookings.html';
       link.textContent = session ? '내 예약' : '예약 조회';
     });
-    document.querySelectorAll('.mobile-menu-actions .primary').forEach((link) => {
-      link.href = session ? 'my.html' : 'login.html';
-      link.textContent = session ? `${session.user.displayName}님의 마이페이지` : '로그인·회원가입';
+    document.querySelectorAll('.mobile-menu-actions a.primary[data-guest-only]').forEach((link) => {
+      link.href = 'login.html';
+      link.textContent = '로그인·회원가입';
     });
     document.querySelectorAll('[data-member-name]').forEach((target) => { target.textContent = session?.user.displayName || ''; });
     if (session) {
