@@ -1,14 +1,26 @@
 (() => {
   if (window.HotelNGoTripCard) return;
   const DOMAIN = 'trip-card';
+  const SESSION_KEY = 'hotelngo.mock.session.v1';
   const api = () => window.HotelNGoMockAPI;
   const categoryMap = { HOTEL: 'STAY', PLACE: 'LANDMARK', RESTAURANT: 'FOOD', VEHICLE: 'TRANSPORT' };
+  const session = () => {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; }
+  };
+  const memberId = () => session()?.user?.id || '';
+  const requireLogin = () => {
+    const returnUrl = `${location.pathname.split('/').pop() || 'cart.html'}${location.search}${location.hash}`;
+    location.href = `login.html?returnUrl=${encodeURIComponent(returnUrl)}`;
+    return false;
+  };
   const normalize = (record = {}) => {
+    const ownerId = record.ownerId || memberId();
     const sourceId = record.sourceId || record.itemId || record.placeId || record.id || `place_${Date.now()}`;
     const category = categoryMap[record.category || record.type] || record.category || record.type || 'LANDMARK';
     const destinationId = record.destinationId || String(record.destination || record.city || 'danang').toLowerCase().replaceAll(' ', '-');
     return {
-      id: record.cardId || `${destinationId}_${sourceId}`,
+      id: record.cardId || record.id || `${ownerId}_${destinationId}_${sourceId}`,
+      ownerId,
       sourceId,
       sourceType: category,
       destinationId,
@@ -31,14 +43,21 @@
       addedAt: record.addedAt || new Date().toISOString()
     };
   };
-  const list = () => (api()?.list(DOMAIN, []) || []).map(normalize);
+  const list = () => {
+    const ownerId = memberId();
+    if (!ownerId) return [];
+    return (api()?.list(DOMAIN, []) || []).map(normalize).filter((item) => item.ownerId === ownerId);
+  };
   const add = (record) => {
-    const normalized = normalize(record);
+    const ownerId = memberId();
+    if (!ownerId) return null;
+    const normalized = normalize({ ...record, ownerId });
     api()?.upsert(DOMAIN, normalized);
     window.dispatchEvent(new CustomEvent('hotelngo:trip-card-change', { detail: { action: 'ADD', item: normalized } }));
     return normalized;
   };
   const remove = (id) => {
+    if (!memberId() || !list().some((item) => item.id === id)) return;
     api()?.remove(DOMAIN, id);
     window.dispatchEvent(new CustomEvent('hotelngo:trip-card-change', { detail: { action: 'REMOVE', id } }));
   };
@@ -62,15 +81,16 @@
     const button = event.target.closest('[data-trip-card-add]');
     if (!button) return;
     event.preventDefault();
+    if (!memberId()) return requireLogin();
     const item = fromDataset(button);
     if (has(item.sourceId, item.destinationId)) {
       button.textContent = '이미 여행 카드에 있어요';
       return;
     }
-    add(item);
+    if (!add(item)) return;
     button.classList.add('is-saved');
     button.textContent = '여행 카드에 담았어요';
     document.querySelector('[data-toast]')?.replaceChildren(document.createTextNode(`${item.title}을(를) 여행 카드에 담았습니다.`));
   });
-  window.HotelNGoTripCard = { domain: DOMAIN, normalize, list, add, remove, has };
+  window.HotelNGoTripCard = { domain: DOMAIN, normalize, list, add, remove, has, isAuthenticated: () => Boolean(memberId()), requireLogin };
 })();

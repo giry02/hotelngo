@@ -27,7 +27,7 @@
   };
   const safeReturnUrl = () => {
     const requested = new URLSearchParams(location.search).get('returnUrl');
-    if (!requested || requested.includes('://') || requested.startsWith('//')) return 'my.html';
+    if (!requested || requested.includes('://') || requested.startsWith('//')) return 'trips.html';
     return requested;
   };
   const showMessage = (form, message, type = 'error') => {
@@ -83,8 +83,8 @@
       link.setAttribute('aria-label', '로그인');
     });
     document.querySelectorAll('.reservation-link').forEach((link) => {
-      link.href = session ? 'orders.html' : 'bookings.html';
-      link.textContent = session ? '내 예약' : '예약 조회';
+      link.href = 'bookings.html';
+      link.textContent = '예약 조회';
     });
     document.querySelectorAll('.mobile-menu-actions a[href="bookings.html"]').forEach((link) => {
       link.href = session ? 'orders.html' : 'bookings.html';
@@ -95,14 +95,14 @@
       link.textContent = '로그인·회원가입';
     });
     document.querySelectorAll('[data-member-name]').forEach((target) => { target.textContent = session?.user.displayName || ''; });
+    document.querySelectorAll('[data-member-label]').forEach((target) => {
+      target.textContent = session ? `${session.user.displayName}님` : '내 계정';
+    });
     if (session) {
-      document.querySelectorAll('.account-nav').forEach((nav) => {
-        if (!nav.querySelector('[data-auth-logout]')) nav.insertAdjacentHTML('beforeend', '<button class="account-logout" type="button" data-auth-logout>로그아웃</button>');
-      });
       const loginCard = document.querySelector('[data-login-form]')?.closest('.auth-card');
       if (loginCard && !loginCard.dataset.authenticatedView) {
         loginCard.dataset.authenticatedView = 'true';
-        loginCard.innerHTML = `<span class="page-eyebrow">SIGNED IN</span><h1>이미 로그인되어 있습니다</h1><p><strong>${session.user.displayName}님</strong>의 여행과 예약을 계속 확인할 수 있습니다.</p><div class="form-stack"><a class="ui-button primary" href="${safeReturnUrl()}">계속하기</a><a class="ui-button" href="my.html">마이페이지 보기</a><button class="ui-button soft" type="button" data-auth-logout>다른 계정으로 로그인</button></div>`;
+        loginCard.innerHTML = `<span class="page-eyebrow">SIGNED IN</span><h1>이미 로그인되어 있습니다</h1><p><strong>${session.user.displayName}님</strong>의 여행과 예약을 계속 확인할 수 있습니다.</p><div class="form-stack"><a class="ui-button primary" href="${safeReturnUrl()}">계속하기</a><a class="ui-button" href="trips.html">내 여행 보기</a><button class="ui-button soft" type="button" data-auth-logout>다른 계정으로 로그인</button></div>`;
       }
     }
   };
@@ -170,7 +170,7 @@
     localStorage.setItem(MEMBER_PROFILES_KEY, JSON.stringify(profiles));
     writeSession(user);
     showMessage(signupForm, 'Mock 계정을 만들었습니다. 마이페이지로 이동합니다.', 'success');
-    setTimeout(() => { location.href = 'my.html'; }, 180);
+    setTimeout(() => { location.href = 'trips.html'; }, 180);
   });
 
   const resetRequestForm = document.querySelector('[data-password-reset-request]');

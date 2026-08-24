@@ -27,7 +27,7 @@
   if (!document.querySelector('link[data-hotelngo-account-navigation]')) {
     const accountNavigationStyles = document.createElement('link');
     accountNavigationStyles.rel = 'stylesheet';
-    accountNavigationStyles.href = 'styles/account-navigation.css?v=1';
+    accountNavigationStyles.href = 'styles/account-navigation.css?v=2';
     accountNavigationStyles.dataset.hotelngoAccountNavigation = '';
     document.head.append(accountNavigationStyles);
   }
@@ -40,7 +40,7 @@
   }
 
   const logo = (_assetId, ariaLabel = 'HotelnGo Go Capsule IBM Plex Sans 로고') => `
-    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg?v=2" width="446" height="100" alt="${ariaLabel}" decoding="async">`;
+    <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg?v=3" width="407" height="100" alt="${ariaLabel}" decoding="async">`;
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
@@ -51,11 +51,15 @@
   ];
 
   const route = location.pathname.split('/').pop() || 'index.html';
+  if (route === 'my.html') {
+    location.replace('trips.html');
+    return;
+  }
   const accountRouteGroups = {
-    my: ['my.html', 'notifications.html', 'coupons.html', 'reviews.html', 'my-stories.html', 'inquiries.html'],
     trips: ['trips.html', 'shared-trips.html'],
     orders: ['orders.html', 'booking-detail.html'],
     saved: ['saved.html'],
+    activity: ['notifications.html', 'coupons.html', 'reviews.html', 'my-stories.html', 'inquiries.html'],
     settings: ['account-settings.html', 'travelers.html', 'payment-methods.html', 'password-change.html', 'privacy-request.html']
   };
   const accountSection = Object.entries(accountRouteGroups).find(([, routes]) => routes.includes(route))?.[0] || '';
@@ -63,12 +67,10 @@
   const accountContextNavigation = () => accountSection ? `
     <nav class="account-context-nav" aria-label="마이페이지 메뉴" data-auth-only hidden>
       <div class="shell account-context-inner">
-        <a class="${accountSection === 'my' ? 'is-active' : ''}" href="my.html">마이 홈</a>
-        <a class="${accountSection === 'trips' ? 'is-active' : ''}" href="trips.html">내 여행</a>
-        <a class="${accountSection === 'orders' ? 'is-active' : ''}" href="orders.html">내 예약</a>
-        <a class="${accountSection === 'saved' ? 'is-active' : ''}" href="saved.html">저장한 콘텐츠</a>
-        <a class="${accountSection === 'settings' ? 'is-active' : ''}" href="account-settings.html">계정 설정</a>
-        <button type="button" data-auth-logout>로그아웃</button>
+        <a class="${accountSection === 'trips' ? 'is-active' : ''}" href="trips.html">여행 일정</a>
+        <a class="${accountSection === 'orders' ? 'is-active' : ''}" href="orders.html">예약 내역</a>
+        <a class="${accountSection === 'saved' ? 'is-active' : ''}" href="saved.html">저장·찜</a>
+        <a class="${accountSection === 'activity' ? 'is-active' : ''}" href="notifications.html">활동·혜택</a>
       </div>
     </nav>` : '';
 
@@ -82,11 +84,16 @@
         <div class="header-actions">
           <a class="ai-quick-link${active === 'ai' ? ' is-active' : ''}" href="ai-travel.html"><span aria-hidden="true">✦</span><b>AI 여행</b></a>
           <a class="cart-link" href="cart.html">여행 카드</a>
-          <a class="account-header-link" href="my.html" data-auth-only hidden>마이 홈</a>
           <a class="account-header-link" href="trips.html" data-auth-only hidden>내 여행</a>
-          <a class="reservation-link" href="bookings.html">예약 조회</a>
+          <a class="reservation-link" href="bookings.html" data-guest-only>예약 조회</a>
           <a class="login-button" href="login.html" data-guest-only>로그인</a>
-          <button class="header-logout" type="button" data-auth-logout data-auth-only hidden>로그아웃</button>
+          <div class="account-user" data-auth-only hidden>
+            <button class="account-user-trigger" type="button" aria-label="회원 메뉴 열기" aria-haspopup="menu" aria-expanded="false" data-account-menu-trigger><span data-member-label>내 계정</span><i aria-hidden="true"></i></button>
+            <div class="account-user-menu" role="menu" data-account-menu hidden>
+              <a role="menuitem" href="account-settings.html">계정 설정</a>
+              <button role="menuitem" type="button" data-auth-logout>로그아웃</button>
+            </div>
+          </div>
           <button class="menu-button" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" data-menu-trigger><span></span><span></span><span></span></button>
         </div>
       </div>
@@ -97,9 +104,9 @@
       <nav>${navItems.map(([key, label, href], index) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}><span>0${index + 1}</span><strong>${label}</strong><i aria-hidden="true">›</i></a>`).join('')}</nav>
       <div class="mobile-menu-actions">
         <a href="cart.html">여행 카드</a>
-        <a href="bookings.html" class="reservation-link">예약 조회</a>
-        <a href="my.html" data-auth-only hidden>마이 홈</a>
+        <a href="bookings.html" class="reservation-link" data-guest-only>예약 조회</a>
         <a href="trips.html" data-auth-only hidden>내 여행</a>
+        <a href="account-settings.html" data-auth-only hidden><span data-member-label>내 계정</span></a>
         <a class="primary" href="login.html" data-guest-only>로그인·회원가입</a>
         <button class="primary" type="button" data-auth-logout data-auth-only hidden>로그아웃</button>
       </div>
@@ -122,7 +129,7 @@
       <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>⌂</span>홈</a>
       <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>⌕</span>호텔</a>
       <a class="${active === 'planner' || active === 'ai' || active === 'trips' ? 'is-active' : ''}" href="trip-create.html"><span>＋</span>여행 만들기</a>
-      <a class="${active === 'my' ? 'is-active' : ''}" href="my.html"><span>○</span>마이</a>
+      <a class="${active === 'my' || active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>○</span>내 여행</a>
     </nav>`;
 
   document.querySelectorAll('[data-site-header]').forEach((target) => {
@@ -144,4 +151,28 @@
   if (!document.querySelector('[data-toast]')) {
     document.body.insertAdjacentHTML('beforeend', '<div class="toast" role="status" aria-live="polite" data-toast></div>');
   }
+
+  const closeAccountMenus = () => {
+    document.querySelectorAll('[data-account-menu]').forEach((menu) => { menu.hidden = true; });
+    document.querySelectorAll('[data-account-menu-trigger]').forEach((trigger) => trigger.setAttribute('aria-expanded', 'false'));
+  };
+
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-account-menu-trigger]');
+    if (trigger) {
+      const menu = trigger.closest('.account-user')?.querySelector('[data-account-menu]');
+      const willOpen = Boolean(menu?.hidden);
+      closeAccountMenus();
+      if (menu && willOpen) {
+        menu.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+      return;
+    }
+    if (!event.target.closest('.account-user')) closeAccountMenus();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeAccountMenus();
+  });
 })();

@@ -1,6 +1,6 @@
 # HotelnGo
 
-> **브랜드 로고 잠금:** 새 UI 작업 전에 `assets/brand/brand-config.json`과 `docs/hotelngo/13-brand-logo-style-guide.md`를 먼저 확인한다. 웹 화면은 `assets/brand/official/hotelngo-logo-web.png`만 사용하며 로고를 HTML 텍스트나 웹폰트로 재구성하지 않는다.
+> **브랜드 로고 잠금:** 새 UI 작업 전에 `assets/brand/brand-config.json`과 `docs/hotelngo/13-brand-logo-style-guide.md`를 먼저 확인한다. 웹 화면은 IBM Plex Sans와 01번 종이비행기를 결합한 `assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg`를 이미지로 사용한다.
 
 해외 숙소 검색에서 시작해 호텔, 항공, 패키지, 투어, 랜드마크 스토리와 AI 여행을 연결하는 B2C 여행 플랫폼의 JSON Mock 프로토타입이다. 국내 상품은 이후 확장 범위다.
 
@@ -16,7 +16,7 @@ python -m http.server 8791
 
 ## 현재 구현
 
-- Ocean Route의 actual SVG 원본을 메인·하위 페이지 헤더에 126px로 적용하고 v10 HTML을 동일 바이트로 별도 보관
+- IBM Plex Sans Go Paper Plane SVG를 메인·하위 페이지 헤더에 152px로 적용하고 01번 정본을 별도 보관
 - 웹 스타일 가이드와 메인 포함 B2C 공통 헤더·푸터·모바일 탭 셸
 - 통합검색·여행 발견·스토리·랜드마크·호텔 검색/상세·즐길거리 목록/상세·항공·패키지 화면
 - 규칙형 AI 여행·로그인 전용 내 여행·저장·예약 조회·마이 화면

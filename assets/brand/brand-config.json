@@ -1,49 +1,48 @@
 {
-  "version": "1.5.0",
+  "version": "1.8.0",
   "status": "LOCKED",
-  "selectedAt": "2026-07-22",
+  "selectedAt": "2026-08-24",
   "brandName": "HotelnGo",
   "selectedVariant": {
-    "id": "03",
-    "name": "Ocean Route",
-    "sourcePage": "assets/brand/n-color-types.html#color-03",
-    "sourceContext": "actual header 126px"
+    "id": "07-01",
+    "name": "Go Paper Plane · IBM Plex Sans",
+    "sourcePage": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/full-lockups.html",
+    "sourceContext": "IBM Plex Sans full lockup with travel symbol option 01, desktop header 152px"
   },
   "primaryAsset": {
-    "path": "assets/brand/official/hotelngo-logo-web.png",
-    "format": "PNG_RGBA",
-    "pixelSize": "504x138",
-    "source": "assets/brand/n-color-types.html#color-03 .actual svg",
+    "path": "assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg",
+    "format": "SVG",
+    "viewBox": "0 0 407 100",
+    "source": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/go-travel-full-lockups-v1.svg",
     "background": "transparent",
     "policy": "USE_AS_IMAGE_WITHOUT_LIVE_TEXT"
   },
   "savedDesignSource": {
-    "path": "assets/brand/n-color-types-v10-ocean-route.html",
-    "sha256": "9AF4324CC044FB3D04F1C26962371476AF22D807F91A59A5DB1ADF9FBDE268C4",
-    "purpose": "Use #color-03 when converting the approved logo back to SVG later."
+    "path": "assets/brand/exploration-20260824/go-travel-symbol-variants-v1/go-travel-full-lockups-v1.svg",
+    "purpose": "Approved option 01 paper-plane full-lockup source for the website wordmark."
   },
   "headerUsage": {
     "desktop": {
       "minViewport": 801,
-      "logoWidth": 126,
+      "logoWidth": 152,
       "headerHeight": 72
     },
     "tablet": {
       "maxViewport": 800,
-      "logoWidth": 116,
+      "logoWidth": 138,
       "headerHeight": 62
     },
     "mobile": {
       "maxViewport": 560,
-      "logoWidth": 105,
+      "logoWidth": 129,
       "headerHeight": 62
     }
   },
   "rules": [
-    "Use assets/brand/official/hotelngo-logo-web.png in website headers, footers, login screens, and backoffice shells.",
-    "Display it at 126px in the desktop header and preserve the 504:138 ratio.",
+    "Use assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg in website headers, footers, login screens, and backoffice shells.",
+    "Display it at 152px in the desktop header and preserve the 407:100 ratio.",
     "Do not reconstruct the logo with HTML text, web fonts, or CSS shapes.",
-    "Keep the saved n-color-types v10 HTML unchanged for future SVG work.",
-    "Do not overwrite the saved HTML source or the approved web PNG without a new explicit approval."
+    "Keep the option 01 paper-plane full-lockup source SVG unchanged.",
+    "Do not overwrite the approved official SVG without a new explicit approval."
   ]
 }

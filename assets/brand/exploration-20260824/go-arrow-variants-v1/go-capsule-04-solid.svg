@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="55" height="30" viewBox="0 0 55 30" role="img" aria-labelledby="title desc">
+  <title id="title">GO capsule arrow proposal 04 solid</title>
+  <desc id="desc">Compact solid arrow with a short body.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="55" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00C6B7"/>
+      <stop offset="0.48" stop-color="#1CB3E5"/>
+      <stop offset="1" stop-color="#2F6BFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="55" height="30" rx="15" fill="url(#g)"/>
+  <text x="7" y="21" fill="#fff" font-family="Barlow Semi Condensed,Arial Narrow,Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="-0.8">GO</text>
+  <path d="M35 13.8h7v-2.7l6 3.9-6 3.9v-2.7h-7z" fill="#fff"/>
+</svg>
