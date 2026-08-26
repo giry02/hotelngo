@@ -12,7 +12,7 @@ const sheetLayer = document.querySelector('[data-sheet-layer]');
 let data;
 let activeDay = 1;
 let toastTimer;
-let homeMap;
+let planMap;
 
 const icons = {
   search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
@@ -81,29 +81,37 @@ const storyCard = (story) => `
 const homeView = () => `
   <div class="view home-view">
     <section class="home-hero">
-      <div class="home-hero-copy"><span class="eyebrow">START IN DANANG</span><span class="weather">☀ 다낭 29°</span><h1>가고 싶은 곳을 찾고,<br>지도에서 여행을 만드세요</h1><p>장소를 검색해 여행 카드에 담으면 이동 순서까지 정리합니다.</p></div>
-      <button class="search-launcher" type="button" data-open-search>${icons.search}<span><strong>여행지·랜드마크·호텔 검색</strong><small>예: 다낭, 미케 비치, 오션 리조트</small></span></button>
-      <div class="journey-steps" aria-label="여행 만들기 순서"><span><b>1</b>장소 찾기</span><i></i><span><b>2</b>카드에 담기</span><i></i><span><b>3</b>일정 만들기</span></div>
+      <div class="home-hero-copy"><span class="eyebrow">DANANG JOURNEY</span><span class="weather">☀ 다낭 29°</span><h1>다낭에서 무엇을 찾으세요?</h1><p>장소를 찾거나 다른 여행자의 일정을 담아 시작하세요.</p></div>
+      <button class="search-launcher" type="button" data-open-search>${icons.search}<span><strong>여행지·랜드마크·호텔 검색</strong><small>예: 미케 비치, 오션 리조트</small></span></button>
+      <nav class="home-start-actions" aria-label="여행 시작 방법"><a href="#discover">${icons.pin}<span>추천 장소</span></a><a href="#community">${icons.comment}<span>인기 여행기</span></a><a href="#card">${icons.spark}<span>AI 일정 초안</span></a></nav>
     </section>
-    <section class="home-route-card">
-      <header><div><small>최근 만들던 여행 · 3/5단계</small><strong>처음 가는 다낭 4박 5일</strong><span>랜드마크 4곳 · 해안부터 호이안까지</span></div><button class="map-more" type="button" data-route="plan">전체 일정</button></header>
-      <div class="home-map" id="home-route-map" role="img" aria-label="다낭에서 호이안까지 선택한 네 장소의 이동 지도"><div class="map-loading">여행 지도를 불러오는 중입니다</div></div>
-      <footer><div><b>${icons.pin} 선택 장소 4</b><span>예상 이동 1시간 38분</span></div><div class="home-route-actions"><button class="secondary-button" type="button" data-route="discover">장소 더 담기</button><button class="primary-button" type="button" data-route="plan">일정 이어가기</button></div></footer>
-    </section>
+    <section class="continue-card"><div class="continue-card-top"><div><small>최근 만들던 여행 · 3/5단계</small><strong>처음 가는 다낭 4박 5일</strong><span>랜드마크 4 · 상세 서비스 3</span></div><button class="soft-button" type="button" data-route="plan">이어가기</button></div><div class="progress-track"><i></i></div></section>
     <section class="section" style="margin-top:28px"><div class="section-head"><div><span class="eyebrow">TRAVEL STORIES</span><h2>다른 여행자가 먼저 가봤어요</h2><p>마음에 드는 여행은 그대로 담은 뒤 수정하세요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${data.stories.map(storyCard).join('')}</div><div class="swipe-hint"><i></i>옆으로 넘겨 여행기를 둘러보세요</div></section>
     <section class="section"><div class="section-head"><div><h2>빠르게 찾기</h2><p>목적에 맞는 항목부터 살펴보세요.</p></div></div><div class="quick-grid">
       <a href="#hotels">${icons.hotel}<span>숙소</span></a><a href="#discover">${icons.pin}<span>랜드마크</span></a><a href="#discover">${icons.route}<span>즐길거리</span></a><a href="#card">${icons.spark}<span>AI 일정</span></a>
     </div></section>
   </div>`;
 
-const destroyHomeMap = () => {
-  if (!homeMap) return;
-  homeMap.remove();
-  homeMap = undefined;
+const destroyPlanMap = () => {
+  if (!planMap) return;
+  planMap.remove();
+  planMap = undefined;
 };
 
-const initHomeMap = () => {
-  const target = document.querySelector('#home-route-map');
+const planLocation = (item) => {
+  const fallbacks = [
+    ['다낭 오션 리조트',[16.0408,108.2495],'미케 비치 남쪽'],['미케 비치',[16.0593,108.2469],'다낭 동쪽 해안'],['Madame Lan',[16.0758,108.2228],'한강 북쪽'],
+    ['한 시장',[16.0681,108.2241],'하이쩌우'],['한강 로컬 런치',[16.0611,108.2258],'한강변'],['Herbal Spa',[16.0664,108.2345],'안하이'],
+    ['바나힐 픽업',[16.0612,108.2464],'미케 비치'],['골든 브리지',[15.9970,107.9886],'바나힐'],['시푸드',[16.0716,108.2442],'미케 비치'],
+    ['오행산',[16.0036,108.2642],'오행산'],['호이안 올드타운',[15.8801,108.3380],'호이안'],['투본강',[15.8752,108.3277],'호이안'],
+    ['체크아웃 브런치',[16.0622,108.2398],'미케 비치'],['다낭 공항',[16.0439,108.1994],'다낭 국제공항']
+  ];
+  const match = fallbacks.find(([keyword]) => item.title.includes(keyword));
+  return match ? { lat:match[1][0], lng:match[1][1], area:match[2] } : null;
+};
+
+const initPlanMap = () => {
+  const target = document.querySelector('#plan-route-map');
   const Leaflet = window.L;
   if (!target) return;
   if (!Leaflet) {
@@ -112,33 +120,24 @@ const initHomeMap = () => {
     return;
   }
 
-  const routeIds = ['mykhe','hanmarket','montgomerie','hoian'];
-  const routePlaces = routeIds.map((id) => data.places.find((place) => place.id === id)).filter(Boolean);
-  homeMap = Leaflet.map(target, {
-    zoomControl:false,
-    attributionControl:true,
-    dragging:false,
-    scrollWheelZoom:false,
-    doubleClickZoom:false,
-    touchZoom:false,
-    keyboard:false
-  });
-  const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:19,
-    attribution:'&copy; OpenStreetMap'
-  }).addTo(homeMap);
+  const plan = getPlan();
+  const day = plan.days.find((item) => item.day === activeDay) || plan.days[0];
+  const routePlaces = day.items.map((item) => ({ ...item, ...planLocation(item) })).filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+  planMap = Leaflet.map(target, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:false, doubleClickZoom:false, touchZoom:true, keyboard:false });
+  const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(planMap);
   tileLayer.on('tileerror', () => target.classList.add('has-tile-error'));
 
   const coordinates = routePlaces.map((place) => [place.lat, place.lng]);
-  Leaflet.polyline(coordinates, { color:'#2f6bff', weight:4, opacity:.88, dashArray:'8 6' }).addTo(homeMap);
+  Leaflet.polyline(coordinates, { color:'#2f6bff', weight:4, opacity:.9, dashArray:'8 6' }).addTo(planMap);
   routePlaces.forEach((place, index) => {
     const marker = Leaflet.marker([place.lat, place.lng], {
-      icon:Leaflet.divIcon({ className:'home-map-marker', html:`<span>${index + 1}</span>`, iconSize:[30,30], iconAnchor:[15,15] })
-    }).addTo(homeMap);
-    marker.bindPopup(`<strong>${escapeHtml(place.title)}</strong><small>${escapeHtml(place.area)}</small>`, { closeButton:false, offset:[0,-10] });
+      icon:Leaflet.divIcon({ className:'route-live-marker', html:`<span>${index + 1}</span>`, iconSize:[32,32], iconAnchor:[16,16] })
+    }).addTo(planMap);
+    marker.bindPopup(`<strong>${escapeHtml(place.time)} · ${escapeHtml(place.title)}</strong><small>${escapeHtml(place.area || '')} · 체류 ${place.duration}분</small>`, { closeButton:false, offset:[0,-10] });
   });
-  homeMap.fitBounds(coordinates, { padding:[22,22] });
-  setTimeout(() => homeMap?.invalidateSize(), 60);
+  if (coordinates.length > 1) planMap.fitBounds(coordinates, { padding:[26,26] });
+  else if (coordinates.length === 1) planMap.setView(coordinates[0], 14);
+  setTimeout(() => planMap?.invalidateSize(), 60);
 };
 
 const discoverView = () => {
@@ -171,7 +170,7 @@ const cardView = () => {
 const planView = () => {
   const plan = getPlan();
   const day = plan.days.find((item) => item.day === activeDay) || plan.days[0];
-  return `<div class="view"><header class="page-intro"><span class="eyebrow">SMART ROUTE</span><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.dates)} · 성인 ${plan.people}명 · 충돌 없이 자동 정렬됨</p></header><div class="day-tabs">${plan.days.map((item) => `<button class="${item.day === day.day ? 'is-active' : ''}" type="button" data-plan-day="${item.day}"><strong>DAY ${item.day}</strong><small>${item.date} · ${item.items.length}곳</small></button>`).join('')}</div><section class="route-map" aria-label="DAY ${day.day} 이동 경로"><svg class="route-line" viewBox="0 0 360 238" preserveAspectRatio="none"><path d="M76 162 C110 135 139 130 176 103 S244 62 280 54"/></svg><span class="map-pin">1</span><span class="map-pin">2</span><span class="map-pin">3</span><span class="map-caption">DAY ${day.day} · 예상 이동 38분</span></section><section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>항목을 누르면 체류시간과 서비스 옵션을 변경할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section><div class="sticky-action"><button class="secondary-button" type="button" data-route="card">장소 수정</button><button class="primary-button" type="button" data-save-plan>내 여행 저장</button></div></div>`;
+  return `<div class="view"><header class="page-intro"><span class="eyebrow">SMART ROUTE</span><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.dates)} · 성인 ${plan.people}명 · 충돌 없이 자동 정렬됨</p></header><div class="day-tabs">${plan.days.map((item) => `<button class="${item.day === day.day ? 'is-active' : ''}" type="button" data-plan-day="${item.day}"><strong>DAY ${item.day}</strong><small>${item.date} · ${item.items.length}곳</small></button>`).join('')}</div><section class="route-map" id="plan-route-map" aria-label="DAY ${day.day} 실제 이동 지도"><div class="map-loading">DAY ${day.day} 지도를 불러오는 중입니다</div><span class="map-caption">DAY ${day.day} · ${day.items.length}곳 실제 위치</span></section><section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>지도 핀과 일정 항목을 누르면 장소와 체류시간을 확인할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section><div class="sticky-action"><button class="secondary-button" type="button" data-route="card">장소 수정</button><button class="primary-button" type="button" data-save-plan>내 여행 저장</button></div></div>`;
 };
 
 const hotelsView = () => `<div class="view"><header class="page-intro"><span class="eyebrow">STAY IN DANANG</span><div class="page-intro-row"><div><h1>호텔</h1><p>여행지와 호텔명을 함께 검색합니다.</p></div><button class="icon-button" type="button" data-open-search>${icons.search}</button></div></header><section class="section"><div class="chip-row"><button class="chip is-active">추천순</button><button class="chip">가격</button><button class="chip">평점 4.5+</button><button class="chip">해변</button><button class="chip">조식 포함</button></div><div class="hotel-list">${data.hotels.map((hotel) => `<article class="hotel-card"><img src="${hotel.image}" alt="${escapeHtml(hotel.name)}"><div class="hotel-card-body"><small>${escapeHtml(hotel.area)} · ${hotel.badges.join(' · ')}</small><h2>${escapeHtml(hotel.name)}</h2><div class="hotel-card-meta"><b>★ ${hotel.rating} · 후기 ${formatNumber(hotel.reviews)}</b><strong>${formatPrice(hotel.price)}<small>/박</small></strong></div><button class="primary-button full-button" style="margin-top:12px" type="button" data-add-hotel="${hotel.id}">여행 카드에 담고 객실 보기</button></div></article>`).join('')}</div></section></div>`;
@@ -240,9 +239,9 @@ const render = () => {
   const initial = session()?.user?.displayName?.slice(0,1) || 'G';
   document.querySelector('[data-profile-initial]').textContent = initial;
   const views = {home:homeView,discover:discoverView,community:communityView,story:()=>detailView(current.id),card:cardView,plan:planView,hotels:hotelsView,trips:tripsView,login:loginView};
-  destroyHomeMap();
+  destroyPlanMap();
   main.innerHTML = (views[current.name] || homeView)();
-  requestAnimationFrame(initHomeMap);
+  requestAnimationFrame(initPlanMap);
   main.focus({ preventScroll:true });
   scrollTo({ top:0, behavior:'instant' });
 };
