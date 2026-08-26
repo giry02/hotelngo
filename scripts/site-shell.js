@@ -18,6 +18,12 @@
     searchScript.dataset.hotelngoSearch = '';
     document.head.append(searchScript);
   }
+  if (!document.querySelector('script[src*="scripts/main.js"], script[data-hotelngo-main]')) {
+    const mainScript = document.createElement('script');
+    mainScript.src = 'scripts/main.js?v=15';
+    mainScript.dataset.hotelngoMain = '';
+    document.head.append(mainScript);
+  }
   if (!document.querySelector('script[data-hotelngo-trip-card]')) {
     const tripCardScript = document.createElement('script');
     tripCardScript.src = 'scripts/trip-card-store.js?v=1';
@@ -44,6 +50,7 @@
 
   const navItems = [
     ['discover', '여행 발견', 'discover.html'],
+    ['community', '여행기', 'community.html'],
     ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
@@ -124,12 +131,20 @@
       </div>
     </footer>`;
 
+  const mobileIcons = {
+    home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v9h-6v-6H9v6H3Z"/></svg>',
+    community: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3Z"/><path d="M8 8h8M8 12h6"/></svg>',
+    planner: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+    hotels: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V5h10v15M14 10h6v10M7 8h4M7 12h4M7 16h4M17 13v3"/></svg>',
+    trips: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14a2 2 0 0 1 2 2v10H3V9a2 2 0 0 1 2-2Z"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>'
+  };
   const mobileNav = (active) => `
     <nav class="mobile-tabbar" aria-label="모바일 하단 메뉴">
-      <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>⌂</span>홈</a>
-      <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>⌕</span>호텔</a>
-      <a class="${active === 'planner' || active === 'ai' || active === 'trips' ? 'is-active' : ''}" href="trip-create.html"><span>＋</span>여행 만들기</a>
-      <a class="${active === 'my' || active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>○</span>내 여행</a>
+      <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>${mobileIcons.home}</span>홈</a>
+      <a class="${active === 'community' ? 'is-active' : ''}" href="community.html"><span>${mobileIcons.community}</span>여행기</a>
+      <a class="${active === 'planner' || active === 'ai' ? 'is-active' : ''}" href="trip-create.html"><span>${mobileIcons.planner}</span>만들기</a>
+      <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>${mobileIcons.hotels}</span>호텔</a>
+      <a class="${active === 'my' || active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>${mobileIcons.trips}</span>내 여행</a>
     </nav>`;
 
   document.querySelectorAll('[data-site-header]').forEach((target) => {

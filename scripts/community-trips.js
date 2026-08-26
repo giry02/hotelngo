@@ -60,9 +60,102 @@
     }))
   } : null;
 
+  const icons = {
+    heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z"/></svg>',
+    comment: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>',
+    bookmark: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4Z"/></svg>',
+    share: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-3.9M8.7 13.3l6.6 3.9"/></svg>',
+    route: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c-2.2 0-4-1.8-4-4s1.8-4 4-4h12a4 4 0 0 0 0-8h-1"/><path d="m7 15-4 4 4 4M17 1l4 2-4 2"/></svg>'
+  };
+  const showToast = (message) => {
+    const toast = document.querySelector('[data-toast]');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    window.clearTimeout(showToast.timer);
+    showToast.timer = window.setTimeout(() => toast.classList.remove('is-visible'), 2800);
+  };
+  const returnToLogin = () => {
+    const returnUrl = `${route}${location.search}${location.hash}`;
+    location.href = `login.html?returnUrl=${encodeURIComponent(returnUrl)}`;
+  };
+  const engagementId = (userId, tripId) => `${userId}_${tripId}`;
+  const engagement = (tripId) => {
+    const currentSession = session();
+    if (!currentSession) return null;
+    return api.list('community-engagements').find((item) => item.id === engagementId(currentSession.user.id, tripId)) || null;
+  };
+  const metrics = (trip, seedComments = []) => {
+    const records = api.list('community-engagements').filter((item) => item.tripId === trip.id);
+    const localComments = api.list('community-comments').filter((item) => item.tripId === trip.id);
+    return {
+      likes: Number(trip.likes || 0) + records.filter((item) => item.liked).length,
+      comments: seedComments.filter((item) => item.tripId === trip.id).length + localComments.length,
+      scraps: Number(trip.saves || 0) + records.filter((item) => item.scrapped).length,
+      copies: Number(trip.copies || 0)
+    };
+  };
+  const toggleEngagement = (tripId, field) => {
+    const currentSession = session();
+    if (!currentSession) {
+      returnToLogin();
+      return null;
+    }
+    const current = engagement(tripId) || { id: engagementId(currentSession.user.id, tripId), userId: currentSession.user.id, tripId, liked: false, scrapped: false };
+    const next = api.upsert('community-engagements', { ...current, [field]: !current[field] });
+    api.appendAudit({ actor: currentSession.user.id, action: `COMMUNITY_${field.toUpperCase()}_${next[field] ? 'ADDED' : 'REMOVED'}`, entityType: 'COMMUNITY_TRIP', entityId: tripId });
+    return next;
+  };
+  const shareTrip = async (trip) => {
+    const url = new URL(`trip-guide-detail.html?id=${encodeURIComponent(trip.id)}`, location.href).href;
+    try {
+      if (navigator.share) await navigator.share({ title: trip.title, text: trip.summary, url });
+      else {
+        await navigator.clipboard.writeText(url);
+        showToast('여행기 링크를 복사했습니다.');
+      }
+    } catch (error) {
+      if (error?.name !== 'AbortError') showToast('공유 링크를 복사하지 못했습니다.');
+    }
+  };
+  const copyTrip = (source) => {
+    const currentSession = session();
+    if (!currentSession) {
+      returnToLogin();
+      return;
+    }
+    const trip = normalizeTrip(source);
+    const copy = {
+      id: `trip_copy_${Date.now()}`,
+      ownerId: currentSession.user.id,
+      title: `${trip.title} · 내 버전`,
+      destination: trip.destination,
+      destinationId: trip.destinationId,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      travelers: trip.travelers,
+      duration: trip.duration,
+      status: 'DRAFT',
+      sourceType: 'COMMUNITY_COPY',
+      sourceTripId: trip.id,
+      sourceGuideId: trip.guideId || trip.id,
+      sourceGuideTitle: trip.title,
+      sourceAuthor: trip.author,
+      sourcePublishedVersion: trip.publishedVersion || 1,
+      items: trip.items.map((item) => ({ ...item, id: `copy_${Date.now()}_${Math.random().toString(36).slice(2, 6)}` })),
+      updatedAt: new Date().toISOString()
+    };
+    api.upsert('trips', copy);
+    api.appendAudit({ actor: currentSession.user.id, action: 'COMMUNITY_TRIP_COPIED', entityType: 'TRIP', entityId: copy.id, payload: { sourceTripId: trip.id } });
+    location.href = `trip-planner.html?tripId=${encodeURIComponent(copy.id)}&copied=1`;
+  };
+
+  const creatorAvatar = (name = '여행자') => escapeHtml(name.trim().slice(0, 1) || '여');
+
   const feed = document.querySelector('[data-community-feed]');
-  if (feed) catalog().then(({ trips }) => {
+  if (feed) catalog().then(({ trips, comments = [] }) => {
     const localStories = api.list('stories').filter((story) => ['PUBLISHED', 'PENDING_REVIEW'].includes(story.status)).map((story) => ({
+      ...(story.tripSnapshot || {}),
       id: story.id,
       title: story.title,
       summary: story.summary,
@@ -70,26 +163,41 @@
       destination: story.destination,
       duration: story.duration || '일정 초안',
       tags: story.tags || [],
-      author: { displayName: story.authorName, verifiedTrips: 0 },
+      author: { id: story.authorId, displayName: story.authorName, verifiedTrips: 0 },
       saves: story.saves || 0,
-      copies: story.copies || 0
+      copies: story.copies || 0,
+      allowCopy: story.allowCopy !== false
     }));
     const allTrips = [...localStories, ...trips];
-    const renderFeed = (filter = '추천') => {
+    let activeFilter = '추천';
+    const renderFeed = (filter = activeFilter) => {
+      activeFilter = filter;
       const visible = filter === '추천'
         ? allTrips
         : allTrips.filter((trip) => `${trip.destination} ${(trip.tags || []).join(' ')}`.includes(filter));
-      feed.innerHTML = visible.length ? visible.map((trip) => `
-        <article class="community-card">
-          <a href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}"><img src="${escapeHtml(trip.cover)}" alt="${escapeHtml(trip.title)}"></a>
-          <div>
-            <span class="page-eyebrow">${escapeHtml(trip.destination)} · ${escapeHtml(trip.duration)}</span>
-            <h2><a href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}">${escapeHtml(trip.title)}</a></h2>
-            <p>${escapeHtml(trip.summary)}</p>
-            <div class="community-tags">${(trip.tags || []).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
-            <footer><span>by ${escapeHtml(trip.author?.displayName || '회원 가이드')}</span><span>저장 ${Number(trip.saves || 0).toLocaleString('ko-KR')} · 복사 ${Number(trip.copies || 0).toLocaleString('ko-KR')}</span></footer>
-          </div>
-        </article>`).join('') : '<div class="empty-state"><strong>해당 주제의 공개 일정이 아직 없습니다.</strong><p>첫 일정을 만들고 공유해 보세요.</p></div>';
+      feed.innerHTML = visible.length ? visible.map((trip) => {
+        const state = engagement(trip.id) || {};
+        const count = metrics(trip, comments);
+        const dayCount = trip.days?.length || new Set((trip.items || []).map((item) => item.day)).size;
+        return `
+          <article class="community-card">
+            <div class="community-card-author"><span class="creator-avatar">${creatorAvatar(trip.author?.displayName)}</span><span><strong>${escapeHtml(trip.author?.displayName || '회원 가이드')}</strong><small>공개 여행 ${trip.author?.verifiedTrips || 0}개</small></span></div>
+            <a class="community-card-cover" href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}"><img src="${escapeHtml(trip.cover)}" alt="${escapeHtml(trip.title)}"><span>${dayCount || '?'}일 일정</span></a>
+            <div class="community-card-body">
+              <span class="page-eyebrow">${escapeHtml(trip.destination)} · ${escapeHtml(trip.duration)}</span>
+              <h2><a href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}">${escapeHtml(trip.title)}</a></h2>
+              <p>${escapeHtml(trip.summary)}</p>
+              <div class="community-tags">${(trip.tags || []).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
+              <div class="community-card-actions" aria-label="여행기 반응">
+                <button type="button" class="${state.liked ? 'is-active' : ''}" aria-pressed="${Boolean(state.liked)}" data-community-action="like" data-trip-id="${escapeHtml(trip.id)}">${icons.heart}<span>${count.likes.toLocaleString('ko-KR')}</span><b>좋아요</b></button>
+                <a href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}#comments">${icons.comment}<span>${count.comments.toLocaleString('ko-KR')}</span><b>댓글</b></a>
+                <button type="button" class="${state.scrapped ? 'is-active' : ''}" aria-pressed="${Boolean(state.scrapped)}" data-community-action="scrap" data-trip-id="${escapeHtml(trip.id)}">${icons.bookmark}<span>${count.scraps.toLocaleString('ko-KR')}</span><b>스크랩</b></button>
+                <button type="button" data-community-action="share" data-trip-id="${escapeHtml(trip.id)}">${icons.share}<b>공유</b></button>
+              </div>
+              <div class="community-card-cta"><a class="ui-button" href="trip-guide-detail.html?id=${encodeURIComponent(trip.id)}">여행기 보기</a>${trip.allowCopy === false ? '' : `<button class="ui-button primary" type="button" data-community-action="copy" data-trip-id="${escapeHtml(trip.id)}">${icons.route}내 여행에 담기</button>`}</div>
+            </div>
+          </article>`;
+      }).join('') : '<div class="empty-state"><strong>해당 주제의 공개 여행기가 아직 없습니다.</strong><p>첫 여행을 만들고 여행기로 공유해 보세요.</p></div>';
     };
     renderFeed();
     document.querySelector('.community-filter')?.addEventListener('click', (event) => {
@@ -98,10 +206,26 @@
       document.querySelectorAll('.community-filter button').forEach((item) => item.classList.toggle('is-active', item === button));
       renderFeed(button.textContent.trim());
     });
+    feed.addEventListener('click', (event) => {
+      const control = event.target.closest('[data-community-action]');
+      if (!control) return;
+      const trip = allTrips.find((item) => item.id === control.dataset.tripId);
+      if (!trip) return;
+      if (control.dataset.communityAction === 'like') {
+        if (toggleEngagement(trip.id, 'liked')) renderFeed();
+      } else if (control.dataset.communityAction === 'scrap') {
+        const next = toggleEngagement(trip.id, 'scrapped');
+        if (next) {
+          showToast(next.scrapped ? '여행기를 저장·찜에 스크랩했습니다.' : '스크랩을 해제했습니다.');
+          renderFeed();
+        }
+      } else if (control.dataset.communityAction === 'share') shareTrip(trip);
+      else if (control.dataset.communityAction === 'copy') copyTrip(trip);
+    });
   });
 
   const detail = document.querySelector('[data-community-detail]');
-  if (detail) catalog().then(({ trips }) => {
+  if (detail) catalog().then(({ trips, comments = [] }) => {
     const id = new URLSearchParams(location.search).get('id') || trips[0].id;
     const localStory = api.list('stories').find((story) => story.id === id);
     const catalogTrip = trips.find((item) => item.id === id);
@@ -130,67 +254,97 @@
       groups[item.day].items.push(item);
       return groups;
     }, {}));
-    detail.innerHTML = `
-      <header class="community-detail-hero">
-        <img src="${escapeHtml(trip.cover)}" alt="${escapeHtml(trip.title)}">
-        <div>
-          <span class="page-eyebrow">${escapeHtml(trip.destination)} · MEMBER GUIDE</span>
-          <h1>${escapeHtml(trip.title)}</h1>
-          <p>${escapeHtml(trip.summary)}</p>
-          <div class="creator-line"><strong>${escapeHtml(trip.author?.displayName || '회원 가이드')}</strong><span>공개 일정 ${trip.author?.verifiedTrips || 0}개</span></div>
-          ${trip.sourceGuideId ? `<div class="guide-attribution"><span>원본 가이드 기반</span><a href="trip-guide-detail.html?id=${encodeURIComponent(trip.sourceGuideId)}">${escapeHtml(trip.sourceGuideTitle || '원본 일정')} 보기</a></div>` : ''}
-          <div class="community-tags">${(trip.tags || []).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
-          <div class="page-head-actions">
-            <button class="ui-button" type="button" data-save-item="${escapeHtml(trip.id)}" data-text-save>저장</button>
-            ${trip.allowCopy === false ? '<span class="guide-copy-note">작성자가 복사를 허용하지 않은 가이드입니다.</span>' : '<button class="ui-button primary" type="button" data-copy-trip>이 일정으로 내 여행 만들기</button>'}
+    const renderDetail = () => {
+      const state = engagement(trip.id) || {};
+      const count = metrics(trip, comments);
+      const localComments = api.list('community-comments').filter((item) => item.tripId === trip.id);
+      const tripComments = [...comments.filter((item) => item.tripId === trip.id), ...localComments]
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      const currentSession = session();
+      const followId = currentSession ? `${currentSession.user.id}_${trip.author?.id || trip.id}` : '';
+      const following = Boolean(followId && api.list('community-follows').find((item) => item.id === followId)?.following);
+      detail.innerHTML = `
+        <header class="community-detail-hero">
+          <img src="${escapeHtml(trip.cover)}" alt="${escapeHtml(trip.title)}">
+          <div>
+            <span class="page-eyebrow">${escapeHtml(trip.destination)} · TRAVEL STORY</span>
+            <h1>${escapeHtml(trip.title)}</h1>
+            <p>${escapeHtml(trip.summary)}</p>
+            <div class="creator-line"><span class="creator-avatar">${creatorAvatar(trip.author?.displayName)}</span><span><strong>${escapeHtml(trip.author?.displayName || '회원 가이드')}</strong><small>공개 여행 ${trip.author?.verifiedTrips || 0}개</small></span><button type="button" class="creator-follow ${following ? 'is-active' : ''}" data-community-action="follow" aria-pressed="${following}">${following ? '팔로잉' : '팔로우'}</button></div>
+            ${trip.sourceGuideId ? `<div class="guide-attribution"><span>원본 여행기 기반</span><a href="trip-guide-detail.html?id=${encodeURIComponent(trip.sourceGuideId)}">${escapeHtml(trip.sourceGuideTitle || '원본 일정')} 보기</a></div>` : ''}
+            <div class="community-tags">${(trip.tags || []).map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>
+            <div class="community-detail-actions" aria-label="여행기 반응">
+              <button type="button" class="${state.liked ? 'is-active' : ''}" data-community-action="like" aria-pressed="${Boolean(state.liked)}">${icons.heart}<span>좋아요</span><b>${count.likes.toLocaleString('ko-KR')}</b></button>
+              <a href="#comments">${icons.comment}<span>댓글</span><b>${count.comments.toLocaleString('ko-KR')}</b></a>
+              <button type="button" class="${state.scrapped ? 'is-active' : ''}" data-community-action="scrap" aria-pressed="${Boolean(state.scrapped)}">${icons.bookmark}<span>스크랩</span><b>${count.scraps.toLocaleString('ko-KR')}</b></button>
+              <button type="button" data-community-action="share">${icons.share}<span>공유</span></button>
+            </div>
+            <div class="page-head-actions">${trip.allowCopy === false ? '<span class="guide-copy-note">작성자가 일정 복사를 허용하지 않았습니다.</span>' : `<button class="ui-button primary" type="button" data-community-action="copy">${icons.route}이 일정 내 여행에 담기</button>`}</div>
           </div>
+        </header>
+        <div class="community-detail-layout">
+          <section>
+            <div class="content-section-head"><div><h2>날짜별 일정</h2><p>내 여행에 담은 뒤 날짜·인원·장소를 내 방식대로 바꿀 수 있습니다.</p></div></div>
+            ${days.length ? days.map((day) => `<article class="community-day"><header><strong>DAY ${day.day}</strong><span>${escapeHtml(day.dateLabel || '')}</span></header><div>${(day.items || []).map((item) => {
+              const [label, tone] = statusLabel(item);
+              return `<div class="community-stop"><time>${escapeHtml(item.time)}</time><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.note || '')}</small></span><em class="${tone}">${label}</em></div>`;
+            }).join('')}</div></article>`).join('') : '<div class="empty-state"><strong>작성자가 세부 일정을 정리하고 있습니다.</strong></div>'}
+          </section>
+          <aside class="community-side">
+            <strong>내 여행에 담으면</strong>
+            <ol><li>원본과 별개인 내 일정으로 복사</li><li>날짜·인원·장소 자유롭게 변경</li><li>운영시간·이동·재고 다시 확인</li><li>예약 항목은 별도 선택 후 결제</li></ol>
+            <p>수정해도 원본 여행기는 바뀌지 않으며, 다시 공유할 때 원작자 출처가 표시됩니다.</p>
+            <a class="ui-button" href="community.html">다른 여행기 보기</a>
+          </aside>
         </div>
-      </header>
-      <div class="community-detail-layout">
-        <section>
-          <div class="content-section-head"><div><h2>날짜별 일정</h2><p>복사 후 날짜·인원·장소를 바꾸고 재고와 운영시간을 다시 확인합니다.</p></div></div>
-          ${days.length ? days.map((day) => `<article class="community-day"><header><strong>DAY ${day.day}</strong><span>${escapeHtml(day.dateLabel || '')}</span></header><div>${(day.items || []).map((item) => {
-            const [label, tone] = statusLabel(item);
-            return `<div class="community-stop"><time>${escapeHtml(item.time)}</time><span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.note || '')}</small></span><em class="${tone}">${label}</em></div>`;
-          }).join('')}</div></article>`).join('') : '<div class="empty-state"><strong>작성자가 세부 일정을 정리하고 있습니다.</strong></div>'}
-        </section>
-        <aside class="community-side">
-          <strong>내 여행으로 만들면</strong>
-          <ol><li>원본과 독립된 내 여행 초안 생성</li><li>날짜·인원·장소 교체·삭제</li><li>운영시간·이동·재고 재검증</li><li>예약 가능한 항목만 카트에 추가</li></ol>
-          <p>내가 수정해도 원본 가이드는 바뀌지 않으며, 다시 공유할 때 원작자 출처가 표시됩니다.</p>
-          <a class="ui-button" href="community.html">다른 일정 보기</a>
-        </aside>
-      </div>`;
-
-    detail.querySelector('[data-copy-trip]')?.addEventListener('click', () => {
+        <section class="community-comments" id="comments">
+          <div class="content-section-head"><div><h2>댓글 ${count.comments.toLocaleString('ko-KR')}</h2><p>직접 다녀온 팁과 궁금한 점을 나눠보세요.</p></div></div>
+          <form class="community-comment-form" data-comment-form><span class="creator-avatar">${creatorAvatar(currentSession?.user?.displayName || '게스트')}</span><label><span class="sr-only">댓글 내용</span><textarea name="comment" maxlength="300" required placeholder="${currentSession ? '여행자에게 도움이 될 댓글을 남겨보세요.' : '로그인 후 댓글을 남길 수 있습니다.'}" ${currentSession ? '' : 'readonly'}></textarea></label><button class="ui-button primary" type="submit">등록</button></form>
+          <div class="community-comment-list">${tripComments.length ? tripComments.map((comment) => `<article><span class="creator-avatar">${creatorAvatar(comment.authorName)}</span><div><header><strong>${escapeHtml(comment.authorName)}</strong><time>${escapeHtml(comment.createdLabel || new Date(comment.createdAt).toLocaleDateString('ko-KR'))}</time></header><p>${escapeHtml(comment.body)}</p></div></article>`).join('') : '<div class="empty-state"><strong>첫 댓글을 남겨보세요.</strong><p>일정에 대한 질문과 실제 방문 팁이 여행기를 더 풍부하게 만듭니다.</p></div>'}</div>
+        </section>`;
+    };
+    renderDetail();
+    detail.addEventListener('click', (event) => {
+      const control = event.target.closest('[data-community-action]');
+      if (!control) return;
+      const action = control.dataset.communityAction;
+      if (action === 'like') {
+        if (toggleEngagement(trip.id, 'liked')) renderDetail();
+      } else if (action === 'scrap') {
+        const next = toggleEngagement(trip.id, 'scrapped');
+        if (next) {
+          showToast(next.scrapped ? '여행기를 저장·찜에 스크랩했습니다.' : '스크랩을 해제했습니다.');
+          renderDetail();
+        }
+      } else if (action === 'share') shareTrip(trip);
+      else if (action === 'copy') copyTrip(trip);
+      else if (action === 'follow') {
+        const currentSession = session();
+        if (!currentSession) returnToLogin();
+        else {
+          const id = `${currentSession.user.id}_${trip.author?.id || trip.id}`;
+          const current = api.list('community-follows').find((item) => item.id === id);
+          api.upsert('community-follows', { id, userId: currentSession.user.id, authorId: trip.author?.id || trip.id, following: !current?.following });
+          renderDetail();
+        }
+      }
+    });
+    detail.addEventListener('submit', (event) => {
+      const form = event.target.closest('[data-comment-form]');
+      if (!form) return;
+      event.preventDefault();
       const currentSession = session();
       if (!currentSession) {
-        location.href = `login.html?returnUrl=${encodeURIComponent(`${route}${location.search}`)}`;
+        returnToLogin();
         return;
       }
-      const copy = {
-        id: `trip_copy_${Date.now()}`,
-        ownerId: currentSession.user.id,
-        title: `${trip.title} · 내 버전`,
-        destination: trip.destination,
-        destinationId: trip.destinationId,
-        startDate: trip.startDate,
-        endDate: trip.endDate,
-        travelers: trip.travelers,
-        duration: trip.duration,
-        status: 'DRAFT',
-        sourceType: 'COMMUNITY_COPY',
-        sourceTripId: trip.id,
-        sourceGuideId: trip.guideId || trip.id,
-        sourceGuideTitle: trip.title,
-        sourceAuthor: trip.author,
-        sourcePublishedVersion: trip.publishedVersion || 1,
-        items: trip.items.map((item) => ({ ...item, id: `copy_${Date.now()}_${Math.random().toString(36).slice(2, 6)}` })),
-        updatedAt: new Date().toISOString()
-      };
-      api.upsert('trips', copy);
-      api.appendAudit({ actor: currentSession.user.id, action: 'COMMUNITY_TRIP_COPIED', entityType: 'TRIP', entityId: copy.id, payload: { sourceTripId: trip.id } });
-      location.href = `trip-planner.html?tripId=${encodeURIComponent(copy.id)}&copied=1`;
+      const body = String(new FormData(form).get('comment') || '').trim();
+      if (!body) return;
+      api.upsert('community-comments', { id: `comment_${Date.now()}`, tripId: trip.id, userId: currentSession.user.id, authorName: currentSession.user.displayName, body, createdAt: new Date().toISOString() });
+      api.appendAudit({ actor: currentSession.user.id, action: 'COMMUNITY_COMMENT_CREATED', entityType: 'COMMUNITY_TRIP', entityId: trip.id });
+      renderDetail();
+      document.querySelector('#comments')?.scrollIntoView({ block: 'start' });
+      showToast('댓글을 등록했습니다.');
     });
   });
 

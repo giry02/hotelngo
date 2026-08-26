@@ -577,3 +577,94 @@
   .mobile-booking-bar span strong { font-size: 18px; }
   .mobile-booking-bar .ui-button { min-width: 132px; min-height: 46px; }
 }
+
+/* Community travel stories · social discovery */
+.community-hero { padding: 44px 0 38px; }
+.community-hero .page-head-actions { flex-wrap: wrap; }
+.community-filter { scrollbar-width: none; scroll-snap-type: x proximity; }
+.community-filter::-webkit-scrollbar { display: none; }
+.community-filter button { min-height: 40px; scroll-snap-align: start; font-weight: 750; }
+.community-card { display: flex; min-width: 0; flex-direction: column; box-shadow: 0 12px 28px rgb(24 49 44 / 6%); }
+.community-card > div { padding: 0; }
+.community-card-author { display: flex; align-items: center; gap: 9px; padding: 13px 15px 12px !important; }
+.community-card-author > span:last-child,.creator-line > span:nth-child(2) { display: grid; min-width: 0; gap: 1px; }
+.community-card-author strong,.creator-line strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.community-card-author small,.creator-line small { color: var(--text-muted); font-size: 11px; }
+.creator-avatar { flex: 0 0 auto; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: #fff; background: linear-gradient(145deg,#13bdb1,#316cff); font-size: 13px; font-weight: 850; }
+.community-card-cover { position: relative; display: block; overflow: hidden; }
+.community-card-cover img { display: block; width: 100%; height: 225px; object-fit: cover; transition: transform .28s ease; }
+.community-card-cover:hover img { transform: scale(1.025); }
+.community-card-cover > span { position: absolute; right: 11px; bottom: 10px; padding: 6px 8px; border-radius: 999px; color: #fff; background: rgb(9 27 38 / 72%); backdrop-filter: blur(8px); font-size: 11px; font-weight: 800; }
+.community-card-body { display: flex; flex: 1; flex-direction: column; padding: 15px !important; }
+.community-card h2 { min-height: auto; margin: 7px 0 6px; }
+.community-card p { min-height: 48px; }
+.community-card-actions { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 3px; margin-top: 13px; padding: 8px 0; border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
+.community-card-actions button,.community-card-actions a { display: flex; min-width: 0; min-height: 38px; align-items: center; justify-content: center; gap: 5px; padding: 0 3px; border: 0; color: #64706c; background: transparent; cursor: pointer; font-size: 11px; font-weight: 700; }
+.community-card-actions svg,.community-detail-actions svg,.community-card-cta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.community-card-actions button.is-active,.community-detail-actions button.is-active { color: var(--brand-primary); }
+.community-card-actions button.is-active svg path,.community-detail-actions button.is-active svg path { fill: currentColor; }
+.community-card-actions b { display: none; }
+.community-card-cta { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8px; margin-top: 12px; }
+.community-card-cta .ui-button { min-width: 0; min-height: 44px; padding-inline: 10px; }
+.community-card-cta .ui-button.primary { gap: 6px; }
+.community-card-cta .ui-button.primary svg { width: 17px; }
+.community-detail-hero { align-items: stretch; }
+.community-detail-hero > img { min-height: 390px; }
+.community-detail-hero > div { display: flex; flex-direction: column; justify-content: center; }
+.creator-line { margin: 13px 0; }
+.creator-follow { min-height: 42px; margin-left: auto; padding: 0 13px; border: 1px solid #cdd7e3; border-radius: 999px; color: #33413d; background: #fff; cursor: pointer; font-size: 12px; font-weight: 800; }
+.creator-follow.is-active { color: var(--brand-primary); border-color: #aac0ff; background: #f1f5ff; }
+.community-detail-actions { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; margin: 17px 0 14px; }
+.community-detail-actions button,.community-detail-actions a { display: grid; min-width: 0; min-height: 56px; grid-template-columns: 20px 1fr; align-items: center; gap: 1px 7px; padding: 8px 9px; border: 1px solid var(--border-soft); border-radius: 10px; color: #4f5b58; background: #fff; cursor: pointer; text-align: left; }
+.community-detail-actions svg { grid-row: 1 / 3; }
+.community-detail-actions span { font-size: 11px; font-weight: 750; }
+.community-detail-actions b { font-size: 12px; }
+.community-detail-hero .page-head-actions { margin-top: 0; }
+.community-detail-hero .page-head-actions .ui-button { min-height: 48px; gap: 7px; }
+.community-detail-hero .page-head-actions svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.community-comments { max-width: 820px; margin: 4px 0 52px; padding-top: 22px; border-top: 1px solid var(--border-soft); scroll-margin-top: 88px; }
+.community-comment-form { display: grid; grid-template-columns: 36px minmax(0,1fr) auto; align-items: start; gap: 10px; padding: 14px; border: 1px solid var(--border-soft); border-radius: 13px; background: #fff; }
+.community-comment-form label { min-width: 0; }
+.community-comment-form textarea { width: 100%; min-height: 82px; resize: vertical; padding: 11px 12px; border: 1px solid #d9e0de; border-radius: 9px; color: var(--text-strong); background: #fbfcfc; font: inherit; font-size: 13px; line-height: 1.6; }
+.community-comment-form textarea[readonly] { cursor: pointer; }
+.community-comment-form .ui-button { min-height: 44px; }
+.community-comment-list { display: grid; gap: 0; margin-top: 12px; }
+.community-comment-list article { display: grid; grid-template-columns: 36px minmax(0,1fr); gap: 10px; padding: 16px 4px; border-bottom: 1px solid var(--border-soft); }
+.community-comment-list article header { display: flex; align-items: baseline; gap: 8px; }
+.community-comment-list article header strong { font-size: 13px; }
+.community-comment-list article time { color: var(--text-muted); font-size: 11px; }
+.community-comment-list article p { margin: 6px 0 0; color: #46514e; font-size: 13px; line-height: 1.65; }
+
+@media (max-width: 560px) {
+  .community-hero { padding: 27px 0 24px; background-position: 58% 52%; }
+  .community-hero h1 { margin-top: 8px; font-size: 31px; line-height: 1.16; }
+  .community-hero p { margin-bottom: 15px; font-size: 12px; line-height: 1.65; }
+  .community-hero .page-head-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .community-hero .page-head-actions .ui-button { width: 100%; min-height: 44px; padding-inline: 8px; font-size: 12px; }
+  .community-hero .page-head-actions .ui-button:first-child { grid-column: 1 / -1; }
+  .community-filter { width: 100%; margin-inline: 0; padding: 16px 0 12px; }
+  .community-filter button { min-height: 38px; }
+  .community-feed { gap: 12px; padding-bottom: 24px; }
+  .community-card-cover img { height: 205px; }
+  .community-card p { min-height: 0; }
+  .community-card-actions button,.community-card-actions a { min-height: 44px; }
+  .community-card-actions b { display: inline; font-size: 0; }
+  .community-card-cta { grid-template-columns: .88fr 1.12fr; }
+  .community-detail-hero { gap: 17px; padding: 17px 0 22px; }
+  .community-detail-hero > img { height: 220px; min-height: 220px; border-radius: 13px; }
+  .community-detail-hero h1 { margin: 7px 0 8px; font-size: 29px; }
+  .community-detail-hero > div > p { margin: 0; font-size: 13px; }
+  .community-detail-actions { gap: 5px; margin: 14px 0 12px; }
+  .community-detail-actions button,.community-detail-actions a { min-height: 52px; grid-template-columns: 1fr; justify-items: center; gap: 2px; padding: 6px 3px; text-align: center; }
+  .community-detail-actions svg { grid-row: auto; }
+  .community-detail-actions span { font-size: 10px; }
+  .community-detail-actions b { font-size: 11px; }
+  .community-detail-hero .page-head-actions .ui-button { width: 100%; }
+  .community-detail-layout { gap: 18px; padding-bottom: 26px; }
+  .community-side { order: -1; }
+  .community-comments { margin-bottom: 24px; padding-top: 17px; }
+  .community-comment-form { grid-template-columns: 34px minmax(0,1fr); padding: 12px; }
+  .community-comment-form .ui-button { grid-column: 2; width: 100%; }
+  .community-comment-form textarea { min-height: 76px; }
+  .community-comment-list article { grid-template-columns: 34px minmax(0,1fr); }
+}

@@ -1,1 +1,54 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>다른 여행자의 공개 일정 · HotelnGo</title><link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png"><link rel="stylesheet" href="styles/tokens.css?v=10"><link rel="stylesheet" href="styles/main.css?v=33"><link rel="stylesheet" href="styles/pages.css?v=20"><script src="scripts/site-shell.js?v=18" defer></script><script src="scripts/mock-api.js?v=7" defer></script><script src="scripts/platform-flows.js?v=17" defer></script><script src="scripts/auth.js?v=6" defer></script><script src="scripts/main.js?v=13" defer></script><script src="scripts/community-trips.js?v=6" defer></script></head><body><a class="skip-link" href="#main-content">본문으로 바로가기</a><div data-site-header data-active="discover"></div><main class="page-main" id="main-content"><section class="community-hero"><div class="shell"><span class="page-eyebrow">PUBLIC TRIPS · DISCOVERY</span><h1>다른 여행자의 일정을<br>내 여행의 출발점으로</h1><p>이곳은 일정 편집기가 아니라 공개된 여행을 발견하고 복사하는 곳입니다. 복사한 뒤에는 날짜·숙소·식사·활동을 내 일정 편집기에서 바꿉니다.</p><div class="page-head-actions"><a class="ui-button primary" href="trip-planner.html">내 일정 직접 만들기</a><a class="ui-button" href="discover.html">여행 발견으로 돌아가기</a><a class="ui-button" href="trip-publish.html" data-member-only>내 일정 공유하기</a></div></div></section><div class="shell"><div class="community-filter"><button class="is-active">추천</button><button>교토</button><button>다낭</button><button>방콕</button><button>가족</button><button>미식</button><button>느린 여행</button></div><section class="community-feed" data-community-feed><div class="empty-state"><strong>공개 여행 일정을 불러오는 중입니다.</strong></div></section></div></main><div data-site-footer></div><div data-site-mobile-nav data-active="trips"></div></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="여행자가 직접 만든 일정과 여행기를 발견하고, 댓글·공유·스크랩하거나 내 여행으로 담아 편집하세요.">
+  <title>여행기 · HotelnGo</title>
+  <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
+  <link rel="stylesheet" href="styles/tokens.css?v=10">
+  <link rel="stylesheet" href="styles/main.css?v=34">
+  <link rel="stylesheet" href="styles/pages.css?v=22">
+  <script src="scripts/site-shell.js?v=23" defer></script>
+  <script src="scripts/mock-api.js?v=7" defer></script>
+  <script src="scripts/platform-flows.js?v=17" defer></script>
+  <script src="scripts/auth.js?v=6" defer></script>
+  <script src="scripts/main.js?v=13" defer></script>
+  <script src="scripts/community-trips.js?v=7" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div data-site-header data-active="community"></div>
+  <main class="page-main" id="main-content">
+    <section class="community-hero">
+      <div class="shell">
+        <span class="page-eyebrow">TRAVEL STORIES · COMMUNITY</span>
+        <h1>여행자들의 진짜 일정이<br>내 여행의 시작이 됩니다</h1>
+        <p>사진만 보는 여행기가 아닙니다. 마음에 드는 일정을 스크랩하고, 궁금한 점은 댓글로 묻고, 친구에게 공유하거나 내 여행에 담아 날짜와 장소를 자유롭게 바꿔보세요.</p>
+        <div class="page-head-actions">
+          <a class="ui-button primary" href="trip-create.html">내 여행 만들기</a>
+          <a class="ui-button" href="my-stories.html" data-auth-only hidden>내 여행기 관리</a>
+          <a class="ui-button" href="story-create.html" data-auth-only hidden>여행기 쓰기</a>
+          <a class="ui-button" href="login.html?returnUrl=community.html" data-guest-only>로그인하고 참여하기</a>
+        </div>
+      </div>
+    </section>
+    <div class="shell">
+      <div class="community-filter" role="tablist" aria-label="여행기 주제">
+        <button class="is-active" type="button">추천</button>
+        <button type="button">교토</button>
+        <button type="button">다낭</button>
+        <button type="button">방콕</button>
+        <button type="button">가족</button>
+        <button type="button">미식</button>
+        <button type="button">느린 여행</button>
+      </div>
+      <section class="community-feed" data-community-feed aria-live="polite">
+        <div class="empty-state"><strong>공개 여행기를 불러오는 중입니다.</strong></div>
+      </section>
+    </div>
+  </main>
+  <div data-site-footer></div>
+  <div data-site-mobile-nav data-active="community"></div>
+</body>
+</html>
