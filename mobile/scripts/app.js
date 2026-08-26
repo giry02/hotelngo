@@ -81,9 +81,9 @@ const storyCard = (story) => `
 const homeView = () => `
   <div class="view home-view">
     <section class="home-hero">
-      <div class="home-hero-copy"><span class="eyebrow">DANANG JOURNEY</span><span class="weather">☀ 다낭 29°</span><h1>다낭에서 무엇을 찾으세요?</h1><p>장소를 찾거나 다른 여행자의 일정을 담아 시작하세요.</p></div>
-      <button class="search-launcher" type="button" data-open-search>${icons.search}<span><strong>여행지·랜드마크·호텔 검색</strong><small>예: 미케 비치, 오션 리조트</small></span></button>
-      <nav class="home-start-actions" aria-label="여행 시작 방법"><a href="#discover">${icons.pin}<span>추천 장소</span></a><a href="#community">${icons.comment}<span>인기 여행기</span></a><a href="#card">${icons.spark}<span>AI 일정 초안</span></a></nav>
+      <div class="home-hero-copy"><div><h1>어디로 떠날까요?</h1><p>여행지·랜드마크·호텔을 한 번에 검색하세요.</p></div><span class="weather">☀ 다낭 29°</span></div>
+      <button class="search-launcher" type="button" data-open-search>${icons.search}<span><strong>도시·랜드마크·호텔 검색</strong><small>다낭, 미케 비치, 호텔명</small></span></button>
+      <div class="popular-searches"><b>지금 많이 찾아요</b><a href="#discover">다낭</a><a href="#discover">방콕</a><a href="#discover">오사카</a></div>
     </section>
     <section class="continue-card"><div class="continue-card-top"><div><small>최근 만들던 여행 · 3/5단계</small><strong>처음 가는 다낭 4박 5일</strong><span>랜드마크 4 · 상세 서비스 3</span></div><button class="soft-button" type="button" data-route="plan">이어가기</button></div><div class="progress-track"><i></i></div></section>
     <section class="section" style="margin-top:28px"><div class="section-head"><div><span class="eyebrow">TRAVEL STORIES</span><h2>다른 여행자가 먼저 가봤어요</h2><p>마음에 드는 여행은 그대로 담은 뒤 수정하세요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${data.stories.map(storyCard).join('')}</div><div class="swipe-hint"><i></i>옆으로 넘겨 여행기를 둘러보세요</div></section>
