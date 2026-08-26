@@ -15,7 +15,9 @@ const mappings = [
   ['assets/images/marketplace/restaurant-dining.jpg', 'mobile/assets/restaurant.jpg'],
   ['assets/images/marketplace/spa-treatment.jpg', 'mobile/assets/spa.jpg'],
   ['assets/images/marketplace/golf-course.jpg', 'mobile/assets/golf.jpg'],
-  ['assets/images/landmark-bangkok.jpg', 'mobile/assets/market.jpg']
+  ['assets/images/landmark-bangkok.jpg', 'mobile/assets/market.jpg'],
+  ['node_modules/leaflet/dist/leaflet.css', 'mobile/vendor/leaflet/leaflet.css'],
+  ['node_modules/leaflet/dist/leaflet.js', 'mobile/vendor/leaflet/leaflet.js']
 ];
 
 for (const [source, target] of mappings) {
