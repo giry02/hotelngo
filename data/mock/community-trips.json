@@ -13,6 +13,7 @@
       "duration":"3박 4일",
       "companions":"친구 2명",
       "tags":["골목","저녁산책","로컬맛집"],
+      "likes": 2187,
       "saves": 1248,
       "copies": 386,
       "status":"PUBLISHED",
@@ -45,11 +46,32 @@
       "duration":"4박 5일",
       "companions":"가족 4명",
       "tags":["가족","리조트","짧은이동"],
+      "likes": 1642,
       "saves": 924,
       "copies": 211,
       "status":"PUBLISHED",
       "publishedAt":"2026-07-18T09:00:00+09:00",
-      "days":[]
+      "days":[
+        {"day":1,"dateLabel":"도착과 리조트 적응","items":[
+          {"time":"15:00","type":"HOTEL","title":"다낭 오션 리조트 체크인","bookingType":"INSTANT","status":"AVAILABLE","note":"공항에서 차량 25분"},
+          {"time":"17:30","type":"PLACE","title":"미케 비치 산책","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"아이와 걷기 좋은 해변 구간"},
+          {"time":"19:00","type":"RESTAURANT","title":"해변 패밀리 다이닝","bookingType":"REQUEST","status":"AVAILABLE","note":"아동 의자 요청 가능"}
+        ]},
+        {"day":2,"dateLabel":"바나힐을 천천히","items":[
+          {"time":"08:00","type":"TOUR","title":"바나힐 가족 픽업","bookingType":"REQUEST","status":"AVAILABLE","note":"호텔 로비 출발"},
+          {"time":"10:00","type":"PLACE","title":"골든 브리지","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"오전 혼잡 전 관람"},
+          {"time":"16:30","type":"HOTEL","title":"리조트 수영장 휴식","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"더운 시간 이후 이용"}
+        ]},
+        {"day":3,"dateLabel":"호이안 반나절","items":[
+          {"time":"10:30","type":"HOTEL","title":"리조트에서 느린 오전","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"수영장과 키즈클럽"},
+          {"time":"15:00","type":"TOUR","title":"호이안 올드타운 이동","bookingType":"REQUEST","status":"AVAILABLE","note":"유모차 적합 동선"},
+          {"time":"18:30","type":"RESTAURANT","title":"투본강 패밀리 디너","bookingType":"REQUEST","status":"CHECK_REQUIRED","note":"야외 좌석 날씨 확인"}
+        ]},
+        {"day":4,"dateLabel":"마지막 바다와 휴식","items":[
+          {"time":"09:00","type":"PLACE","title":"선짜 반도 전망대","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"차량 왕복 70분"},
+          {"time":"13:30","type":"SPA","title":"부모 휴식·키즈 프로그램","bookingType":"REQUEST","status":"AVAILABLE","note":"동시간 예약 가능 여부 확인"}
+        ]}
+      ]
     },
     {
       "id": "community_trip_bangkok_food",
@@ -62,11 +84,29 @@
       "duration":"2박 3일",
       "companions":"2명",
       "tags":["미식","야시장","루프톱"],
+      "likes": 2940,
       "saves": 1732,
       "copies": 542,
       "status":"PUBLISHED",
       "publishedAt":"2026-07-15T13:00:00+09:00",
-      "days":[]
+      "days":[
+        {"day":1,"dateLabel":"차오프라야의 저녁","items":[
+          {"time":"16:00","type":"HOTEL","title":"차오프라야 강변 체크인","bookingType":"INSTANT","status":"AVAILABLE","note":"BTS 사판탁신 환승"},
+          {"time":"18:30","type":"RESTAURANT","title":"강변 타이 디너","bookingType":"REQUEST","status":"AVAILABLE","note":"창가 좌석 요청"},
+          {"time":"21:00","type":"PLACE","title":"탈랏노이 야간 산책","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"골목 사진 동선 50분"}
+        ]},
+        {"day":2,"dateLabel":"시장과 루프톱","items":[
+          {"time":"09:00","type":"RESTAURANT","title":"올드타운 로컬 브런치","bookingType":"INFORMATION_ONLY","status":"VERIFIED","note":"현장 대기 약 20분"},
+          {"time":"12:30","type":"TOUR","title":"시장 미식 워크","bookingType":"INSTANT","status":"AVAILABLE","note":"시식 5곳 포함"},
+          {"time":"19:30","type":"RESTAURANT","title":"실롬 루프톱 디너","bookingType":"REQUEST","status":"CHECK_REQUIRED","note":"드레스 코드 확인"}
+        ]}
+      ]
     }
+  ],
+  "comments": [
+    {"id":"comment_seed_001","tripId":"community_trip_kyoto_evening","authorName":"여행하는수진","body":"DAY 2 동선 그대로 따라가 봤는데 걷는 속도가 느린 편이어도 여유로웠어요. 난젠지 근처 카페는 오후 2시 전에 가는 걸 추천해요.","createdAt":"2026-07-21T14:20:00+09:00","createdLabel":"7월 21일"},
+    {"id":"comment_seed_002","tripId":"community_trip_kyoto_evening","authorName":"도쿄사는민","body":"가모가와 선셋 워크는 비 오는 날에도 운영하나요? 다음 달 일정에 담아두었습니다.","createdAt":"2026-07-22T09:10:00+09:00","createdLabel":"7월 22일"},
+    {"id":"comment_seed_003","tripId":"community_trip_danang_family","authorName":"하율이네","body":"아이 낮잠 시간을 리조트 휴식으로 둔 점이 정말 좋네요. 바나힐 출발만 30분 앞당겨서 사용했어요.","createdAt":"2026-07-19T11:05:00+09:00","createdLabel":"7월 19일"},
+    {"id":"comment_seed_004","tripId":"community_trip_bangkok_food","authorName":"한입방콕","body":"시장 미식 워크와 루프톱 사이에 호텔에서 쉬는 시간을 한 시간 넣으면 더 편합니다.","createdAt":"2026-07-16T18:45:00+09:00","createdLabel":"7월 16일"}
   ]
 }
