@@ -184,7 +184,7 @@ const initPlanMap = () => {
   const plan = getPlan();
   const day = plan.days.find((item) => item.day === activeDay) || plan.days[0];
   const routePlaces = day.items.map((item) => ({ ...item, ...planLocation(item) })).filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
-  planMap = Leaflet.map(target, { zoomControl:true, attributionControl:true, dragging:true, scrollWheelZoom:false, doubleClickZoom:true, touchZoom:true, keyboard:true, zoomSnap:.5 });
+  planMap = Leaflet.map(target, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:true, doubleClickZoom:true, touchZoom:true, keyboard:true, zoomSnap:.5 });
   const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(planMap);
   tileLayer.on('tileerror', () => target.classList.add('has-tile-error'));
 

@@ -471,7 +471,7 @@
       return;
     }
     const renderToken = ++mapRenderToken;
-    mapInstance = window.L.map(element, { zoomControl: true, scrollWheelZoom: false });
+    mapInstance = window.L.map(element, { zoomControl: false, scrollWheelZoom: true, doubleClickZoom: true, touchZoom: true, dragging: true });
     const activeMap = mapInstance;
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
