@@ -1,0 +1,24 @@
+{
+  "name": "hotelngo-hybrid-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HotelnGo independent mobile web and Capacitor hybrid shell",
+  "scripts": {
+    "mobile:assets": "node scripts/build-mobile.mjs",
+    "mobile:sync": "npm run mobile:assets && cap sync",
+    "mobile:android": "cap open android",
+    "mobile:ios": "cap open ios",
+    "mobile:doctor": "cap doctor"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.0",
+    "@capacitor/core": "8.5.0",
+    "@capacitor/geolocation": "8.2.2",
+    "@capacitor/haptics": "8.0.2",
+    "@capacitor/ios": "8.5.0",
+    "@capacitor/share": "8.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.0"
+  }
+}
