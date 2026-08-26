@@ -216,11 +216,7 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .route-map { position:relative; z-index:0; height:245px; overflow:hidden; background:linear-gradient(145deg,#e5f1eb,#d6e8f5); }
 .route-map .leaflet-top.leaflet-left { top:10px; left:10px; }
 .route-map .leaflet-left .leaflet-control { margin:0; }
-.route-map .leaflet-control-zoom { overflow:hidden; border:1px solid rgba(16,39,74,.12); border-radius:11px; box-shadow:0 5px 16px rgba(16,39,74,.18); }
-.route-map .leaflet-control-zoom a { width:34px; height:34px; border:0; color:var(--primary); background:rgba(255,255,255,.96); font:800 20px/34px system-ui,sans-serif; }
-.route-map .leaflet-control-zoom a + a { border-top:1px solid var(--line); }
-.route-map .leaflet-control-zoom a:hover,.route-map .leaflet-control-zoom a:focus { color:#fff; background:var(--primary); }
-.route-map .route-fit-control { margin-top:7px; overflow:hidden; border:1px solid rgba(16,39,74,.12); border-radius:11px; box-shadow:0 5px 16px rgba(16,39,74,.18); }
+.route-map .route-fit-control { overflow:hidden; border:1px solid rgba(16,39,74,.12); border-radius:11px; box-shadow:0 5px 16px rgba(16,39,74,.18); }
 .route-map .route-fit-control button { width:34px; height:34px; display:grid; place-items:center; border:0; color:var(--primary); background:rgba(255,255,255,.96); cursor:pointer; }
 .route-map .route-fit-control button:active { color:#fff; background:var(--primary); }
 .route-map .route-fit-control svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; }
