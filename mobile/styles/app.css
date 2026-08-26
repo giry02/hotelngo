@@ -208,7 +208,22 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .day-tabs small { margin-top:3px; color:var(--muted); font-size:9px; }
 .day-tabs button.is-active { color:#fff; border-color:var(--primary); background:var(--primary); }
 .day-tabs button.is-active small { color:rgba(255,255,255,.72); }
-.route-map { position:relative; z-index:0; height:260px; margin:0 18px 18px; overflow:hidden; border:1px solid var(--line); border-radius:20px; background:linear-gradient(145deg,#e5f1eb,#d6e8f5); }
+.route-map-card { margin:0 18px 18px; overflow:hidden; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 10px 24px rgba(16,39,74,.07); }
+.route-map-label { height:48px; padding:0 13px; display:flex; align-items:center; gap:8px; }
+.route-map-label svg { width:17px; height:17px; color:var(--teal); }
+.route-map-label span { color:var(--primary); font-size:9px; font-weight:900; letter-spacing:.12em; }
+.route-map-label strong { margin-left:auto; color:var(--ink); font-size:10px; }
+.route-map { position:relative; z-index:0; height:245px; overflow:hidden; background:linear-gradient(145deg,#e5f1eb,#d6e8f5); }
+.route-map .leaflet-top.leaflet-left { top:10px; left:10px; }
+.route-map .leaflet-left .leaflet-control { margin:0; }
+.route-map .leaflet-control-zoom { overflow:hidden; border:1px solid rgba(16,39,74,.12); border-radius:11px; box-shadow:0 5px 16px rgba(16,39,74,.18); }
+.route-map .leaflet-control-zoom a { width:34px; height:34px; border:0; color:var(--primary); background:rgba(255,255,255,.96); font:800 20px/34px system-ui,sans-serif; }
+.route-map .leaflet-control-zoom a + a { border-top:1px solid var(--line); }
+.route-map .leaflet-control-zoom a:hover,.route-map .leaflet-control-zoom a:focus { color:#fff; background:var(--primary); }
+.route-map .route-fit-control { margin-top:7px; overflow:hidden; border:1px solid rgba(16,39,74,.12); border-radius:11px; box-shadow:0 5px 16px rgba(16,39,74,.18); }
+.route-map .route-fit-control button { width:34px; height:34px; display:grid; place-items:center; border:0; color:var(--primary); background:rgba(255,255,255,.96); cursor:pointer; }
+.route-map .route-fit-control button:active { color:#fff; background:var(--primary); }
+.route-map .route-fit-control svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; }
 .route-map .leaflet-control-attribution { padding:1px 4px; font-size:7px; }
 .route-map .leaflet-popup-content-wrapper { border-radius:12px; box-shadow:0 7px 20px rgba(16,39,74,.18); }
 .route-map .leaflet-popup-content { margin:9px 11px; display:grid; gap:2px; }
@@ -216,11 +231,26 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .route-map .leaflet-popup-content small { color:var(--muted); font-size:9px; }
 .route-live-marker { width:32px !important; height:32px !important; border:0 !important; background:none !important; }
 .route-live-marker span { width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; color:#fff; background:linear-gradient(135deg,var(--teal),var(--primary)); box-shadow:0 5px 14px rgba(16,39,74,.32); font-size:11px; font-weight:900; }
+.route-moving-marker { width:30px !important; height:30px !important; border:0 !important; background:none !important; }
+.route-moving-marker span { width:30px; height:30px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; color:#fff; background:#10274a; box-shadow:0 5px 15px rgba(16,39,74,.38); font-size:16px; font-weight:900; line-height:1; transform:rotate(-12deg); }
 .map-loading { position:absolute; z-index:500; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:#557086; background:linear-gradient(145deg,#e7f1ec,#dbe8f3); font-size:10px; }
 .map-loading b { color:var(--ink); font-size:12px; }
 .leaflet-container .map-loading { display:none; }
 .route-map.has-tile-error::after { content:"일부 지도 타일을 불러오지 못했습니다"; position:absolute; z-index:600; right:8px; bottom:8px; padding:5px 7px; border-radius:8px; color:#7a4d00; background:rgba(255,244,216,.94); font-size:8px; }
-.route-map .map-caption { position:absolute; z-index:500; left:10px; bottom:10px; padding:7px 9px; border-radius:10px; background:rgba(255,255,255,.92); box-shadow:0 4px 12px rgba(16,39,74,.12); font-size:9px; font-weight:700; pointer-events:none; }
+.route-map .map-caption { position:absolute; z-index:500; left:10px; bottom:10px; padding:7px 9px; display:flex; align-items:center; gap:6px; border-radius:10px; background:rgba(255,255,255,.92); box-shadow:0 4px 12px rgba(16,39,74,.12); font-size:9px; font-weight:700; pointer-events:none; }
+.route-map .map-caption b { color:var(--primary); }
+.route-leg-list { padding:0 13px; }
+.route-leg { min-height:66px; padding:11px 0; display:grid; grid-template-columns:48px 1fr auto; gap:10px; align-items:center; border-bottom:1px solid var(--line); }
+.route-leg-icon { width:48px; height:28px; display:flex; align-items:center; justify-content:center; gap:4px; border-radius:10px; color:var(--primary); background:#edf3ff; font-size:9px; font-weight:900; }
+.route-leg-icon i { color:var(--teal); font-style:normal; }
+.route-leg div { min-width:0; }
+.route-leg small,.route-leg strong { display:block; }
+.route-leg small { color:var(--muted); font-size:8px; }
+.route-leg strong { margin-top:3px; overflow:hidden; font-size:10px; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
+.route-leg em { color:var(--primary); font-size:9px; font-style:normal; font-weight:800; white-space:nowrap; }
+.route-map-status { margin:12px 13px 0; padding:9px 10px; display:flex; gap:7px; align-items:center; border-radius:11px; color:#087963; background:#eafaf5; font-size:9px; }
+.route-map-status b { width:18px; height:18px; display:grid; place-items:center; border-radius:50%; color:#fff; background:var(--teal); }
+.route-data-note { margin:8px 13px 13px; color:var(--muted); font-size:8px; line-height:1.45; }
 .timeline { display:grid; gap:0; }
 .timeline-item { position:relative; padding:0 0 17px 53px; }
 .timeline-item::before { content:""; position:absolute; top:20px; bottom:-4px; left:32px; width:2px; background:#dce5f2; }
