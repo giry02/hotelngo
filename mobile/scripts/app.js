@@ -13,6 +13,10 @@ let data;
 let activeDay = 1;
 let toastTimer;
 let planMap;
+let planRouteLine;
+let planRouteMover;
+let planRouteAnimation;
+let planRouteCoordinates = [];
 
 const icons = {
   search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
@@ -93,9 +97,66 @@ const homeView = () => `
   </div>`;
 
 const destroyPlanMap = () => {
+  if (planRouteAnimation) cancelAnimationFrame(planRouteAnimation);
+  planRouteAnimation = undefined;
+  planRouteLine = undefined;
+  planRouteMover = undefined;
+  planRouteCoordinates = [];
   if (!planMap) return;
   planMap.remove();
   planMap = undefined;
+};
+
+const fitPlanRoute = () => {
+  if (!planMap || !planRouteCoordinates.length) return;
+  if (planRouteCoordinates.length > 1) planMap.fitBounds(planRouteCoordinates, { padding:[34,34] });
+  else planMap.setView(planRouteCoordinates[0], 14);
+};
+
+const animatePlanRoute = () => {
+  if (!planMap || !planRouteLine || !planRouteMover || planRouteCoordinates.length < 2) return;
+  if (planRouteAnimation) cancelAnimationFrame(planRouteAnimation);
+
+  const caption = document.querySelector('[data-route-motion-label]');
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) {
+    planRouteLine.setLatLngs(planRouteCoordinates);
+    planRouteMover.setLatLng(planRouteCoordinates.at(-1));
+    if (caption) caption.textContent = `1 → ${planRouteCoordinates.length} 동선`;
+    return;
+  }
+
+  const segmentDuration = 820;
+  const startedAt = performance.now();
+  planRouteLine.setLatLngs([planRouteCoordinates[0]]);
+  planRouteMover.setLatLng(planRouteCoordinates[0]);
+  if (caption) caption.textContent = `1 → ${planRouteCoordinates.length} 이동 중`;
+
+  const drawFrame = (now) => {
+    if (!planMap || !planRouteLine || !planRouteMover) return;
+    const progress = Math.min((now - startedAt) / segmentDuration, planRouteCoordinates.length - 1);
+    const segment = Math.min(Math.floor(progress), planRouteCoordinates.length - 2);
+    const localProgress = Math.min(progress - segment, 1);
+    const start = planRouteCoordinates[segment];
+    const end = planRouteCoordinates[segment + 1];
+    const current = [
+      start[0] + ((end[0] - start[0]) * localProgress),
+      start[1] + ((end[1] - start[1]) * localProgress)
+    ];
+    planRouteLine.setLatLngs([...planRouteCoordinates.slice(0, segment + 1), current]);
+    planRouteMover.setLatLng(current);
+
+    if (progress < planRouteCoordinates.length - 1) {
+      planRouteAnimation = requestAnimationFrame(drawFrame);
+      return;
+    }
+    planRouteAnimation = undefined;
+    planRouteLine.setLatLngs(planRouteCoordinates);
+    planRouteMover.setLatLng(planRouteCoordinates.at(-1));
+    if (caption) caption.textContent = `1 → ${planRouteCoordinates.length} 동선 완료`;
+  };
+
+  planRouteAnimation = requestAnimationFrame(drawFrame);
 };
 
 const planLocation = (item) => {
@@ -123,21 +184,53 @@ const initPlanMap = () => {
   const plan = getPlan();
   const day = plan.days.find((item) => item.day === activeDay) || plan.days[0];
   const routePlaces = day.items.map((item) => ({ ...item, ...planLocation(item) })).filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
-  planMap = Leaflet.map(target, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:false, doubleClickZoom:false, touchZoom:true, keyboard:false });
+  planMap = Leaflet.map(target, { zoomControl:true, attributionControl:true, dragging:true, scrollWheelZoom:false, doubleClickZoom:true, touchZoom:true, keyboard:true, zoomSnap:.5 });
   const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(planMap);
   tileLayer.on('tileerror', () => target.classList.add('has-tile-error'));
 
   const coordinates = routePlaces.map((place) => [place.lat, place.lng]);
-  Leaflet.polyline(coordinates, { color:'#2f6bff', weight:4, opacity:.9, dashArray:'8 6' }).addTo(planMap);
+  planRouteCoordinates = coordinates;
+  Leaflet.polyline(coordinates, { color:'#9dbcf8', weight:5, opacity:.55, dashArray:'4 8' }).addTo(planMap);
+  planRouteLine = Leaflet.polyline(coordinates.length ? [coordinates[0]] : [], { color:'#2f6bff', weight:4, opacity:1, lineCap:'round', lineJoin:'round' }).addTo(planMap);
   routePlaces.forEach((place, index) => {
     const marker = Leaflet.marker([place.lat, place.lng], {
       icon:Leaflet.divIcon({ className:'route-live-marker', html:`<span>${index + 1}</span>`, iconSize:[32,32], iconAnchor:[16,16] })
     }).addTo(planMap);
     marker.bindPopup(`<strong>${escapeHtml(place.time)} · ${escapeHtml(place.title)}</strong><small>${escapeHtml(place.area || '')} · 체류 ${place.duration}분</small>`, { closeButton:false, offset:[0,-10] });
   });
-  if (coordinates.length > 1) planMap.fitBounds(coordinates, { padding:[26,26] });
-  else if (coordinates.length === 1) planMap.setView(coordinates[0], 14);
-  setTimeout(() => planMap?.invalidateSize(), 60);
+  if (coordinates.length) {
+    planRouteMover = Leaflet.marker(coordinates[0], {
+      interactive:false,
+      zIndexOffset:900,
+      icon:Leaflet.divIcon({ className:'route-moving-marker', html:'<span aria-hidden="true">➜</span>', iconSize:[30,30], iconAnchor:[15,15] })
+    }).addTo(planMap);
+  }
+
+  const RouteFitControl = Leaflet.Control.extend({
+    options:{ position:'topleft' },
+    onAdd:() => {
+      const container = Leaflet.DomUtil.create('div', 'leaflet-bar leaflet-control route-fit-control');
+      const button = Leaflet.DomUtil.create('button', '', container);
+      button.type = 'button';
+      button.title = '전체 경로 보기 · 다시 재생';
+      button.setAttribute('aria-label', '전체 경로 보기와 이동 모션 다시 재생');
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
+      Leaflet.DomEvent.disableClickPropagation(container);
+      Leaflet.DomEvent.on(button, 'click', () => {
+        fitPlanRoute();
+        animatePlanRoute();
+      });
+      return container;
+    }
+  });
+  new RouteFitControl().addTo(planMap);
+
+  fitPlanRoute();
+  setTimeout(() => {
+    planMap?.invalidateSize();
+    fitPlanRoute();
+    animatePlanRoute();
+  }, 90);
 };
 
 const discoverView = () => {
@@ -167,10 +260,53 @@ const cardView = () => {
   return `<div class="view"><header class="page-intro"><span class="eyebrow">BUILD YOUR JOURNEY</span><h1>여행 카드</h1><p>예약 전 단계입니다. 가고 싶은 곳을 모아 동선을 먼저 만드세요.</p></header><section class="card-summary"><header><div><small>현재 여행지</small><h2>다낭 · ${items.length}개 담음</h2></div><b>4박 5일</b></header><div class="ai-draft"><span class="ai-spark">${icons.spark}</span><div><strong>담은 장소로 자동 일정 만들기</strong><span>운영시간·체류시간·이동거리를 고려합니다.</span></div><button type="button" data-generate-plan>초안 만들기</button></div></section><section class="section"><div class="section-head"><div><h2>담은 장소</h2><p>아직 예약되지 않았으며 언제든 삭제할 수 있습니다.</p></div><a href="#discover">더 담기</a></div>${items.length ? `<div class="saved-list">${items.map((item) => `<article class="saved-card"><img src="${item.image}" alt="${escapeHtml(item.title)}"><div class="saved-card-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description)}</p><footer><span>${formatPrice(item.basePrice)} · ${item.duration}분</span><button type="button" aria-label="삭제" data-remove-card="${item.id}">${icons.trash}</button></footer></div></article>`).join('')}</div>` : `<div class="empty-state">${icons.pin}<h2>아직 담은 장소가 없어요</h2><p>여행 발견이나 여행기에서 마음에 드는 장소를 담아보세요.</p><a class="primary-button" href="#discover">장소 발견하기</a></div>`}</section></div>`;
 };
 
+const getRouteEstimate = (day) => {
+  const points = day.items.map((item) => ({ ...item, ...planLocation(item) })).filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+  const toRadians = (value) => value * (Math.PI / 180);
+  const distanceBetween = (from, to) => {
+    const earthRadius = 6371;
+    const latitude = toRadians(to.lat - from.lat);
+    const longitude = toRadians(to.lng - from.lng);
+    const value = Math.sin(latitude / 2) ** 2 + Math.cos(toRadians(from.lat)) * Math.cos(toRadians(to.lat)) * (Math.sin(longitude / 2) ** 2);
+    return earthRadius * (2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value)));
+  };
+  const legs = points.slice(0, -1).map((point, index) => {
+    const next = points[index + 1];
+    const distance = distanceBetween(point, next);
+    const minutes = Math.max(10, Math.round(((distance / 24) * 60 + 5) / 5) * 5);
+    return { from:point, to:next, distance, minutes };
+  });
+  return {
+    legs,
+    totalDistance:legs.reduce((sum, item) => sum + item.distance, 0),
+    totalMinutes:legs.reduce((sum, item) => sum + item.minutes, 0)
+  };
+};
+
 const planView = () => {
   const plan = getPlan();
   const day = plan.days.find((item) => item.day === activeDay) || plan.days[0];
-  return `<div class="view"><header class="page-intro"><span class="eyebrow">SMART ROUTE</span><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.dates)} · 성인 ${plan.people}명 · 충돌 없이 자동 정렬됨</p></header><div class="day-tabs">${plan.days.map((item) => `<button class="${item.day === day.day ? 'is-active' : ''}" type="button" data-plan-day="${item.day}"><strong>DAY ${item.day}</strong><small>${item.date} · ${item.items.length}곳</small></button>`).join('')}</div><section class="route-map" id="plan-route-map" aria-label="DAY ${day.day} 실제 이동 지도"><div class="map-loading">DAY ${day.day} 지도를 불러오는 중입니다</div><span class="map-caption">DAY ${day.day} · ${day.items.length}곳 실제 위치</span></section><section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>지도 핀과 일정 항목을 누르면 장소와 체류시간을 확인할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section><div class="sticky-action"><button class="secondary-button" type="button" data-route="card">장소 수정</button><button class="primary-button" type="button" data-save-plan>내 여행 저장</button></div></div>`;
+  const routeEstimate = getRouteEstimate(day);
+  const routeLegs = routeEstimate.legs.map((leg, index) => `
+    <div class="route-leg">
+      <span class="route-leg-icon">${index + 1}<i>→</i>${index + 2}</span>
+      <div><small>${escapeHtml(leg.from.time)} → ${escapeHtml(leg.to.time)} · 차량</small><strong>${escapeHtml(leg.from.title)} → ${escapeHtml(leg.to.title)}</strong></div>
+      <em>약 ${leg.minutes}분</em>
+    </div>`).join('');
+  const routeSummary = routeEstimate.legs.length ? `약 ${routeEstimate.totalMinutes}분 · ${routeEstimate.totalDistance.toFixed(1)}km` : '장소 1곳';
+  return `<div class="view">
+    <header class="page-intro"><span class="eyebrow">SMART ROUTE</span><h1>${escapeHtml(plan.title)}</h1><p>${escapeHtml(plan.dates)} · 성인 ${plan.people}명 · 충돌 없이 자동 정렬됨</p></header>
+    <div class="day-tabs">${plan.days.map((item) => `<button class="${item.day === day.day ? 'is-active' : ''}" type="button" data-plan-day="${item.day}"><strong>DAY ${item.day}</strong><small>${item.date} · ${item.items.length}곳</small></button>`).join('')}</div>
+    <section class="route-map-card">
+      <div class="route-map-label">${icons.route}<span>DAY ROUTE</span><strong>${routeSummary}</strong></div>
+      <div class="route-map" id="plan-route-map" aria-label="DAY ${day.day} 실제 이동 지도"><div class="map-loading">DAY ${day.day} 지도를 불러오는 중입니다</div><span class="map-caption"><b>DAY ${day.day}</b><span data-route-motion-label>${day.items.length > 1 ? `1 → ${day.items.length} 동선` : '선택 장소'}</span></span></div>
+      ${routeLegs ? `<div class="route-leg-list">${routeLegs}</div>` : ''}
+      <div class="route-map-status"><b>✓</b><span>${routeEstimate.legs.length}개 이동 구간을 시간 순서대로 표시했습니다.</span></div>
+      <p class="route-data-note">현재는 실제 위치 좌표를 잇는 예상치입니다. 출발 전 길찾기에서 교통상황을 다시 확인하세요.</p>
+    </section>
+    <section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>지도 핀과 일정 항목을 누르면 장소와 체류시간을 확인할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section>
+    <div class="sticky-action"><button class="secondary-button" type="button" data-route="card">장소 수정</button><button class="primary-button" type="button" data-save-plan>내 여행 저장</button></div>
+  </div>`;
 };
 
 const hotelsView = () => `<div class="view"><header class="page-intro"><span class="eyebrow">STAY IN DANANG</span><div class="page-intro-row"><div><h1>호텔</h1><p>여행지와 호텔명을 함께 검색합니다.</p></div><button class="icon-button" type="button" data-open-search>${icons.search}</button></div></header><section class="section"><div class="chip-row"><button class="chip is-active">추천순</button><button class="chip">가격</button><button class="chip">평점 4.5+</button><button class="chip">해변</button><button class="chip">조식 포함</button></div><div class="hotel-list">${data.hotels.map((hotel) => `<article class="hotel-card"><img src="${hotel.image}" alt="${escapeHtml(hotel.name)}"><div class="hotel-card-body"><small>${escapeHtml(hotel.area)} · ${hotel.badges.join(' · ')}</small><h2>${escapeHtml(hotel.name)}</h2><div class="hotel-card-meta"><b>★ ${hotel.rating} · 후기 ${formatNumber(hotel.reviews)}</b><strong>${formatPrice(hotel.price)}<small>/박</small></strong></div><button class="primary-button full-button" style="margin-top:12px" type="button" data-add-hotel="${hotel.id}">여행 카드에 담고 객실 보기</button></div></article>`).join('')}</div></section></div>`;
