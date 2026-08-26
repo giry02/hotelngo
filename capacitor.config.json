@@ -1,0 +1,13 @@
+{
+  "appId": "com.hotelngo.mobile",
+  "appName": "HotelnGo",
+  "webDir": "mobile",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "Haptics": {},
+    "Geolocation": {},
+    "Share": {}
+  }
+}
