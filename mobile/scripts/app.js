@@ -30,7 +30,11 @@ const icons = {
   back:'<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
   trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg>',
   route:'<svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3a3 3 0 0 0 3-3V9a3 3 0 0 1 3-3"/></svg>',
-  calendar:'<svg viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M3 9h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg>'
+  calendar:'<svg viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M3 9h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg>',
+  restaurant:'<svg viewBox="0 0 24 24"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M16 3v18M16 3c3 2 4 6 4 9h-4"/></svg>',
+  spa:'<svg viewBox="0 0 24 24"><path d="M4 14c3-4 6-4 8 0 2-4 5-4 8 0M5 19h14M8 10c-1-2 0-4 2-5M13 10c-1-2 0-4 2-5"/></svg>',
+  golf:'<svg viewBox="0 0 24 24"><path d="M6 21V3l10 4-10 4M4 21h8M16 17c3 0 5 1 5 2s-2 2-5 2-5-1-5-2"/></svg>',
+  vehicle:'<svg viewBox="0 0 24 24"><path d="M4 15h16l-2-6H6l-2 6ZM6 15v4M18 15v4M3 15v3h18v-3M7 12h10"/></svg>'
 };
 
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
@@ -41,6 +45,7 @@ const userId = () => session()?.user?.id || '';
 const formatNumber = (value) => new Intl.NumberFormat('ko-KR').format(Number(value || 0));
 const formatPrice = (value) => Number(value) ? `${formatNumber(value)}원` : '무료';
 const categoryLabel = (category) => ({LANDMARK:'랜드마크',HOTEL:'숙소',RESTAURANT:'식사·카페',SPA:'마사지·스파',GOLF:'골프',TOUR:'투어·체험',VEHICLE:'이동'}[category] || category);
+const categoryIcon = (category) => ({LANDMARK:icons.pin,HOTEL:icons.hotel,RESTAURANT:icons.restaurant,SPA:icons.spa,GOLF:icons.golf,TOUR:icons.route,VEHICLE:icons.vehicle}[category] || icons.pin);
 
 const toast = (message) => {
   clearTimeout(toastTimer);
@@ -67,6 +72,7 @@ const route = () => {
 const setActiveNav = (name) => {
   const navName = name === 'story' ? 'community' : name === 'plan' ? 'card' : name === 'login' ? 'trips' : name;
   document.querySelectorAll('[data-nav]').forEach((link) => link.classList.toggle('is-active', link.dataset.nav === navName));
+  document.querySelector('[data-open-menu]')?.classList.toggle('is-active', ['hotels','ai','trips','login'].includes(name));
 };
 
 const openSheet = (title, body) => {
@@ -82,6 +88,12 @@ const storyCard = (story) => `
     <div class="story-card-copy"><small>${escapeHtml(story.destinationId.toUpperCase())} · ${story.duration}</small><h3>${escapeHtml(story.title)}</h3><p>${escapeHtml(story.summary)}</p><div class="story-card-meta"><span class="avatar-line"><i class="avatar">${escapeHtml(story.avatar)}</i>${escapeHtml(story.author)}</span><b>저장 ${formatNumber(story.scraps)}</b></div></div>
   </a>`;
 
+const homePlaceCard = (place) => `
+  <a class="home-place-card" href="#discover">
+    <img src="${place.image}" alt="${escapeHtml(place.title)}">
+    <span><small>${categoryLabel(place.category)} · ${escapeHtml(place.area)}</small><strong>${escapeHtml(place.title)}</strong><em>${place.recommendedTime} 추천 · ${place.duration}분</em></span>
+  </a>`;
+
 const homeView = () => `
   <div class="view home-view">
     <section class="home-hero">
@@ -90,9 +102,10 @@ const homeView = () => `
       <div class="popular-searches"><b>지금 많이 찾아요</b><a href="#discover">다낭</a><a href="#discover">방콕</a><a href="#discover">오사카</a></div>
     </section>
     <section class="continue-card"><div class="continue-card-top"><div><small>최근 만들던 여행 · 3/5단계</small><strong>처음 가는 다낭 4박 5일</strong><span>랜드마크 4 · 상세 서비스 3</span></div><button class="soft-button" type="button" data-route="plan">이어가기</button></div><div class="progress-track"><i></i></div></section>
-    <section class="section" style="margin-top:28px"><div class="section-head"><div><span class="eyebrow">TRAVEL STORIES</span><h2>다른 여행자가 먼저 가봤어요</h2><p>마음에 드는 여행은 그대로 담은 뒤 수정하세요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${data.stories.map(storyCard).join('')}</div><div class="swipe-hint"><i></i>옆으로 넘겨 여행기를 둘러보세요</div></section>
+    <section class="section home-story-section"><div class="section-head"><div><span class="eyebrow">TRAVEL STORIES</span><h2>다른 여행자가 먼저 가봤어요</h2><p>마음에 드는 여행은 그대로 담은 뒤 수정하세요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${data.stories.map(storyCard).join('')}</div><div class="swipe-hint"><i></i>옆으로 넘겨 여행기를 둘러보세요</div></section>
+    <section class="section home-curation"><div class="section-head"><div><span class="eyebrow">PICK IN DANANG</span><h2>다낭에서 바로 담기 좋은 곳</h2><p>랜드마크부터 식사까지, 일정에 필요한 장소를 골라보세요.</p></div><a href="#discover">전체보기</a></div><div class="home-place-reel">${data.places.slice(0,4).map(homePlaceCard).join('')}</div></section>
     <section class="section"><div class="section-head"><div><h2>빠르게 찾기</h2><p>목적에 맞는 항목부터 살펴보세요.</p></div></div><div class="quick-grid">
-      <a href="#hotels">${icons.hotel}<span>숙소</span></a><a href="#discover">${icons.pin}<span>랜드마크</span></a><a href="#discover">${icons.route}<span>즐길거리</span></a><a href="#card">${icons.spark}<span>AI 일정</span></a>
+      <a href="#hotels">${icons.hotel}<span>숙소</span></a><a href="#discover">${icons.pin}<span>랜드마크</span></a><a href="#discover">${icons.route}<span>즐길거리</span></a><a href="#ai">${icons.spark}<span>AI 여행</span></a>
     </div></section>
   </div>`;
 
@@ -304,12 +317,18 @@ const planView = () => {
       <div class="route-map-status"><b>✓</b><span>${routeEstimate.legs.length}개 이동 구간을 시간 순서대로 표시했습니다.</span></div>
       <p class="route-data-note">현재는 실제 위치 좌표를 잇는 예상치입니다. 출발 전 길찾기에서 교통상황을 다시 확인하세요.</p>
     </section>
-    <section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>지도 핀과 일정 항목을 누르면 장소와 체류시간을 확인할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section>
+    <section class="section"><div class="section-head"><div><span class="eyebrow">DAY ${day.day}</span><h2>${escapeHtml(day.title)}</h2><p>지도 핀과 일정 항목을 누르면 장소와 체류시간을 확인할 수 있습니다.</p></div></div><div class="timeline">${day.items.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><button class="timeline-card" type="button" data-edit-schedule="${escapeHtml(item.title)}"><small>${categoryIcon(item.type)}${categoryLabel(item.type)}</small><strong>${escapeHtml(item.title)}</strong><span>체류 ${item.duration}분 · 시간 변경 가능</span></button></article>`).join('')}</div><div class="route-ok"><b>✓</b><span>현재 일정은 이동시간과 체류시간이 겹치지 않습니다. 변경 시 가능한 다음 시간을 먼저 제안합니다.</span></div></section>
     <div class="sticky-action"><button class="secondary-button" type="button" data-route="card">장소 수정</button><button class="primary-button" type="button" data-save-plan>내 여행 저장</button></div>
   </div>`;
 };
 
 const hotelsView = () => `<div class="view"><header class="page-intro"><span class="eyebrow">STAY IN DANANG</span><div class="page-intro-row"><div><h1>호텔</h1><p>여행지와 호텔명을 함께 검색합니다.</p></div><button class="icon-button" type="button" data-open-search>${icons.search}</button></div></header><section class="section"><div class="chip-row"><button class="chip is-active">추천순</button><button class="chip">가격</button><button class="chip">평점 4.5+</button><button class="chip">해변</button><button class="chip">조식 포함</button></div><div class="hotel-list">${data.hotels.map((hotel) => `<article class="hotel-card"><img src="${hotel.image}" alt="${escapeHtml(hotel.name)}"><div class="hotel-card-body"><small>${escapeHtml(hotel.area)} · ${hotel.badges.join(' · ')}</small><h2>${escapeHtml(hotel.name)}</h2><div class="hotel-card-meta"><b>★ ${hotel.rating} · 후기 ${formatNumber(hotel.reviews)}</b><strong>${formatPrice(hotel.price)}<small>/박</small></strong></div><button class="primary-button full-button" style="margin-top:12px" type="button" data-add-hotel="${hotel.id}">여행 카드에 담고 객실 보기</button></div></article>`).join('')}</div></section></div>`;
+
+const aiView = () => {
+  const loggedIn = Boolean(session());
+  const savedCount = loggedIn ? getCardItems().length : 0;
+  return `<div class="view"><header class="page-intro ai-page-intro"><span class="eyebrow">AI TRIP PLANNER</span><h1>담아둔 장소로<br>여행 초안을 만드세요</h1><p>랜드마크·숙소·식사를 먼저 추천하고, 이동시간과 체류시간을 고려해 날짜별 순서를 정리합니다.</p></header><section class="section"><article class="ai-guide-card"><span class="ai-guide-icon">${icons.spark}</span><div><small>현재 준비 상태</small><h2>${loggedIn ? `여행 카드 ${savedCount}곳` : '로그인 후 내 장소 불러오기'}</h2><p>${loggedIn ? '저장한 장소와 HotelnGo 추천을 섞어 초안을 만들 수 있습니다.' : '로그인하면 여러 기기에서 담아둔 장소와 일정을 이어서 사용할 수 있습니다.'}</p></div></article><ol class="ai-step-list"><li><b>1</b><span><strong>장소를 담아요</strong><small>마음에 드는 랜드마크·호텔·식사를 여행 카드에 저장</small></span></li><li><b>2</b><span><strong>AI가 초안을 만들어요</strong><small>날짜별 동선과 가능한 시간을 먼저 제안</small></span></li><li><b>3</b><span><strong>내 방식으로 바꿔요</strong><small>장소·시간·서비스를 수정한 뒤 내 여행으로 저장</small></span></li></ol><div class="ai-actions">${loggedIn ? `<button class="secondary-button" type="button" data-route="card">여행 카드 확인</button><button class="primary-button" type="button" data-generate-plan>AI 초안 만들기</button>` : `<button class="secondary-button" type="button" data-route="discover">먼저 둘러보기</button><button class="primary-button" type="button" data-route="login">로그인</button>`}</div></section></div>`;
+};
 
 const tripsView = () => {
   if (!session()) return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY</span><h1>내 여행</h1><p>여행 일정, 예약 내역, 저장·찜과 활동을 한곳에서 관리합니다.</p></header><section class="section"><div class="empty-state">${icons.route}<h2>내 여행을 이어서 보려면 로그인하세요</h2><p>여행 카드와 예약은 HotelnGo 회원 계정에만 저장됩니다.</p><button class="primary-button" type="button" data-route="login">로그인</button></div></section></div>`;
@@ -318,6 +337,14 @@ const tripsView = () => {
 };
 
 const loginView = () => `<div class="view auth-view"><span class="eyebrow">WELCOME BACK</span><h1>로그인</h1><p>여행 카드와 내 여행을 어느 기기에서든 이어서 확인하세요.</p><form class="auth-form" data-mobile-login><label class="form-field"><span>이메일</span><input name="email" type="email" value="demo@hotelngo.test" autocomplete="username" required></label><label class="form-field"><span>비밀번호</span><input name="password" type="password" value="Hotelngo!2026" autocomplete="current-password" required></label><button class="primary-button full-button" type="submit">로그인</button></form><div class="demo-account"><span>화면 검증용 계정이 입력되어 있습니다.</span><button type="button" data-demo-fill>다시 채우기</button></div></div>`;
+
+const openServiceMenu = () => {
+  const loggedIn = Boolean(session());
+  const accountBlock = loggedIn
+    ? `<div class="service-account"><span class="avatar">${escapeHtml(session().user.displayName.slice(0,1))}</span><div><strong>${escapeHtml(session().user.displayName)}님</strong><small>여행 일정과 예약을 관리하세요.</small></div><button type="button" data-route="trips">내 여행</button></div>`
+    : `<div class="service-account"><span class="service-login-icon">${icons.route}</span><div><strong>로그인이 필요해요</strong><small>여행 카드와 일정을 안전하게 저장하세요.</small></div><button type="button" data-route="login">로그인</button></div>`;
+  openSheet('전체 서비스', `${accountBlock}<div class="service-menu-section"><h3>여행 준비</h3><div class="service-menu-grid"><button type="button" data-route="hotels">${icons.hotel}<span><strong>호텔</strong><small>숙소와 객실 찾기</small></span></button><button type="button" data-route="ai">${icons.spark}<span><strong>AI 여행</strong><small>담은 장소로 초안 만들기</small></span></button><button type="button" data-route="card">${icons.bookmark}<span><strong>여행 카드</strong><small>가고 싶은 곳 모아보기</small></span></button><button type="button" data-route="community">${icons.comment}<span><strong>여행기</strong><small>공유 일정과 이야기</small></span></button></div></div><div class="service-menu-section"><h3>예약·계정</h3><div class="service-list"><a href="../bookings.html">${icons.calendar}<span><strong>예약 조회</strong><small>예약번호와 예약 상태 확인</small></span><b>›</b></a>${loggedIn ? `<button type="button" data-route="trips">${icons.route}<span><strong>내 여행</strong><small>일정·예약·저장·활동 관리</small></span><b>›</b></button><a href="../account-settings.html">${icons.pin}<span><strong>계정 설정</strong><small>회원 정보와 여행자 정보</small></span><b>›</b></a><button class="service-logout" type="button" data-logout>로그아웃</button>` : ''}</div></div>`);
+};
 
 const getEngagement = (storyId) => read(ENGAGEMENT_KEY, []).find((item) => item.id === `${userId()}_${storyId}`) || {};
 const setEngagement = (storyId, field) => {
@@ -372,9 +399,15 @@ const openScheduleEditor = (title) => openSheet('시간과 체류시간 변경',
 const render = () => {
   const current = route();
   setActiveNav(current.name);
-  const initial = session()?.user?.displayName?.slice(0,1) || 'G';
+  const loggedIn = Boolean(session());
+  const profileButton = document.querySelector('.profile-button');
+  document.querySelector('[data-notification-button]').hidden = !loggedIn;
+  const initial = loggedIn ? session().user.displayName.slice(0,1) : '로그인';
   document.querySelector('[data-profile-initial]').textContent = initial;
-  const views = {home:homeView,discover:discoverView,community:communityView,story:()=>detailView(current.id),card:cardView,plan:planView,hotels:hotelsView,trips:tripsView,login:loginView};
+  profileButton.dataset.route = loggedIn ? 'trips' : 'login';
+  profileButton.setAttribute('aria-label', loggedIn ? `${session().user.displayName}님의 내 여행 열기` : '로그인');
+  profileButton.classList.toggle('is-login', !loggedIn);
+  const views = {home:homeView,discover:discoverView,community:communityView,story:()=>detailView(current.id),card:cardView,plan:planView,hotels:hotelsView,ai:aiView,trips:tripsView,login:loginView};
   destroyPlanMap();
   main.innerHTML = (views[current.name] || homeView)();
   requestAnimationFrame(initPlanMap);
@@ -384,7 +417,8 @@ const render = () => {
 
 document.addEventListener('click', async (event) => {
   const routeButton = event.target.closest('[data-route]');
-  if (routeButton) { location.hash = routeButton.dataset.route; return; }
+  if (routeButton) { if (!sheetLayer.hidden) closeSheet(); location.hash = routeButton.dataset.route; return; }
+  if (event.target.closest('[data-open-menu]')) return openServiceMenu();
   if (event.target.closest('[data-open-search]')) return openSearch();
   if (event.target.closest('[data-close-sheet]') || event.target === sheetLayer) return closeSheet();
   const destination = event.target.closest('[data-destination],[data-search-destination]');
