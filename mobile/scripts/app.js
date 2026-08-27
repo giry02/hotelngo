@@ -70,9 +70,8 @@ const route = () => {
 };
 
 const setActiveNav = (name) => {
-  const navName = name === 'story' ? 'community' : name === 'plan' ? 'card' : name === 'login' ? 'trips' : name;
+  const navName = name === 'story' ? 'community' : name === 'plan' ? 'ai' : name === 'login' ? 'trips' : name;
   document.querySelectorAll('[data-nav]').forEach((link) => link.classList.toggle('is-active', link.dataset.nav === navName));
-  document.querySelector('[data-open-menu]')?.classList.toggle('is-active', ['hotels','ai','trips','login'].includes(name));
 };
 
 const openSheet = (title, body) => {
@@ -94,6 +93,15 @@ const homePlaceCard = (place) => `
     <span><small>${categoryLabel(place.category)} · ${escapeHtml(place.area)}</small><strong>${escapeHtml(place.title)}</strong><em>${place.recommendedTime} 추천 · ${place.duration}분</em></span>
   </a>`;
 
+const homeJourneyEntry = () => {
+  if (!session()) return `<section class="home-ai-entry"><span class="home-ai-icon">${icons.spark}</span><div><small>AI 여행 만들기</small><strong>가고 싶은 곳을 담으면<br>날짜별 일정을 만들어드려요</strong><p>마음에 드는 장소를 모은 뒤 로그인하면 어느 기기에서나 이어서 만들 수 있어요.</p></div><div class="home-ai-actions"><button class="secondary-button" type="button" data-route="discover">장소 둘러보기</button><button class="primary-button" type="button" data-route="ai">AI 여행 보기</button></div></section>`;
+  const savedCount = getCardItems().length;
+  const hasDraft = Boolean(localStorage.getItem('hotelngo.mobile.plan.v1'));
+  if (hasDraft) return `<section class="continue-card"><div class="continue-card-top"><div><small>AI가 정리한 여행 초안</small><strong>처음 가는 다낭 4박 5일</strong><span>담은 장소 ${savedCount} · 날짜별 동선 정리됨</span></div><button class="soft-button" type="button" data-route="plan">이어가기</button></div><div class="progress-track"><i></i></div></section>`;
+  if (savedCount) return `<section class="home-ai-entry is-saved"><span class="home-ai-icon">${icons.spark}</span><div><small>여행 카드 ${savedCount}곳</small><strong>담아둔 장소로<br>AI 여행을 만들어볼까요?</strong><p>이동시간과 체류시간을 고려한 초안을 먼저 만듭니다.</p></div><div class="home-ai-actions"><button class="secondary-button" type="button" data-route="card">담은 장소 보기</button><button class="primary-button" type="button" data-generate-plan>AI 일정 만들기</button></div></section>`;
+  return `<section class="home-ai-entry"><span class="home-ai-icon">${icons.bookmark}</span><div><small>아직 담은 장소가 없어요</small><strong>먼저 가고 싶은 곳을<br>여행 카드에 담아주세요</strong><p>담은 장소는 마이에서 다시 확인할 수 있습니다.</p></div><div class="home-ai-actions"><button class="primary-button" type="button" data-route="discover">장소 발견하기</button></div></section>`;
+};
+
 const homeView = () => `
   <div class="view home-view">
     <section class="home-hero">
@@ -101,7 +109,7 @@ const homeView = () => `
       <button class="search-launcher" type="button" data-open-search>${icons.search}<span><strong>도시·랜드마크·호텔 검색</strong><small>다낭, 미케 비치, 호텔명</small></span></button>
       <div class="popular-searches"><b>지금 많이 찾아요</b><a href="#discover">다낭</a><a href="#discover">방콕</a><a href="#discover">오사카</a></div>
     </section>
-    <section class="continue-card"><div class="continue-card-top"><div><small>최근 만들던 여행 · 3/5단계</small><strong>처음 가는 다낭 4박 5일</strong><span>랜드마크 4 · 상세 서비스 3</span></div><button class="soft-button" type="button" data-route="plan">이어가기</button></div><div class="progress-track"><i></i></div></section>
+    ${homeJourneyEntry()}
     <section class="section home-story-section"><div class="section-head"><div><span class="eyebrow">TRAVEL STORIES</span><h2>다른 여행자가 먼저 가봤어요</h2><p>마음에 드는 여행은 그대로 담은 뒤 수정하세요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${data.stories.map(storyCard).join('')}</div><div class="swipe-hint"><i></i>옆으로 넘겨 여행기를 둘러보세요</div></section>
     <section class="section home-curation"><div class="section-head"><div><span class="eyebrow">PICK IN DANANG</span><h2>다낭에서 바로 담기 좋은 곳</h2><p>랜드마크부터 식사까지, 일정에 필요한 장소를 골라보세요.</p></div><a href="#discover">전체보기</a></div><div class="home-place-reel">${data.places.slice(0,4).map(homePlaceCard).join('')}</div></section>
     <section class="section"><div class="section-head"><div><h2>빠르게 찾기</h2><p>목적에 맞는 항목부터 살펴보세요.</p></div></div><div class="quick-grid">
@@ -331,9 +339,9 @@ const aiView = () => {
 };
 
 const tripsView = () => {
-  if (!session()) return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY</span><h1>내 여행</h1><p>여행 일정, 예약 내역, 저장·찜과 활동을 한곳에서 관리합니다.</p></header><section class="section"><div class="empty-state">${icons.route}<h2>내 여행을 이어서 보려면 로그인하세요</h2><p>여행 카드와 예약은 HotelnGo 회원 계정에만 저장됩니다.</p><button class="primary-button" type="button" data-route="login">로그인</button></div></section></div>`;
+  if (!session()) return `<div class="view"><header class="page-intro"><span class="eyebrow">MY HOTELNGO</span><h1>마이</h1><p>로그인하면 여행 일정, 예약 내역과 담은 장소를 한곳에서 관리할 수 있습니다.</p></header><section class="section"><div class="empty-state">${icons.route}<h2>내 여행을 이어서 보려면 로그인하세요</h2><p>여행 카드와 예약은 HotelnGo 회원 계정에만 저장됩니다.</p><button class="primary-button" type="button" data-route="login">로그인</button></div></section></div>`;
   const trips = read(TRIPS_KEY, []);
-  return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY</span><h1>${escapeHtml(session().user.displayName)}님의 내 여행</h1><p>일정과 예약을 구분해서 한 공간에서 확인합니다.</p></header><section class="section"><div class="chip-row"><button class="chip is-active">여행 일정</button><button class="chip">예약 내역</button><button class="chip">저장·찜</button><button class="chip">활동</button></div><div class="trip-list"><article class="trip-overview is-primary"><header><div><small>다가오는 여행</small><h2>처음 가는 다낭 4박 5일</h2></div><span class="trip-status">일정 저장</span></header><p>9.20–9.24 · 랜드마크 7 · 숙소 1 · 식사 5<br>예약 확정과 일정 저장은 별도로 관리됩니다.</p><footer><button class="secondary-button" type="button" data-route="plan">일정 열기</button><button class="primary-button" type="button" data-route="hotels">예약 준비</button></footer></article>${trips.filter((trip) => trip.sourceType === 'COMMUNITY_COPY').map((trip) => `<article class="trip-overview"><header><div><small>여행기에서 담음</small><h2>${escapeHtml(trip.title)}</h2></div><span class="trip-status">수정 가능</span></header><p>${escapeHtml(trip.destination || '')} · 원본과 분리된 나만의 일정입니다.</p><footer><button class="secondary-button" type="button" data-route="plan">일정 편집</button></footer></article>`).join('')}</div></section><section class="section"><button class="secondary-button full-button" type="button" data-logout>로그아웃</button></section></div>`;
+  return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY</span><h1>${escapeHtml(session().user.displayName)}님의 마이</h1><p>여행 일정, 예약, 담은 장소와 활동을 한곳에서 관리합니다.</p></header><section class="section"><div class="chip-row my-nav"><button class="chip is-active">여행 일정</button><a class="chip" href="../bookings.html">예약 내역</a><button class="chip" type="button" data-route="card">여행 카드</button><a class="chip" href="../saved.html">저장·찜</a></div><div class="trip-list"><article class="trip-overview is-primary"><header><div><small>다가오는 여행</small><h2>처음 가는 다낭 4박 5일</h2></div><span class="trip-status">일정 저장</span></header><p>9.20–9.24 · 랜드마크 7 · 숙소 1 · 식사 5<br>예약 확정과 일정 저장은 별도로 관리됩니다.</p><footer><button class="secondary-button" type="button" data-route="plan">일정 열기</button><button class="primary-button" type="button" data-route="hotels">호텔 예약 준비</button></footer></article>${trips.filter((trip) => trip.sourceType === 'COMMUNITY_COPY').map((trip) => `<article class="trip-overview"><header><div><small>여행기에서 담음</small><h2>${escapeHtml(trip.title)}</h2></div><span class="trip-status">수정 가능</span></header><p>${escapeHtml(trip.destination || '')} · 원본과 분리된 나만의 일정입니다.</p><footer><button class="secondary-button" type="button" data-route="plan">일정 편집</button></footer></article>`).join('')}</div></section><section class="section"><button class="secondary-button full-button" type="button" data-logout>로그아웃</button></section></div>`;
 };
 
 const loginView = () => `<div class="view auth-view"><span class="eyebrow">WELCOME BACK</span><h1>로그인</h1><p>여행 카드와 내 여행을 어느 기기에서든 이어서 확인하세요.</p><form class="auth-form" data-mobile-login><label class="form-field"><span>이메일</span><input name="email" type="email" value="demo@hotelngo.test" autocomplete="username" required></label><label class="form-field"><span>비밀번호</span><input name="password" type="password" value="Hotelngo!2026" autocomplete="current-password" required></label><button class="primary-button full-button" type="submit">로그인</button></form><div class="demo-account"><span>화면 검증용 계정이 입력되어 있습니다.</span><button type="button" data-demo-fill>다시 채우기</button></div></div>`;
