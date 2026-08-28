@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hotelngo-mobile-v9';
+const CACHE_NAME = 'hotelngo-mobile-v10';
 const APP_SHELL = [
   './', './index.html', './styles/app.css', './scripts/app.js', './scripts/native-bridge.js',
   './manifest.webmanifest', './icon.svg', './assets/hotelngo-logo.svg', './assets/PretendardVariable.woff2', './assets/danang.jpg',
