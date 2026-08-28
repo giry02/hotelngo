@@ -4,6 +4,12 @@
   const SESSION_KEY = 'hotelngo.mock.session.v1';
   const api = () => window.HotelNGoMockAPI;
   const categoryMap = { HOTEL: 'STAY', PLACE: 'LANDMARK', RESTAURANT: 'FOOD', VEHICLE: 'TRANSPORT' };
+  const destinationCatalog = [
+    { id: 'danang', name: '다낭', aliases: ['danang', 'da nang', '다낭'] },
+    { id: 'kyoto', name: '교토', aliases: ['kyoto', '교토'] },
+    { id: 'bangkok', name: '방콕', aliases: ['bangkok', '방콕'] },
+    { id: 'bali', name: '발리', aliases: ['bali', '발리'] }
+  ];
   const session = () => {
     try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; }
   };
@@ -13,18 +19,30 @@
     location.href = `login.html?returnUrl=${encodeURIComponent(returnUrl)}`;
     return false;
   };
+  const destinationOf = (record = {}) => {
+    const rawId = String(record.destinationId || '').trim().toLowerCase();
+    const source = [rawId, record.destination, record.city, record.area, record.location]
+      .filter(Boolean).join(' ').toLowerCase();
+    const exact = destinationCatalog.find((item) => item.id === rawId);
+    if (exact) return exact;
+    const known = destinationCatalog.find((item) => item.aliases.some((alias) => source.includes(alias)));
+    if (known) return known;
+    if (rawId) return { id: rawId.replace(/\s+/g, '-'), name: record.destination || record.city || rawId, aliases: [] };
+    return { id: 'unassigned', name: '지역 미지정', aliases: [] };
+  };
   const normalize = (record = {}) => {
     const ownerId = record.ownerId || memberId();
     const sourceId = record.sourceId || record.itemId || record.placeId || record.id || `place_${Date.now()}`;
     const category = categoryMap[record.category || record.type] || record.category || record.type || 'LANDMARK';
-    const destinationId = record.destinationId || String(record.destination || record.city || 'danang').toLowerCase().replaceAll(' ', '-');
+    const destination = destinationOf(record);
+    const destinationId = destination.id;
     return {
       id: record.cardId || record.id || `${ownerId}_${destinationId}_${sourceId}`,
       ownerId,
       sourceId,
       sourceType: category,
       destinationId,
-      destination: record.destination || record.city || destinationId,
+      destination: destination.name,
       category,
       title: record.title || record.name || '여행 장소',
       area: record.area || record.location || '',
@@ -61,6 +79,20 @@
     api()?.remove(DOMAIN, id);
     window.dispatchEvent(new CustomEvent('hotelngo:trip-card-change', { detail: { action: 'REMOVE', id } }));
   };
+  const update = (id, patch = {}) => {
+    const current = list().find((item) => item.id === id);
+    if (!current) return null;
+    const normalized = normalize({ ...current, ...patch, id: current.id, ownerId: current.ownerId, sourceId: current.sourceId });
+    api()?.upsert(DOMAIN, normalized);
+    window.dispatchEvent(new CustomEvent('hotelngo:trip-card-change', { detail: { action: 'UPDATE', item: normalized } }));
+    return normalized;
+  };
+  const groups = () => list().reduce((result, item) => {
+    const group = result.find((entry) => entry.id === item.destinationId);
+    if (group) group.items.push(item);
+    else result.push({ id: item.destinationId, name: item.destination, items: [item] });
+    return result;
+  }, []);
   const has = (sourceId, destinationId) => list().some((item) => item.sourceId === sourceId && (!destinationId || item.destinationId === destinationId));
   const fromDataset = (button) => {
     const scope = button.closest('[data-trip-card-item], [data-hotel-card], article') || button;
@@ -92,5 +124,5 @@
     button.textContent = '여행 카드에 담았어요';
     document.querySelector('[data-toast]')?.replaceChildren(document.createTextNode(`${item.title}을(를) 여행 카드에 담았습니다.`));
   });
-  window.HotelNGoTripCard = { domain: DOMAIN, normalize, list, add, remove, has, isAuthenticated: () => Boolean(memberId()), requireLogin };
+  window.HotelNGoTripCard = { domain: DOMAIN, destinations: destinationCatalog, destinationOf, normalize, list, groups, add, update, remove, has, isAuthenticated: () => Boolean(memberId()), requireLogin };
 })();
