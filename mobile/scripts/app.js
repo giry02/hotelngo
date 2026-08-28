@@ -5,12 +5,14 @@ const ENGAGEMENT_KEY = 'hotelngo.api.state.v1.community-engagements';
 const COMMENTS_KEY = 'hotelngo.api.state.v1.community-comments';
 const RETURN_KEY = 'hotelngo.mobile.return.v1';
 const PENDING_KEY = 'hotelngo.mobile.pending-action.v1';
+const CARD_DESTINATION_KEY = 'hotelngo.mobile.card-destination.v1';
 
 const main = document.querySelector('#app-main');
 const toastElement = document.querySelector('[data-toast]');
 const sheetLayer = document.querySelector('[data-sheet-layer]');
 let data;
 let activeDay = 1;
+let activeCardDestination = localStorage.getItem(CARD_DESTINATION_KEY) || 'danang';
 let toastTimer;
 let planMap;
 let planRouteLine;
@@ -181,6 +183,7 @@ const animatePlanRoute = () => {
 };
 
 const planLocation = (item) => {
+  if (Number.isFinite(Number(item.lat)) && Number.isFinite(Number(item.lng))) return { lat:Number(item.lat), lng:Number(item.lng), area:item.area || '' };
   const fallbacks = [
     ['다낭 오션 리조트',[16.0408,108.2495],'미케 비치 남쪽'],['미케 비치',[16.0593,108.2469],'다낭 동쪽 해안'],['Madame Lan',[16.0758,108.2228],'한강 북쪽'],
     ['한 시장',[16.0681,108.2241],'하이쩌우'],['한강 로컬 런치',[16.0611,108.2258],'한강변'],['Herbal Spa',[16.0664,108.2345],'안하이'],
@@ -276,9 +279,13 @@ const detailView = (id) => {
 
 const cardView = () => {
   const loggedIn = Boolean(session());
-  const items = getCardItems();
   if (!loggedIn) return `<div class="view"><header class="page-intro"><span class="eyebrow">TRIP CARD</span><h1>여행 카드</h1><p>쇼핑하듯 장소를 담고, 담은 항목으로 일정을 만드세요.</p></header><section class="section"><div class="empty-state">${icons.bookmark}<h2>로그인하면 여행 카드가 저장돼요</h2><p>다른 기기에서도 담은 장소와 여행 가이드를 이어서 볼 수 있습니다.</p><button class="primary-button" type="button" data-route="login">로그인</button></div></section></div>`;
-  return `<div class="view"><header class="page-intro"><span class="eyebrow">BUILD YOUR JOURNEY</span><h1>여행 카드</h1><p>예약 전 단계입니다. 가고 싶은 곳을 모아 동선을 먼저 만드세요.</p></header><section class="card-summary"><header><div><small>현재 여행지</small><h2>다낭 · ${items.length}개 담음</h2></div><b>4박 5일</b></header><div class="ai-draft"><span class="ai-spark">${icons.spark}</span><div><strong>담은 장소로 자동 일정 만들기</strong><span>운영시간·체류시간·이동거리를 고려합니다.</span></div><button type="button" data-generate-plan>초안 만들기</button></div></section><section class="section"><div class="section-head"><div><h2>담은 장소</h2><p>아직 예약되지 않았으며 언제든 삭제할 수 있습니다.</p></div><a href="#discover">더 담기</a></div>${items.length ? `<div class="saved-list">${items.map((item) => `<article class="saved-card"><img src="${item.image}" alt="${escapeHtml(item.title)}"><div class="saved-card-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description)}</p><footer><span>${formatPrice(item.basePrice)} · ${item.duration}분</span><button type="button" aria-label="삭제" data-remove-card="${item.id}">${icons.trash}</button></footer></div></article>`).join('')}</div>` : `<div class="empty-state">${icons.pin}<h2>아직 담은 장소가 없어요</h2><p>여행지나 여행 가이드에서 마음에 드는 장소를 담아보세요.</p><a class="primary-button" href="#discover">여행지 찾기</a></div>`}</section></div>`;
+  const groups = cardGroups();
+  if (!groups.some((group) => group.id === activeCardDestination)) setActiveCardDestination(groups.find((group) => group.items.length)?.id || 'danang');
+  const activeGroup = groups.find((group) => group.id === activeCardDestination) || groups[0];
+  const items = activeGroup?.items || [];
+  const destinationName = activeGroup?.name || '여행지';
+  return `<div class="view"><header class="page-intro"><span class="eyebrow">BUILD YOUR JOURNEY</span><h1>여행 카드</h1><p>여행지별로 모은 장소를 검토하고, 한 지역씩 일정으로 만드세요.</p></header><nav class="card-destination-tabs" aria-label="여행지별 여행 카드">${groups.map((group) => `<button class="${group.id === activeCardDestination ? 'is-active' : ''}" type="button" data-card-destination="${group.id}"><span>${escapeHtml(group.name)}</span><b>${group.items.length}</b></button>`).join('')}</nav><section class="card-summary"><header><div><small>현재 여행지 보관함</small><h2>${escapeHtml(destinationName)} · ${items.length}개 담음</h2></div><b>${data.recommendedPlan.days.length - 1}박 ${data.recommendedPlan.days.length}일</b></header><p class="card-location-rule">${escapeHtml(destinationName)} 안에서 이동 가능한 장소만 묶습니다. 다른 지역은 별도 일정으로 만들어요.</p><div class="ai-draft"><span class="ai-spark">${icons.spark}</span><div><strong>${escapeHtml(destinationName)} 자동 일정 만들기</strong><span>담은 장소를 우선 배치하고 빈 시간은 추천 장소로 채웁니다.</span></div><button type="button" data-generate-plan data-plan-destination="${activeCardDestination}" ${items.length ? '' : 'disabled'}>초안 만들기</button></div></section><section class="section"><div class="section-head"><div><h2>${escapeHtml(destinationName)}에 담은 장소</h2><p>지역·옵션을 바꾸거나 삭제한 뒤 결과를 만들 수 있습니다.</p></div><a href="#discover">더 담기</a></div>${items.length ? `<div class="saved-list">${items.map((item) => `<article class="saved-card"><img src="${item.image}" alt="${escapeHtml(item.title)}"><div class="saved-card-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description)}</p><footer><span>${formatPrice(item.basePrice)} · ${item.duration}분</span><span class="saved-card-actions"><button class="move-card-button" type="button" data-move-card="${escapeHtml(item.id)}">지역 변경</button><button type="button" aria-label="삭제" data-remove-card="${escapeHtml(item.id)}">${icons.trash}</button></span></footer></div></article>`).join('')}</div>` : `<div class="empty-state">${icons.pin}<h2>${escapeHtml(destinationName)}에 담은 장소가 없어요</h2><p>여행지에서 장소를 담거나, 다른 지역 보관함을 확인해보세요.</p><a class="primary-button" href="#discover">여행지 찾기</a></div>`}</section></div>`;
 };
 
 const getRouteEstimate = (day) => {
@@ -368,6 +375,23 @@ const setEngagement = (storyId, field) => {
 };
 const getComments = (storyId) => [...(data.comments || []).filter((item) => item.tripId === storyId), ...read(COMMENTS_KEY, []).filter((item) => item.tripId === storyId)];
 const getCardItems = () => read(CARD_KEY, []).filter((item) => item.ownerId === userId());
+const destinationMeta = (destinationId) => data.destinations.find((item) => item.id === destinationId) || { id:destinationId, name:destinationId === 'unassigned' ? '지역 미지정' : destinationId, country:'' };
+const cardDestinationId = (item = {}) => item.destinationId || data.destinations.find((destination) => [item.destination,item.area,item.title].filter(Boolean).join(' ').includes(destination.name))?.id || 'unassigned';
+const cardGroups = () => {
+  const items = getCardItems();
+  const groups = data.destinations.map((destination) => ({ ...destination, items:items.filter((item) => cardDestinationId(item) === destination.id) }));
+  [...new Set(items.map(cardDestinationId))].forEach((destinationId) => {
+    if (groups.some((group) => group.id === destinationId)) return;
+    const first = items.find((item) => cardDestinationId(item) === destinationId);
+    groups.push({ id:destinationId,name:first?.destination || (destinationId === 'unassigned' ? '지역 미지정' : destinationId),country:'',items:items.filter((item) => cardDestinationId(item) === destinationId) });
+  });
+  return groups;
+};
+const setActiveCardDestination = (destinationId) => {
+  activeCardDestination = destinationId;
+  localStorage.setItem(CARD_DESTINATION_KEY, destinationId);
+};
+const getActiveCardItems = () => getCardItems().filter((item) => cardDestinationId(item) === activeCardDestination);
 const seedDemoCard = () => {
   const all = read(CARD_KEY, []);
   if (all.some((item) => item.ownerId === userId())) return;
@@ -394,10 +418,64 @@ const addPlace = (placeId) => {
   const place = data.places.find((item) => item.id === placeId);
   const list = read(CARD_KEY, []);
   if (list.some((item) => item.ownerId === userId() && item.sourceId === placeId)) return toast('이미 여행 카드에 담긴 장소입니다.');
-  list.unshift({ id:`${userId()}_danang_${place.id}`,ownerId:userId(),sourceId:place.id,sourceType:place.category,destinationId:'danang',destination:'다낭',category:place.category,title:place.title,area:place.area,image:place.image,description:place.description,duration:place.duration,recommendedTime:place.recommendedTime,basePrice:place.price,lat:place.lat,lng:place.lng,status:'SAVED',addedAt:new Date().toISOString() });
+  const destinationId = place.destinationId || 'unassigned';
+  const destination = destinationMeta(destinationId);
+  list.unshift({ id:`${userId()}_${destinationId}_${place.id}`,ownerId:userId(),sourceId:place.id,sourceType:place.category,destinationId,destination:destination.name,category:place.category,title:place.title,area:place.area,image:place.image,description:place.description,duration:place.duration,recommendedTime:place.recommendedTime,basePrice:place.price,lat:place.lat,lng:place.lng,status:'SAVED',addedAt:new Date().toISOString() });
   write(CARD_KEY, list);
+  setActiveCardDestination(destinationId);
   toast(`${place.title}을 여행 카드에 담았습니다.`);
   window.HotelnGoNative?.haptic('Light');
+};
+
+const openCardDestinationEditor = (cardId) => {
+  const item = getCardItems().find((candidate) => candidate.id === cardId);
+  if (!item) return;
+  openSheet('여행지 보관함 변경', `<div class="card-move-intro"><img src="${item.image}" alt=""><div><small>${categoryLabel(item.category)}</small><strong>${escapeHtml(item.title)}</strong><p>함께 일정으로 만들 여행지를 선택하세요.</p></div></div><div class="card-move-options">${data.destinations.map((destination) => `<button type="button" class="${destination.id === cardDestinationId(item) ? 'is-active' : ''}" data-assign-card-destination="${destination.id}" data-card-id="${escapeHtml(item.id)}"><img src="${destination.image}" alt=""><span><strong>${escapeHtml(destination.name)}</strong><small>${escapeHtml(destination.country)} · ${getCardItems().filter((candidate) => cardDestinationId(candidate) === destination.id).length}개 담음</small></span><b>${destination.id === cardDestinationId(item) ? '현재' : '이동'}</b></button>`).join('')}</div>`);
+};
+
+const assignCardDestination = (cardId, destinationId) => {
+  const destination = destinationMeta(destinationId);
+  const list = read(CARD_KEY, []);
+  const index = list.findIndex((item) => item.id === cardId && item.ownerId === userId());
+  if (index < 0) return;
+  list[index] = { ...list[index], destinationId, destination:destination.name, updatedAt:new Date().toISOString() };
+  write(CARD_KEY, list);
+  setActiveCardDestination(destinationId);
+  closeSheet();
+  render();
+  toast(`${destination.name} 여행 카드로 이동했습니다.`);
+};
+
+const buildPlanFromCard = (destinationId) => {
+  const destination = destinationMeta(destinationId);
+  const saved = getCardItems().filter((item) => cardDestinationId(item) === destinationId);
+  if (!saved.length) return null;
+  const base = destinationId === data.recommendedPlan.destinationId ? data.recommendedPlan : null;
+  const dayCount = base?.days?.length || 5;
+  const days = Array.from({ length:dayCount }, (_, index) => ({
+    day:index + 1,
+    date:base?.days?.[index]?.date || `${index + 1}일차`,
+    title:base?.days?.[index]?.title || `${destination.name}에서 보내는 ${index + 1}일`,
+    items:[]
+  }));
+  const slots = ['09:00','13:00','17:00'];
+  const ordered = [...saved].sort((a, b) => ({HOTEL:0,LANDMARK:1,RESTAURANT:2,GOLF:3,SPA:4,TOUR:5,VEHICLE:6}[a.category] ?? 9) - ({HOTEL:0,LANDMARK:1,RESTAURANT:2,GOLF:3,SPA:4,TOUR:5,VEHICLE:6}[b.category] ?? 9));
+  ordered.forEach((item, index) => {
+    const dayIndex = item.category === 'HOTEL' ? 0 : Math.min(index % dayCount, dayCount - 1);
+    const sequence = days[dayIndex].items.length;
+    days[dayIndex].items.push({ time:slots[Math.min(sequence, slots.length - 1)], type:item.category, title:item.title, duration:Number(item.duration || 60), lat:Number(item.lat) || null, lng:Number(item.lng) || null, source:'SAVED' });
+  });
+  if (base) {
+    const used = new Set(ordered.map((item) => item.title));
+    base.days.forEach((sourceDay, index) => {
+      sourceDay.items.forEach((item) => {
+        if (days[index].items.length >= 3 || [...used].some((title) => item.title.includes(title) || title.includes(item.title))) return;
+        days[index].items.push({ ...item, source:'RECOMMENDED' });
+      });
+      days[index].items.sort((a, b) => a.time.localeCompare(b.time));
+    });
+  }
+  return { id:`card_plan_${destinationId}_${Date.now()}`,title:`${destination.name} ${dayCount - 1}박 ${dayCount}일`,destinationId,destination:destination.name,dates:base?.dates || '날짜를 정해주세요',people:base?.people || 2,source:'TRIP_CARD',savedCount:saved.length,days };
 };
 
 const openSearch = () => openSheet('여행지와 장소 검색', `<form class="search-form" data-mobile-search><input name="query" type="search" placeholder="도시, 랜드마크, 호텔명" autocomplete="off"><button class="primary-button" type="submit">검색</button></form><div class="search-result-list">${data.destinations.slice(0,3).map((item) => `<button class="search-result" type="button" data-search-destination="${item.id}"><img src="${item.image}" alt=""><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.country)} · ${item.placeCount}개 장소</small></span><b>›</b></button>`).join('')}</div>`);
@@ -429,6 +507,12 @@ document.addEventListener('click', async (event) => {
   if (event.target.closest('[data-open-menu]')) return openServiceMenu();
   if (event.target.closest('[data-open-search]')) return openSearch();
   if (event.target.closest('[data-close-sheet]') || event.target === sheetLayer) return closeSheet();
+  const cardDestination = event.target.closest('[data-card-destination]');
+  if (cardDestination) { setActiveCardDestination(cardDestination.dataset.cardDestination); render(); return; }
+  const moveCard = event.target.closest('[data-move-card]');
+  if (moveCard) return openCardDestinationEditor(moveCard.dataset.moveCard);
+  const assignDestination = event.target.closest('[data-assign-card-destination]');
+  if (assignDestination) return assignCardDestination(assignDestination.dataset.cardId, assignDestination.dataset.assignCardDestination);
   const destination = event.target.closest('[data-destination],[data-search-destination]');
   if (destination) { closeSheet(); toast(`${data.destinations.find((item) => item.id === (destination.dataset.destination || destination.dataset.searchDestination))?.name} 추천을 불러왔습니다.`); return; }
   const add = event.target.closest('[data-add-place]');
@@ -450,7 +534,19 @@ document.addEventListener('click', async (event) => {
   const edit = event.target.closest('[data-edit-schedule]');
   if (edit) return openScheduleEditor(edit.dataset.editSchedule);
   if (event.target.closest('[data-apply-schedule]')) { closeSheet(); toast('겹치지 않는 시간으로 변경했습니다.'); return; }
-  if (event.target.closest('[data-generate-plan]')) { if (!getCardItems().length) return toast('먼저 여행 카드에 장소를 담아주세요.'); write('hotelngo.mobile.plan.v1', data.recommendedPlan); window.HotelnGoNative?.haptic('Heavy'); location.hash = 'plan'; return; }
+  const generatePlan = event.target.closest('[data-generate-plan]');
+  if (generatePlan) {
+    const requestedDestination = generatePlan.dataset.planDestination || activeCardDestination;
+    const destinationId = getCardItems().some((item) => cardDestinationId(item) === requestedDestination) ? requestedDestination : cardGroups().find((group) => group.items.length)?.id;
+    const plan = buildPlanFromCard(destinationId);
+    if (!plan) return toast('이 여행지에 먼저 장소를 담아주세요.');
+    write('hotelngo.mobile.plan.v1', plan);
+    activeDay = 1;
+    window.HotelnGoNative?.haptic('Heavy');
+    toast(`${destinationMeta(destinationId).name}에 담은 장소를 우선으로 일정을 만들었습니다.`);
+    location.hash = 'plan';
+    return;
+  }
   if (event.target.closest('[data-save-plan]')) { if (!requireLogin('plan')) return; toast('내 여행에 일정을 저장했습니다.'); window.HotelnGoNative?.haptic('Medium'); return; }
   if (event.target.closest('[data-focus-comment]')) { document.querySelector('.comment-form input')?.focus(); return; }
   if (event.target.closest('[data-follow-author]')) { if (!requireLogin(route().raw)) return; event.target.closest('button').textContent = '팔로잉'; toast('작성자를 팔로우했습니다.'); return; }
