@@ -6,6 +6,7 @@ const COMMENTS_KEY = 'hotelngo.api.state.v1.community-comments';
 const RETURN_KEY = 'hotelngo.mobile.return.v1';
 const PENDING_KEY = 'hotelngo.mobile.pending-action.v1';
 const CARD_DESTINATION_KEY = 'hotelngo.mobile.card-destination.v1';
+const CARD_SELECTION_KEY = 'hotelngo.mobile.card-selection.v1';
 
 const main = document.querySelector('#app-main');
 const toastElement = document.querySelector('[data-toast]');
@@ -294,7 +295,9 @@ const cardView = () => {
   const activeGroup = groups.find((group) => group.id === activeCardDestination) || groups[0];
   const items = activeGroup?.items || [];
   const destinationName = activeGroup?.name || '여행지';
-  return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY · ${escapeHtml(session().user.displayName)}님</span><h1>여행 카드</h1><p>여행지별로 모은 장소를 검토하고, 한 지역씩 일정으로 만드세요.</p></header><section class="section my-nav-section">${myNavView('card')}</section><nav class="card-destination-tabs" aria-label="여행지별 여행 카드">${groups.map((group) => `<button class="${group.id === activeCardDestination ? 'is-active' : ''}" type="button" data-card-destination="${group.id}"><span>${escapeHtml(group.name)}</span><b>${group.items.length}</b></button>`).join('')}</nav><section class="card-summary"><header><div><small>현재 여행지 보관함</small><h2>${escapeHtml(destinationName)} · ${items.length}개 담음</h2></div><b>${data.recommendedPlan.days.length - 1}박 ${data.recommendedPlan.days.length}일</b></header><p class="card-location-rule">${escapeHtml(destinationName)} 안에서 이동 가능한 장소만 묶습니다. 다른 지역은 별도 일정으로 만들어요.</p><div class="ai-draft"><span class="ai-spark">${icons.spark}</span><div><strong>${escapeHtml(destinationName)} 자동 일정 만들기</strong><span>담은 장소를 우선 배치하고 빈 시간은 추천 장소로 채웁니다.</span></div><button type="button" data-generate-plan data-plan-destination="${activeCardDestination}" ${items.length ? '' : 'disabled'}>초안 만들기</button></div></section><section class="section"><div class="section-head"><div><h2>${escapeHtml(destinationName)}에 담은 장소</h2><p>지역·옵션을 바꾸거나 삭제한 뒤 결과를 만들 수 있습니다.</p></div><a href="#discover">더 담기</a></div>${items.length ? `<div class="saved-list">${items.map((item) => `<article class="saved-card"><img src="${item.image}" alt="${escapeHtml(item.title)}"><div class="saved-card-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description)}</p><footer><span>${formatPrice(item.basePrice)} · ${item.duration}분</span><span class="saved-card-actions"><button class="move-card-button" type="button" data-move-card="${escapeHtml(item.id)}">지역 변경</button><button type="button" aria-label="삭제" data-remove-card="${escapeHtml(item.id)}">${icons.trash}</button></span></footer></div></article>`).join('')}</div>` : `<div class="empty-state">${icons.pin}<h2>${escapeHtml(destinationName)}에 담은 장소가 없어요</h2><p>여행지에서 장소를 담거나, 다른 지역 보관함을 확인해보세요.</p><a class="primary-button" href="#discover">여행지 찾기</a></div>`}</section></div>`;
+  const selectedIds = new Set(selectedCardIds(activeCardDestination, items));
+  const selectedCount = selectedIds.size;
+  return `<div class="view"><header class="page-intro"><span class="eyebrow">MY JOURNEY · ${escapeHtml(session().user.displayName)}님</span><h1>여행 카드</h1><p>여행지별로 모은 장소를 검토하고, 일정에 넣을 장소만 선택하세요.</p></header><section class="section my-nav-section">${myNavView('card')}</section><nav class="card-destination-tabs" aria-label="여행지별 여행 카드">${groups.map((group) => `<button class="${group.id === activeCardDestination ? 'is-active' : ''}" type="button" data-card-destination="${group.id}"><span>${escapeHtml(group.name)}</span><b>${group.items.length}</b></button>`).join('')}</nav><section class="card-summary"><header><div><small>현재 여행지 보관함</small><h2>${escapeHtml(destinationName)} · <span data-card-selection-count>${items.length}개 중 ${selectedCount}개 선택</span></h2></div><b>${data.recommendedPlan.days.length - 1}박 ${data.recommendedPlan.days.length}일</b></header><p class="card-location-rule">${escapeHtml(destinationName)} 안에서 이동 가능한 장소만 묶습니다. 다른 지역은 별도 일정으로 만들어요.</p><div class="ai-draft"><span class="ai-spark">${icons.spark}</span><div><strong>${escapeHtml(destinationName)} 자동 일정 만들기</strong><span data-card-selection-copy>${selectedCount ? `선택한 ${selectedCount}곳만 날짜와 동선에 맞춰 배치합니다.` : '일정에 포함할 장소를 한 곳 이상 선택해주세요.'}</span></div><button type="button" data-generate-plan data-plan-destination="${activeCardDestination}" ${selectedCount ? '' : 'disabled'}>${selectedCount ? `${selectedCount}곳으로 만들기` : '장소 선택 필요'}</button></div></section><section class="section"><div class="section-head card-list-head"><div><h2>${escapeHtml(destinationName)}에 담은 장소</h2><p>체크한 장소만 일정 초안에 반영됩니다. 필요 없는 장소는 삭제할 수 있어요.</p></div><span class="card-list-tools"><button type="button" data-toggle-card-selection>${items.length && selectedCount === items.length ? '전체 해제' : '전체 선택'}</button><a href="#discover">더 담기</a></span></div>${items.length ? `<div class="saved-list">${items.map((item) => { const selected = selectedIds.has(item.id); return `<article class="saved-card ${selected ? 'is-selected' : ''}"><img src="${item.image}" alt="${escapeHtml(item.title)}"><div class="saved-card-copy"><div class="saved-card-top"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><label class="card-include-toggle"><input type="checkbox" data-card-select="${escapeHtml(item.id)}" ${selected ? 'checked' : ''}><span>일정에 포함</span></label></div><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.description)}</p><footer><span>${formatPrice(item.basePrice)} · ${item.duration}분</span><span class="saved-card-actions"><button type="button" aria-label="${escapeHtml(item.title)} 삭제" data-confirm-remove-card="${escapeHtml(item.id)}">${icons.trash}</button></span></footer></div></article>`; }).join('')}</div>` : `<div class="empty-state">${icons.pin}<h2>${escapeHtml(destinationName)}에 담은 장소가 없어요</h2><p>여행지에서 장소를 담거나, 다른 지역 보관함을 확인해보세요.</p><a class="primary-button" href="#discover">여행지 찾기</a></div>`}</section></div>`;
 };
 
 const getRouteEstimate = (day) => {
@@ -436,6 +439,23 @@ const setActiveCardDestination = (destinationId) => {
   localStorage.setItem(CARD_DESTINATION_KEY, destinationId);
 };
 const getActiveCardItems = () => getCardItems().filter((item) => cardDestinationId(item) === activeCardDestination);
+const getCardSelectionState = () => read(CARD_SELECTION_KEY, {});
+const selectedCardIds = (destinationId, items = getCardItems().filter((item) => cardDestinationId(item) === destinationId)) => {
+  const state = getCardSelectionState();
+  const availableIds = new Set(items.map((item) => item.id));
+  if (!Object.prototype.hasOwnProperty.call(state, destinationId)) return items.map((item) => item.id);
+  return (state[destinationId] || []).filter((id) => availableIds.has(id));
+};
+const setCardSelection = (destinationId, ids) => {
+  const state = getCardSelectionState();
+  state[destinationId] = [...new Set(ids)];
+  write(CARD_SELECTION_KEY, state);
+};
+const getSelectedCardItems = (destinationId) => {
+  const items = getCardItems().filter((item) => cardDestinationId(item) === destinationId);
+  const ids = new Set(selectedCardIds(destinationId, items));
+  return items.filter((item) => ids.has(item.id));
+};
 const seedDemoCard = () => {
   const all = read(CARD_KEY, []);
   if (all.some((item) => item.ownerId === userId())) return;
@@ -464,35 +484,64 @@ const addPlace = (placeId) => {
   if (list.some((item) => item.ownerId === userId() && item.sourceId === placeId)) return toast('이미 여행 카드에 담긴 장소입니다.');
   const destinationId = place.destinationId || 'unassigned';
   const destination = destinationMeta(destinationId);
-  list.unshift({ id:`${userId()}_${destinationId}_${place.id}`,ownerId:userId(),sourceId:place.id,sourceType:place.category,destinationId,destination:destination.name,category:place.category,title:place.title,area:place.area,image:place.image,description:place.description,duration:place.duration,recommendedTime:place.recommendedTime,basePrice:place.price,lat:place.lat,lng:place.lng,status:'SAVED',addedAt:new Date().toISOString() });
+  const cardItem = { id:`${userId()}_${destinationId}_${place.id}`,ownerId:userId(),sourceId:place.id,sourceType:place.category,destinationId,destination:destination.name,category:place.category,title:place.title,area:place.area,image:place.image,description:place.description,duration:place.duration,recommendedTime:place.recommendedTime,basePrice:place.price,lat:place.lat,lng:place.lng,status:'SAVED',addedAt:new Date().toISOString() };
+  list.unshift(cardItem);
   write(CARD_KEY, list);
+  const selectionState = getCardSelectionState();
+  if (Object.prototype.hasOwnProperty.call(selectionState, destinationId)) {
+    setCardSelection(destinationId, [...(selectionState[destinationId] || []), cardItem.id]);
+  }
   setActiveCardDestination(destinationId);
   toast(`${place.title}을 여행 카드에 담았습니다.`);
   window.HotelnGoNative?.haptic('Light');
 };
 
-const openCardDestinationEditor = (cardId) => {
+const openCardRemoveConfirm = (cardId) => {
   const item = getCardItems().find((candidate) => candidate.id === cardId);
   if (!item) return;
-  openSheet('여행지 보관함 변경', `<div class="card-move-intro"><img src="${item.image}" alt=""><div><small>${categoryLabel(item.category)}</small><strong>${escapeHtml(item.title)}</strong><p>함께 일정으로 만들 여행지를 선택하세요.</p></div></div><div class="card-move-options">${data.destinations.map((destination) => `<button type="button" class="${destination.id === cardDestinationId(item) ? 'is-active' : ''}" data-assign-card-destination="${destination.id}" data-card-id="${escapeHtml(item.id)}"><img src="${destination.image}" alt=""><span><strong>${escapeHtml(destination.name)}</strong><small>${escapeHtml(destination.country)} · ${getCardItems().filter((candidate) => cardDestinationId(candidate) === destination.id).length}개 담음</small></span><b>${destination.id === cardDestinationId(item) ? '현재' : '이동'}</b></button>`).join('')}</div>`);
+  openSheet('여행 카드에서 삭제', `<div class="card-remove-confirm"><img src="${item.image}" alt=""><div><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><strong>${escapeHtml(item.title)}</strong><p>삭제하면 이 여행지의 일정 초안에도 더 이상 포함되지 않습니다.</p></div></div><div class="sheet-confirm-actions"><button type="button" data-close-sheet>취소</button><button class="is-danger" type="button" data-remove-card="${escapeHtml(item.id)}">삭제하기</button></div>`);
 };
 
-const assignCardDestination = (cardId, destinationId) => {
-  const destination = destinationMeta(destinationId);
+const removeCardItem = (cardId) => {
   const list = read(CARD_KEY, []);
-  const index = list.findIndex((item) => item.id === cardId && item.ownerId === userId());
-  if (index < 0) return;
-  list[index] = { ...list[index], destinationId, destination:destination.name, updatedAt:new Date().toISOString() };
-  write(CARD_KEY, list);
-  setActiveCardDestination(destinationId);
+  const item = list.find((candidate) => candidate.id === cardId && candidate.ownerId === userId());
+  if (!item) return;
+  const destinationId = cardDestinationId(item);
+  write(CARD_KEY, list.filter((candidate) => candidate.id !== cardId));
+  const selectionState = getCardSelectionState();
+  if (Object.prototype.hasOwnProperty.call(selectionState, destinationId)) {
+    setCardSelection(destinationId, (selectionState[destinationId] || []).filter((id) => id !== cardId));
+  }
   closeSheet();
   render();
-  toast(`${destination.name} 여행 카드로 이동했습니다.`);
+  window.HotelnGoNative?.haptic('Light');
+  toast(`${item.title}을 여행 카드에서 삭제했습니다.`);
+};
+
+const syncCardSelectionUi = () => {
+  const items = getCardItems().filter((item) => cardDestinationId(item) === activeCardDestination);
+  const selected = new Set(selectedCardIds(activeCardDestination, items));
+  document.querySelectorAll('[data-card-select]').forEach((checkbox) => {
+    checkbox.checked = selected.has(checkbox.dataset.cardSelect);
+    checkbox.closest('.saved-card')?.classList.toggle('is-selected', checkbox.checked);
+  });
+  const count = selected.size;
+  const countLabel = document.querySelector('[data-card-selection-count]');
+  if (countLabel) countLabel.textContent = `${items.length}개 중 ${count}개 선택`;
+  const copy = document.querySelector('[data-card-selection-copy]');
+  if (copy) copy.textContent = count ? `선택한 ${count}곳만 날짜와 동선에 맞춰 배치합니다.` : '일정에 포함할 장소를 한 곳 이상 선택해주세요.';
+  const generate = document.querySelector('[data-generate-plan]');
+  if (generate) {
+    generate.disabled = count === 0;
+    generate.textContent = count ? `${count}곳으로 만들기` : '장소 선택 필요';
+  }
+  const toggle = document.querySelector('[data-toggle-card-selection]');
+  if (toggle) toggle.textContent = items.length && count === items.length ? '전체 해제' : '전체 선택';
 };
 
 const buildPlanFromCard = (destinationId) => {
   const destination = destinationMeta(destinationId);
-  const saved = getCardItems().filter((item) => cardDestinationId(item) === destinationId);
+  const saved = getSelectedCardItems(destinationId);
   if (!saved.length) return null;
   const base = destinationId === data.recommendedPlan.destinationId ? data.recommendedPlan : null;
   const dayCount = base?.days?.length || 5;
@@ -509,16 +558,6 @@ const buildPlanFromCard = (destinationId) => {
     const sequence = days[dayIndex].items.length;
     days[dayIndex].items.push({ time:slots[Math.min(sequence, slots.length - 1)], type:item.category, title:item.title, duration:Number(item.duration || 60), lat:Number(item.lat) || null, lng:Number(item.lng) || null, source:'SAVED' });
   });
-  if (base) {
-    const used = new Set(ordered.map((item) => item.title));
-    base.days.forEach((sourceDay, index) => {
-      sourceDay.items.forEach((item) => {
-        if (days[index].items.length >= 3 || [...used].some((title) => item.title.includes(title) || title.includes(item.title))) return;
-        days[index].items.push({ ...item, source:'RECOMMENDED' });
-      });
-      days[index].items.sort((a, b) => a.time.localeCompare(b.time));
-    });
-  }
   return { id:`card_plan_${destinationId}_${Date.now()}`,title:`${destination.name} ${dayCount - 1}박 ${dayCount}일`,destinationId,destination:destination.name,dates:base?.dates || '날짜를 정해주세요',people:base?.people || 2,source:'TRIP_CARD',savedCount:saved.length,days };
 };
 
@@ -553,10 +592,14 @@ document.addEventListener('click', async (event) => {
   if (event.target.closest('[data-close-sheet]') || event.target === sheetLayer) return closeSheet();
   const cardDestination = event.target.closest('[data-card-destination]');
   if (cardDestination) { setActiveCardDestination(cardDestination.dataset.cardDestination); render(); return; }
-  const moveCard = event.target.closest('[data-move-card]');
-  if (moveCard) return openCardDestinationEditor(moveCard.dataset.moveCard);
-  const assignDestination = event.target.closest('[data-assign-card-destination]');
-  if (assignDestination) return assignCardDestination(assignDestination.dataset.cardId, assignDestination.dataset.assignCardDestination);
+  const toggleCardSelection = event.target.closest('[data-toggle-card-selection]');
+  if (toggleCardSelection) {
+    const items = getCardItems().filter((item) => cardDestinationId(item) === activeCardDestination);
+    const selected = selectedCardIds(activeCardDestination, items);
+    setCardSelection(activeCardDestination, selected.length === items.length ? [] : items.map((item) => item.id));
+    syncCardSelectionUi();
+    return;
+  }
   const destination = event.target.closest('[data-destination],[data-search-destination]');
   if (destination) { closeSheet(); toast(`${data.destinations.find((item) => item.id === (destination.dataset.destination || destination.dataset.searchDestination))?.name} 추천을 불러왔습니다.`); return; }
   const bookingFilter = event.target.closest('[data-booking-filter]');
@@ -567,8 +610,10 @@ document.addEventListener('click', async (event) => {
   if (add) return addPlace(add.dataset.addPlace);
   const addHotel = event.target.closest('[data-add-hotel]');
   if (addHotel) { const hotel = data.hotels.find((item) => item.id === addHotel.dataset.addHotel); if (!requireLogin('hotels')) return; const place = data.places.find((item) => item.category === 'HOTEL'); addPlace(place.id); toast(`${hotel.name}을 여행 카드에 담았습니다. 객실 옵션은 예약 단계에서 선택합니다.`); return; }
+  const confirmRemove = event.target.closest('[data-confirm-remove-card]');
+  if (confirmRemove) return openCardRemoveConfirm(confirmRemove.dataset.confirmRemoveCard);
   const remove = event.target.closest('[data-remove-card]');
-  if (remove) { write(CARD_KEY, read(CARD_KEY, []).filter((item) => item.id !== remove.dataset.removeCard)); window.HotelnGoNative?.haptic('Light'); render(); return; }
+  if (remove) return removeCardItem(remove.dataset.removeCard);
   const like = event.target.closest('[data-like-story]');
   if (like) return setEngagement(like.dataset.likeStory, 'liked');
   const scrap = event.target.closest('[data-scrap-story]');
@@ -587,11 +632,11 @@ document.addEventListener('click', async (event) => {
     const requestedDestination = generatePlan.dataset.planDestination || activeCardDestination;
     const destinationId = getCardItems().some((item) => cardDestinationId(item) === requestedDestination) ? requestedDestination : cardGroups().find((group) => group.items.length)?.id;
     const plan = buildPlanFromCard(destinationId);
-    if (!plan) return toast('이 여행지에 먼저 장소를 담아주세요.');
+    if (!plan) return toast('일정에 포함할 장소를 한 곳 이상 선택해주세요.');
     write('hotelngo.mobile.plan.v1', plan);
     activeDay = 1;
     window.HotelnGoNative?.haptic('Heavy');
-    toast(`${destinationMeta(destinationId).name}에 담은 장소를 우선으로 일정을 만들었습니다.`);
+    toast(`${destinationMeta(destinationId).name}에서 선택한 장소만 일정에 반영했습니다.`);
     location.hash = 'plan';
     return;
   }
@@ -600,6 +645,18 @@ document.addEventListener('click', async (event) => {
   if (event.target.closest('[data-follow-author]')) { if (!requireLogin(route().raw)) return; event.target.closest('button').textContent = '팔로잉'; toast('작성자를 팔로우했습니다.'); return; }
   if (event.target.closest('[data-demo-fill]')) { const form=document.querySelector('[data-mobile-login]'); form.email.value='demo@hotelngo.test'; form.password.value='Hotelngo!2026'; return; }
   if (event.target.closest('[data-logout]')) { sessionStorage.removeItem(SESSION_KEY); toast('로그아웃했습니다.'); render(); }
+});
+
+document.addEventListener('change', (event) => {
+  const checkbox = event.target.closest('[data-card-select]');
+  if (!checkbox) return;
+  const items = getCardItems().filter((item) => cardDestinationId(item) === activeCardDestination);
+  const selected = new Set(selectedCardIds(activeCardDestination, items));
+  if (checkbox.checked) selected.add(checkbox.dataset.cardSelect);
+  else selected.delete(checkbox.dataset.cardSelect);
+  setCardSelection(activeCardDestination, [...selected]);
+  syncCardSelectionUi();
+  window.HotelnGoNative?.haptic('Light');
 });
 
 document.addEventListener('submit', (event) => {
