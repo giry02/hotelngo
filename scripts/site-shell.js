@@ -26,7 +26,7 @@
   }
   if (!document.querySelector('script[data-hotelngo-trip-card]')) {
     const tripCardScript = document.createElement('script');
-    tripCardScript.src = 'scripts/trip-card-store.js?v=1';
+    tripCardScript.src = 'scripts/trip-card-store.js?v=4';
     tripCardScript.dataset.hotelngoTripCard = '';
     document.head.append(tripCardScript);
   }
@@ -49,8 +49,8 @@
     <img class="brand-logo" src="assets/brand/official/hotelngo-logo-go-capsule-ibm-plex.svg?v=3" width="407" height="100" alt="${ariaLabel}" decoding="async">`;
 
   const navItems = [
-    ['discover', '여행 발견', 'discover.html'],
-    ['community', '여행기', 'community.html'],
+    ['discover', '여행지', 'discover.html'],
+    ['community', '여행 가이드', 'community.html'],
     ['planner', '여행 만들기', 'trip-create.html'],
     ['hotels', '호텔', 'hotels.html'],
     ['experiences', '즐길거리', 'experiences.html'],
@@ -133,18 +133,18 @@
 
   const mobileIcons = {
     home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v9h-6v-6H9v6H3Z"/></svg>',
-    community: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3Z"/><path d="M8 8h8M8 12h6"/></svg>',
-    planner: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
-    hotels: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V5h10v15M14 10h6v10M7 8h4M7 12h4M7 16h4M17 13v3"/></svg>',
-    trips: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14a2 2 0 0 1 2 2v10H3V9a2 2 0 0 1 2-2Z"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>'
+    discover: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg>',
+    ai: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7ZM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8Z"/></svg>',
+    community: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v11H8l-4 3V6a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></svg>',
+    trips: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>'
   };
   const mobileNav = (active) => `
     <nav class="mobile-tabbar" aria-label="모바일 하단 메뉴">
       <a class="${active === 'home' ? 'is-active' : ''}" href="index.html"><span>${mobileIcons.home}</span>홈</a>
-      <a class="${active === 'community' ? 'is-active' : ''}" href="community.html"><span>${mobileIcons.community}</span>여행기</a>
-      <a class="${active === 'planner' || active === 'ai' ? 'is-active' : ''}" href="trip-create.html"><span>${mobileIcons.planner}</span>만들기</a>
-      <a class="${active === 'hotels' ? 'is-active' : ''}" href="hotels.html"><span>${mobileIcons.hotels}</span>호텔</a>
-      <a class="${active === 'my' || active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>${mobileIcons.trips}</span>내 여행</a>
+      <a class="${active === 'discover' ? 'is-active' : ''}" href="discover.html"><span>${mobileIcons.discover}</span>여행지</a>
+      <a class="mobile-ai-entry ${active === 'planner' || active === 'ai' ? 'is-active' : ''}" href="ai-travel.html"><span>${mobileIcons.ai}</span>AI 여행</a>
+      <a class="${active === 'community' ? 'is-active' : ''}" href="community.html"><span>${mobileIcons.community}</span>여행 가이드</a>
+      <a class="${active === 'my' || active === 'trips' ? 'is-active' : ''}" href="trips.html"><span>${mobileIcons.trips}</span>마이</a>
     </nav>`;
 
   document.querySelectorAll('[data-site-header]').forEach((target) => {

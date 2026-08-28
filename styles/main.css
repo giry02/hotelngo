@@ -343,6 +343,7 @@ img, svg { display: block; max-width: 100%; }
   .site-footer { padding: 28px 0 78px; }.footer-inner > nav { gap: 11px 17px; margin: 16px 0 12px; }
   .mobile-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: grid; grid-template-columns: repeat(5, 1fr); height: 64px; padding: 6px 4px max(7px, env(safe-area-inset-bottom)); background: rgb(255 255 255 / 97%); border-top: 1px solid var(--border-soft); backdrop-filter: blur(14px); }
   .mobile-tabbar a { min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--text-muted); font-size: 11px; font-weight: 650; }.mobile-tabbar a span { display: grid; width: 21px; height: 21px; place-items: center; line-height: 1; }.mobile-tabbar a svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }.mobile-tabbar a.is-active { color: var(--brand-primary); }
+  .mobile-tabbar .mobile-ai-entry span { width: 32px; height: 32px; margin-top: -10px; border-radius: 11px; color: #fff; background: linear-gradient(135deg, var(--brand-accent), var(--brand-primary)); box-shadow: 0 5px 14px rgb(47 107 255 / 24%); }.mobile-tabbar .mobile-ai-entry svg { width: 18px; height: 18px; }.mobile-tabbar .mobile-ai-entry.is-active span { box-shadow: 0 0 0 3px rgb(47 107 255 / 15%), 0 5px 14px rgb(47 107 255 / 24%); }
   .toast { bottom: 76px; }
 }
 

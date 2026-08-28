@@ -7,9 +7,9 @@
   <title>예약 조회 · HotelnGo</title>
   <link rel="icon" href="assets/brand/official/hotelngo-symbol-primary.png">
   <link rel="stylesheet" href="styles/tokens.css?v=10">
-  <link rel="stylesheet" href="styles/main.css?v=33">
-  <link rel="stylesheet" href="styles/pages.css?v=20">
-  <script src="scripts/site-shell.js?v=18" defer></script>
+  <link rel="stylesheet" href="styles/main.css?v=35">
+  <link rel="stylesheet" href="styles/pages.css?v=21">
+  <script src="scripts/site-shell.js?v=25" defer></script>
   <script src="scripts/mock-api.js?v=7" defer></script>
   <script src="scripts/platform-flows.js?v=20" defer></script>
   <script src="scripts/auth.js?v=6" defer></script>
@@ -24,9 +24,9 @@
     <div class="shell">
       <nav class="page-breadcrumb"><a href="index.html">홈</a><span>예약 조회</span></nav>
       <div class="page-head"><div><span class="page-eyebrow">BOOKING STATUS</span><h1 class="page-title">예약 상태를 확인하세요</h1><p class="page-lead">비회원은 예약번호와 예약자 이메일을 확인한 뒤 30분 동안 예약 상세를 볼 수 있습니다.</p></div></div>
-      <div class="account-layout">
-        <aside class="account-nav"><a class="is-active" href="bookings.html">비회원 예약 조회</a><a href="orders.html">내 예약·주문</a><a href="trips.html">내 여행</a><a href="saved.html">저장한 콘텐츠</a></aside>
-        <section class="account-content">
+      <nav class="route-tabs booking-access-tabs" aria-label="예약 조회 유형"><a class="is-active" href="bookings.html">비회원 예약 조회</a><a href="login.html?returnUrl=orders.html">회원 예약 확인</a></nav>
+      <div class="booking-lookup-layout">
+        <section class="booking-lookup-content">
           <div class="state-banner"><div><strong>프로토타입 조회 안내</strong><p>샘플 예약번호와 이메일이 미리 입력되어 있습니다. 실제 예약 데이터는 조회하지 않습니다.</p></div><span class="status-chip warning">Mock 조회</span></div>
           <div class="auth-card booking-lookup-card">
             <h2>비회원 예약 조회</h2>
@@ -40,6 +40,7 @@
             <div class="prototype-note">업체 확인 중이거나 재확인이 필요한 예약은 확정으로 표시하지 않고, 현재 상태와 다음 안내를 고객용 문장으로 보여드립니다.</div>
           </div>
         </section>
+        <aside class="booking-member-guide"><span class="page-eyebrow">MEMBER BOOKING</span><h2>회원으로 예약하셨나요?</h2><p>로그인하면 <strong>내 여행</strong>에서 여행 일정과 예약 내역을 함께 확인할 수 있습니다.</p><a class="ui-button" href="login.html?returnUrl=orders.html">로그인하고 예약 보기</a></aside>
       </div>
     </div>
   </main>
