@@ -54,6 +54,11 @@
     {"id":"sala_danang","destinationId":"danang","name":"살라 다낭 비치 호텔","area":"미케 비치","image":"assets/hotel-room.jpg","rating":4.7,"reviews":2184,"price":142000,"badges":["루프톱 수영장","공항 픽업"],"available":true},
     {"id":"furama_danang","destinationId":"danang","name":"푸라마 리조트 다낭","area":"응우한선","image":"assets/hotel.jpg","rating":4.9,"reviews":4280,"price":238000,"badges":["프라이빗 비치","가족 추천"],"available":true}
   ],
+  "bookings": [
+    {"id":"booking_danang_ocean","bookingNo":"HNG-2026-00021","category":"HOTEL","destination":"다낭","title":"다낭 오션 리조트","option":"디럭스 오션뷰 · 조식 포함 · 4박","image":"assets/hotel-room.jpg","dateLabel":"2026.09.20–09.24","guests":"성인 2명","amount":612000,"paymentStatus":"결제 완료","status":"CONFIRMED","statusLabel":"예약 확정","tripDay":"DAY 1–5","nextAction":"체크인은 9월 20일 15:00부터 가능합니다. 여권 영문명과 예약자명을 다시 확인해주세요."},
+    {"id":"booking_herbal_spa","bookingNo":"HNG-2026-00017","category":"SPA","destination":"다낭","title":"Herbal Spa 아로마 90분","option":"아로마 테라피 · 성인 2명","image":"assets/spa.jpg","dateLabel":"2026.09.21 · 16:00","guests":"성인 2명","amount":108000,"paymentStatus":"승인 대기","status":"PENDING_SUPPLIER","statusLabel":"업체 확인 중","tripDay":"DAY 2","nextAction":"업체가 이용 가능 시간을 확인 중입니다. 확정 전까지 일정에는 ‘확인 중’으로 표시됩니다."},
+    {"id":"booking_madame_lan","bookingNo":"HNG-2026-00011","category":"RESTAURANT","destination":"다낭","title":"Madame Lan 베트남식 디너","option":"창가석 요청 · 성인 2명","image":"assets/restaurant.jpg","dateLabel":"2026.08.12 · 19:00","guests":"성인 2명","amount":68000,"paymentStatus":"현장 결제 완료","status":"COMPLETED","statusLabel":"이용 완료","tripDay":"","nextAction":"이용이 완료된 예약입니다. 여행 가이드에 후기를 남기면 다음 여행 추천에 반영됩니다."}
+  ],
   "recommendedPlan": {
     "id":"mobile_plan_danang_5d","title":"처음 가는 다낭 4박 5일","destinationId":"danang","dates":"2026.09.20–09.24","people":2,
     "days":[
