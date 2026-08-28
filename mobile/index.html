@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="여행을 발견하고 담아 나만의 일정으로 만드는 HotelnGo 모바일 앱">
+  <meta name="description" content="여행지를 찾고 담아 나만의 일정으로 만드는 HotelnGo 모바일 앱">
   <title>HotelnGo Mobile</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1">
-  <link rel="stylesheet" href="styles/app.css?v=8">
+  <link rel="stylesheet" href="styles/app.css?v=11">
 </head>
 <body>
   <div class="mobile-app" data-mobile-app>
@@ -34,9 +34,9 @@
 
     <nav class="app-tabbar" aria-label="모바일 주요 메뉴">
       <a href="#home" data-nav="home"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9h-6v-6H9v6H3Z"/></svg><span>홈</span></a>
-      <a href="#discover" data-nav="discover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg><span>발견</span></a>
+      <a href="#discover" data-nav="discover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg><span>여행지</span></a>
       <a class="tabbar-create" href="#ai" data-nav="ai"><svg viewBox="0 0 24 24"><path d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7ZM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8Z"/></svg><span>AI 여행</span></a>
-      <a href="#community" data-nav="community"><svg viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v11H8l-4 3V6a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></svg><span>여행기</span></a>
+      <a href="#community" data-nav="community"><svg viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v11H8l-4 3V6a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></svg><span>여행 가이드</span></a>
       <a href="#trips" data-nav="trips"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>마이</span></a>
     </nav>
   </div>
@@ -45,6 +45,6 @@
   <div class="sheet-layer" data-sheet-layer hidden></div>
   <script src="scripts/native-bridge.js?v=1"></script>
   <script src="vendor/leaflet/leaflet.js?v=1"></script>
-  <script src="scripts/app.js?v=7" type="module"></script>
+  <script src="scripts/app.js?v=10" type="module"></script>
 </body>
 </html>
