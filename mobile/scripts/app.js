@@ -25,6 +25,9 @@ let planRouteLine;
 let planRouteMover;
 let planRouteAnimation;
 let planRouteCoordinates = [];
+let storyMap;
+let activeStoryMapId = '';
+let activeStoryMapDay = 1;
 
 const icons = {
   search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
@@ -274,6 +277,52 @@ const initPlanMap = () => {
   }, 90);
 };
 
+const destroyStoryMap = () => {
+  if (!storyMap) return;
+  storyMap.remove();
+  storyMap = undefined;
+};
+
+const storyRouteForDay = (story, day) => {
+  const coordinates = data.storyRoutes?.[story.id]?.[day.day - 1] || [];
+  return day.items.map((title, index) => ({
+    title,
+    lat:Number(coordinates[index]?.[0]),
+    lng:Number(coordinates[index]?.[1])
+  })).filter((item) => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+};
+
+const initStoryMap = () => {
+  const target = document.querySelector('#story-route-map');
+  const Leaflet = window.L;
+  if (!target) return;
+  if (!Leaflet) {
+    target.classList.add('is-unavailable');
+    target.innerHTML = `<div class="map-loading"><b>지도를 표시하지 못했습니다</b><span>네트워크 연결 후 다시 열어주세요.</span></div>`;
+    return;
+  }
+
+  const story = data.stories.find((item) => item.id === route().id) || data.stories[0];
+  const day = story.itinerary.find((item) => item.day === activeStoryMapDay) || story.itinerary[0];
+  const routePlaces = storyRouteForDay(story, day);
+  const coordinates = routePlaces.map((place) => [place.lat, place.lng]);
+  storyMap = Leaflet.map(target, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:true, doubleClickZoom:true, touchZoom:true, keyboard:true, zoomSnap:.5 });
+  const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(storyMap);
+  tileLayer.on('tileerror', () => target.classList.add('has-tile-error'));
+  Leaflet.polyline(coordinates, { color:'#9dbcf8', weight:6, opacity:.46, dashArray:'4 9', lineCap:'round' }).addTo(storyMap);
+  Leaflet.polyline(coordinates, { color:'#2f6bff', weight:3.5, opacity:1, lineCap:'round', lineJoin:'round' }).addTo(storyMap);
+  routePlaces.forEach((place, index) => {
+    const marker = Leaflet.marker([place.lat, place.lng], {
+      icon:Leaflet.divIcon({ className:'route-live-marker story-map-marker', html:`<span>${index + 1}</span>`, iconSize:[32,32], iconAnchor:[16,16] })
+    }).addTo(storyMap);
+    marker.bindPopup(`<strong>${index + 1}. ${escapeHtml(place.title)}</strong><small>DAY ${day.day} 일정 순서</small>`, { closeButton:false, offset:[0,-10] });
+  });
+  if (coordinates.length > 1) storyMap.fitBounds(coordinates, { padding:[32,32] });
+  else if (coordinates.length) storyMap.setView(coordinates[0], 14);
+  else storyMap.setView([16.0544,108.2022], 12);
+  setTimeout(() => storyMap?.invalidateSize(), 90);
+};
+
 const discoverThemes = [
   { id:'ALL', label:'추천' },
   { id:'BEACH', label:'바다' },
@@ -310,7 +359,19 @@ const detailView = (id) => {
   const story = data.stories.find((item) => item.id === id) || data.stories[0];
   const engagement = getEngagement(story.id);
   const comments = getComments(story.id);
-  return `<div class="view"><section class="detail-hero"><img src="${story.cover}" alt="${escapeHtml(story.title)}"><button class="back-button" type="button" aria-label="뒤로" data-route="community">${icons.back}</button><div class="detail-hero-copy"><small>${escapeHtml(story.duration)} · ${escapeHtml(story.companions)}</small><h1>${escapeHtml(story.title)}</h1><p>${escapeHtml(story.summary)}</p></div></section><div class="detail-author"><span class="avatar">${escapeHtml(story.avatar)}</span><div><strong>${escapeHtml(story.author)}</strong><small>공개 여행 ${story.days + 8}개 · 일정 인증</small></div><button type="button" data-follow-author>팔로우</button></div><div class="social-actions detail-actions"><button class="${engagement.liked ? 'is-active' : ''}" type="button" data-like-story="${story.id}">${icons.heart}<span>좋아요</span></button><button type="button" data-focus-comment>${icons.comment}<span>댓글 ${comments.length}</span></button><button class="${engagement.scrapped ? 'is-active' : ''}" type="button" data-scrap-story="${story.id}">${icons.bookmark}<span>스크랩</span></button><button type="button" data-share-story="${story.id}">${icons.share}<span>공유</span></button></div><section class="section" style="margin-top:24px"><div class="section-head"><div><span class="eyebrow">DAY BY DAY</span><h2>날짜별 일정</h2></div></div><div class="itinerary-list">${story.itinerary.map((day) => `<article class="itinerary-day"><header><b>DAY ${day.day}</b><strong>${escapeHtml(day.title)}</strong></header><ol>${day.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol></article>`).join('')}</div></section><section class="section"><div class="section-head"><div><h2>댓글 ${comments.length}</h2><p>실제로 다녀온 사람에게 일정 팁을 물어보세요.</p></div></div><div class="comment-list">${comments.length ? comments.map((comment) => `<article class="comment"><span class="avatar">${escapeHtml(comment.authorName.slice(0,1))}</span><div><strong>${escapeHtml(comment.authorName)}</strong><p>${escapeHtml(comment.body)}</p></div></article>`).join('') : '<div class="empty-state"><h2>첫 댓글을 남겨보세요</h2><p>동선이나 체류시간에 대해 질문할 수 있습니다.</p></div>'}</div><form class="comment-form" data-comment-form="${story.id}"><input name="comment" type="text" placeholder="댓글을 입력하세요" aria-label="댓글"><button class="primary-button" type="submit">등록</button></form></section><div class="sticky-action"><button class="secondary-button" type="button" data-scrap-story="${story.id}">스크랩</button><button class="primary-button" type="button" data-copy-story="${story.id}">내 여행에 담기</button></div></div>`;
+  if (activeStoryMapId !== story.id) {
+    activeStoryMapId = story.id;
+    activeStoryMapDay = 1;
+  }
+  const mapDay = story.itinerary.find((item) => item.day === activeStoryMapDay) || story.itinerary[0];
+  return `<div class="view story-detail-view">
+    <section class="detail-hero"><img src="${story.cover}" alt="${escapeHtml(story.title)}"><button class="back-button" type="button" aria-label="뒤로" data-route="community">${icons.back}</button><div class="detail-hero-copy"><small>${escapeHtml(story.duration)} · ${escapeHtml(story.companions)}</small><h1>${escapeHtml(story.title)}</h1><p>${escapeHtml(story.summary)}</p></div></section>
+    <section class="story-engagement-card"><div class="detail-author"><span class="avatar">${escapeHtml(story.avatar)}</span><div><strong>${escapeHtml(story.author)}</strong><small>공개 여행 ${story.days + 8}개 · 일정 인증</small></div><button type="button" data-follow-author>팔로우</button></div><div class="social-actions detail-actions"><button class="${engagement.liked ? 'is-active' : ''}" type="button" data-like-story="${story.id}">${icons.heart}<span>좋아요</span></button><button type="button" data-focus-comment>${icons.comment}<span>댓글 ${comments.length}</span></button><button class="${engagement.scrapped ? 'is-active' : ''}" type="button" data-scrap-story="${story.id}">${icons.bookmark}<span>스크랩</span></button><button type="button" data-share-story="${story.id}">${icons.share}<span>공유</span></button></div></section>
+    <section class="section story-route-section"><div class="section-head"><div><span class="eyebrow">ROUTE MAP</span><h2>일정 동선</h2><p>날짜를 누르면 방문 순서와 이동 경로가 지도에 표시됩니다.</p></div></div><div class="story-map-days">${story.itinerary.map((day) => `<button class="${day.day === activeStoryMapDay ? 'is-active' : ''}" type="button" data-story-map-day="${day.day}"><b>DAY ${day.day}</b><span>${day.items.length}곳</span></button>`).join('')}</div><div class="story-map-card"><div class="story-map-summary"><span>DAY ${mapDay.day}</span><strong>${escapeHtml(mapDay.title)}</strong><small>${mapDay.items.length}개 장소 · 번호 순서로 이동</small></div><div class="story-map" id="story-route-map" aria-label="DAY ${mapDay.day} 여행 일정 지도"><div class="map-loading">DAY ${mapDay.day} 지도를 불러오는 중입니다</div></div><ol class="story-map-legend">${mapDay.items.map((item, index) => `<li><b>${index + 1}</b><span>${escapeHtml(item)}</span></li>`).join('')}</ol></div></section>
+    <section class="section itinerary-section"><div class="section-head"><div><span class="eyebrow">DAY BY DAY</span><h2>날짜별 일정</h2><p>하루씩 확인하고 마음에 들면 내 여행으로 가져오세요.</p></div></div><div class="itinerary-list">${story.itinerary.map((day) => `<article class="itinerary-day"><header><b>DAY ${day.day}</b><strong>${escapeHtml(day.title)}</strong></header><ol>${day.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol></article>`).join('')}</div></section>
+    <section class="section story-comment-section"><div class="section-head"><div><h2>댓글 ${comments.length}</h2><p>실제로 다녀온 사람에게 일정 팁을 물어보세요.</p></div></div><div class="comment-list">${comments.length ? comments.map((comment) => `<article class="comment"><span class="avatar">${escapeHtml(comment.authorName.slice(0,1))}</span><div><strong>${escapeHtml(comment.authorName)}</strong><p>${escapeHtml(comment.body)}</p></div></article>`).join('') : '<div class="empty-state"><h2>첫 댓글을 남겨보세요</h2><p>동선이나 체류시간에 대해 질문할 수 있습니다.</p></div>'}</div><form class="comment-form" data-comment-form="${story.id}"><input name="comment" type="text" placeholder="댓글을 입력하세요" aria-label="댓글"><button class="primary-button" type="submit">등록</button></form></section>
+    <div class="sticky-action detail-sticky-action"><button class="secondary-button" type="button" data-scrap-story="${story.id}">스크랩</button><button class="primary-button" type="button" data-copy-story="${story.id}">내 여행에 담기</button></div>
+  </div>`;
 };
 
 const myNavView = (active) => `<nav class="chip-row my-nav" aria-label="내 여행 메뉴">
@@ -624,8 +685,12 @@ const render = () => {
   profileButton.classList.toggle('is-login', !loggedIn);
   const views = {home:homeView,discover:discoverView,community:communityView,story:()=>detailView(current.id),card:cardView,plan:planView,hotels:hotelsView,ai:aiView,trips:tripsView,bookings:bookingsView,saved:savedView,login:loginView};
   destroyPlanMap();
+  destroyStoryMap();
   main.innerHTML = (views[current.name] || homeView)();
-  requestAnimationFrame(initPlanMap);
+  requestAnimationFrame(() => {
+    initPlanMap();
+    initStoryMap();
+  });
   main.focus({ preventScroll:true });
   scrollTo({ top:0, behavior:'instant' });
 };
@@ -718,6 +783,13 @@ document.addEventListener('click', async (event) => {
   if (share) { const story = data.stories.find((item) => item.id === share.dataset.shareStory); try { await window.HotelnGoNative.share({title:story.title,text:story.summary,url:`${location.origin}${location.pathname}#story/${story.id}`}); toast('공유 화면을 열었습니다.'); } catch { toast('공유 링크를 만들지 못했습니다.'); } return; }
   const day = event.target.closest('[data-plan-day]');
   if (day) { activeDay = Number(day.dataset.planDay); render(); return; }
+  const storyMapDay = event.target.closest('[data-story-map-day]');
+  if (storyMapDay) {
+    activeStoryMapDay = Number(storyMapDay.dataset.storyMapDay);
+    render();
+    requestAnimationFrame(() => document.querySelector('.story-route-section')?.scrollIntoView({ behavior:'smooth', block:'start' }));
+    return;
+  }
   const edit = event.target.closest('[data-edit-schedule]');
   if (edit) return openScheduleEditor(edit.dataset.editSchedule);
   if (event.target.closest('[data-apply-schedule]')) { closeSheet(); toast('겹치지 않는 시간으로 변경했습니다.'); return; }
