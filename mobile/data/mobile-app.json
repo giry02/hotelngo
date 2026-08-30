@@ -32,6 +32,15 @@
         {"day":2,"title":"시장과 루프톱","items":["로컬 브런치","미식 시장 투어","루프톱 디너"]},
         {"day":3,"title":"마지막 한 그릇","items":["쌀국수 아침","카페","공항 이동"]}
       ]
+    },
+    {"id":"story_bali_slow","destinationId":"bali","title":"발리에서 천천히 쉬는 4박 5일","summary":"우붓의 숲과 사원, 스미냑의 해변을 무리 없이 연결한 휴식 중심 일정입니다.","cover":"assets/bali.jpg","author":"느린 여행 수아","avatar":"수","duration":"4박 5일","companions":"친구 2명","tags":["자연","요가","휴양"],"likes":1580,"comments":41,"scraps":812,"days":5,
+      "itinerary":[
+        {"day":1,"title":"우붓에 적응하는 날","items":["우붓 체크인","왕궁 산책","로컬 디너"]},
+        {"day":2,"title":"숲과 사원","items":["몽키 포레스트","사원 산책","발리 마사지"]},
+        {"day":3,"title":"논과 카페","items":["뜨갈랄랑","라이스 테라스 카페","리조트 휴식"]},
+        {"day":4,"title":"스미냑의 해변","items":["해변 이동","선셋 비치","시푸드 디너"]},
+        {"day":5,"title":"마지막 요가","items":["모닝 요가","브런치","공항 이동"]}
+      ]
     }
   ],
   "comments": [
@@ -41,13 +50,22 @@
     {"id":"seed_comment_4","tripId":"story_bangkok_food","authorName":"방콕입문","body":"시장 투어와 루프톱 사이에 호텔에서 쉬는 시간을 두면 일정이 훨씬 편합니다."}
   ],
   "places": [
-    {"id":"mykhe","destinationId":"danang","category":"LANDMARK","title":"미케 비치 아침 산책","area":"다낭 동쪽 해안","image":"assets/danang.jpg","duration":90,"recommendedTime":"07:30","price":0,"description":"해가 높아지기 전 바다를 따라 걷기 좋은 대표 해변입니다.","lat":16.0593,"lng":108.2469},
-    {"id":"hanmarket","destinationId":"danang","category":"LANDMARK","title":"한 시장과 다낭 대성당","area":"하이쩌우","image":"assets/market.jpg","duration":120,"recommendedTime":"10:00","price":6000,"description":"시장과 성당을 도보로 함께 둘러보는 도심 코스입니다.","lat":16.0681,"lng":108.2241},
-    {"id":"hoian","destinationId":"danang","category":"LANDMARK","title":"호이안 올드타운 저녁","area":"호이안","image":"assets/kyoto.jpg","duration":240,"recommendedTime":"16:00","price":12000,"description":"해 질 무렵부터 등불이 켜지는 시간까지 머무는 것이 좋습니다.","lat":15.8801,"lng":108.3380},
-    {"id":"danang_hotel","destinationId":"danang","category":"HOTEL","title":"다낭 오션 리조트","area":"미케 비치","image":"assets/hotel.jpg","duration":720,"recommendedTime":"15:00","price":153000,"description":"해변 도보 3분, 조식과 수영장을 갖춘 휴양형 숙소입니다.","lat":16.0612,"lng":108.2464},
-    {"id":"madamelan","destinationId":"danang","category":"RESTAURANT","title":"Madame Lan 베트남식 디너","area":"한강 북쪽","image":"assets/restaurant.jpg","duration":90,"recommendedTime":"18:30","price":34000,"description":"현지식 입문 메뉴가 다양해 첫날 저녁으로 편안합니다.","lat":16.0758,"lng":108.2228},
-    {"id":"herbalspa","destinationId":"danang","category":"SPA","title":"Herbal Spa 아로마 90분","area":"안하이","image":"assets/spa.jpg","duration":90,"recommendedTime":"16:00","price":54000,"description":"이동이 긴 날 오후에 넣기 좋은 회복 중심 프로그램입니다.","lat":16.0664,"lng":108.2345},
-    {"id":"montgomerie","destinationId":"danang","category":"GOLF","title":"Montgomerie Links 18홀","area":"다낭·호이안 사이","image":"assets/golf.jpg","duration":330,"recommendedTime":"07:00","price":178000,"description":"18홀과 캐디피 2인 카트가 포함된 대표 코스입니다.","lat":15.9548,"lng":108.2828}
+    {"id":"mykhe","destinationId":"danang","category":"LANDMARK","themes":["BEACH","FAMILY"],"title":"미케 비치 아침 산책","area":"다낭 동쪽 해안","image":"assets/danang.jpg","duration":90,"recommendedTime":"07:30","price":0,"description":"해가 높아지기 전 바다를 따라 걷기 좋은 대표 해변입니다.","lat":16.0593,"lng":108.2469},
+    {"id":"hanmarket","destinationId":"danang","category":"LANDMARK","themes":["FOOD","FAMILY"],"title":"한 시장과 다낭 대성당","area":"하이쩌우","image":"assets/market.jpg","duration":120,"recommendedTime":"10:00","price":6000,"description":"시장과 성당을 도보로 함께 둘러보는 도심 코스입니다.","lat":16.0681,"lng":108.2241},
+    {"id":"hoian","destinationId":"danang","category":"LANDMARK","themes":["FAMILY","FOOD"],"title":"호이안 올드타운 저녁","area":"호이안","image":"assets/kyoto.jpg","duration":240,"recommendedTime":"16:00","price":12000,"description":"해 질 무렵부터 등불이 켜지는 시간까지 머무는 것이 좋습니다.","lat":15.8801,"lng":108.3380},
+    {"id":"danang_hotel","destinationId":"danang","category":"HOTEL","themes":["BEACH","FAMILY"],"title":"다낭 오션 리조트","area":"미케 비치","image":"assets/hotel.jpg","duration":720,"recommendedTime":"15:00","price":153000,"description":"해변 도보 3분, 조식과 수영장을 갖춘 휴양형 숙소입니다.","lat":16.0612,"lng":108.2464},
+    {"id":"madamelan","destinationId":"danang","category":"RESTAURANT","themes":["FOOD","FAMILY"],"title":"Madame Lan 베트남식 디너","area":"한강 북쪽","image":"assets/restaurant.jpg","duration":90,"recommendedTime":"18:30","price":34000,"description":"현지식 입문 메뉴가 다양해 첫날 저녁으로 편안합니다.","lat":16.0758,"lng":108.2228},
+    {"id":"herbalspa","destinationId":"danang","category":"SPA","themes":["BEACH"],"title":"Herbal Spa 아로마 90분","area":"안하이","image":"assets/spa.jpg","duration":90,"recommendedTime":"16:00","price":54000,"description":"이동이 긴 날 오후에 넣기 좋은 회복 중심 프로그램입니다.","lat":16.0664,"lng":108.2345},
+    {"id":"montgomerie","destinationId":"danang","category":"GOLF","themes":["GOLF"],"title":"Montgomerie Links 18홀","area":"다낭·호이안 사이","image":"assets/golf.jpg","duration":330,"recommendedTime":"07:00","price":178000,"description":"18홀과 캐디피 2인 카트가 포함된 대표 코스입니다.","lat":15.9548,"lng":108.2828},
+    {"id":"gion_evening","destinationId":"kyoto","category":"LANDMARK","themes":["FAMILY"],"title":"기온 시라카와 저녁 산책","area":"기온","image":"assets/kyoto.jpg","duration":120,"recommendedTime":"17:00","price":0,"description":"전통 가옥과 작은 다리를 따라 교토의 저녁 분위기를 느끼는 산책입니다.","lat":35.0037,"lng":135.7758},
+    {"id":"nishiki_food","destinationId":"kyoto","category":"RESTAURANT","themes":["FOOD","FAMILY"],"title":"니시키 시장 한입 투어","area":"나카교","image":"assets/market.jpg","duration":100,"recommendedTime":"11:00","price":32000,"description":"교토식 달걀말이와 절임, 디저트를 조금씩 맛보는 시장 코스입니다.","lat":35.0050,"lng":135.7647},
+    {"id":"arashiyama_family","destinationId":"kyoto","category":"TOUR","themes":["FAMILY"],"title":"아라시야마 대나무숲과 도게츠교","area":"사가노","image":"assets/bali.jpg","duration":210,"recommendedTime":"08:30","price":18000,"description":"혼잡이 적은 오전에 대나무숲과 강변을 함께 걷는 가족 추천 코스입니다.","lat":35.0170,"lng":135.6720},
+    {"id":"bangkok_market","destinationId":"bangkok","category":"LANDMARK","themes":["FOOD","FAMILY"],"title":"짜뚜짝 시장 오전 탐방","area":"짜뚜짝","image":"assets/bangkok.jpg","duration":180,"recommendedTime":"09:30","price":0,"description":"더워지기 전 시장 골목과 로컬 디자인 상점을 둘러보는 일정입니다.","lat":13.7999,"lng":100.5500},
+    {"id":"bangkok_dinner","destinationId":"bangkok","category":"RESTAURANT","themes":["FOOD"],"title":"차오프라야 강변 타이 디너","area":"리버사이드","image":"assets/restaurant.jpg","duration":120,"recommendedTime":"18:30","price":48000,"description":"강변 야경과 함께 대표 태국 요리를 천천히 즐기는 저녁입니다.","lat":13.7235,"lng":100.5133},
+    {"id":"bangkok_spa","destinationId":"bangkok","category":"SPA","themes":["FAMILY"],"title":"방콕 허브 마사지 90분","area":"수쿰윗","image":"assets/spa.jpg","duration":90,"recommendedTime":"15:30","price":42000,"description":"시장과 도심 이동 사이에 넣기 좋은 회복 중심 프로그램입니다.","lat":13.7350,"lng":100.5610},
+    {"id":"bali_beach","destinationId":"bali","category":"LANDMARK","themes":["BEACH","FAMILY"],"title":"스미냑 선셋 비치","area":"스미냑","image":"assets/bali.jpg","duration":120,"recommendedTime":"17:00","price":0,"description":"해가 내려앉는 시간에 맞춰 걷고 쉬기 좋은 발리 대표 해변입니다.","lat":-8.6913,"lng":115.1570},
+    {"id":"bali_food","destinationId":"bali","category":"RESTAURANT","themes":["FOOD","FAMILY"],"title":"우붓 오가닉 브런치","area":"우붓","image":"assets/restaurant.jpg","duration":90,"recommendedTime":"10:30","price":26000,"description":"논과 정원을 바라보며 현지 식재료로 만든 브런치를 즐깁니다.","lat":-8.5069,"lng":115.2625},
+    {"id":"bali_resort","destinationId":"bali","category":"HOTEL","themes":["BEACH","FAMILY"],"title":"발리 가든 풀빌라","area":"우붓","image":"assets/hotel.jpg","duration":720,"recommendedTime":"15:00","price":216000,"description":"프라이빗 풀과 요가 프로그램을 갖춘 조용한 휴양형 숙소입니다.","lat":-8.5191,"lng":115.2607}
   ],
   "hotels": [
     {"id":"danang_ocean","destinationId":"danang","name":"다낭 오션 리조트","area":"미케 비치","image":"assets/hotel.jpg","rating":4.8,"reviews":3410,"price":153000,"badges":["해변 3분","조식 포함"],"available":true},
