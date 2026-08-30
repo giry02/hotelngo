@@ -29,7 +29,7 @@ img { display:block; width:100%; object-fit:cover; }
 svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
 [hidden] { display:none !important; }
 
-.mobile-app { position:relative; max-width:540px; min-height:100dvh; margin:0 auto; overflow:hidden; background:#fff; box-shadow:0 0 40px rgba(16,39,74,.08); }
+.mobile-app { position:relative; max-width:540px; min-height:100dvh; margin:0 auto; overflow:clip; background:#fff; box-shadow:0 0 40px rgba(16,39,74,.08); }
 .app-header { position:sticky; z-index:30; top:0; height:calc(var(--header-h) + env(safe-area-inset-top)); padding:env(safe-area-inset-top) 18px 0; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(229,233,240,.92); background:rgba(255,255,255,.94); backdrop-filter:blur(18px); }
 .app-brand { display:flex; align-items:center; min-height:44px; width:126px; }
 .app-brand img { width:126px; height:auto; object-fit:contain; }
@@ -271,7 +271,7 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .detail-hero-copy small { font-size:11px; }
 .detail-hero-copy h1 { margin:7px 0 9px; font-size:26px; line-height:1.3; letter-spacing:-.05em; }
 .detail-hero-copy p { margin:0; color:rgba(255,255,255,.78); font-size:12px; line-height:1.6; }
-.story-detail-view { padding-bottom:18px; background:var(--soft); }
+.story-detail-view { padding-bottom:18px; overflow-anchor:none; background:var(--soft); }
 .story-engagement-card { margin:14px 18px 0; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 6px 18px rgba(16,39,74,.05); }
 .detail-author { padding:15px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line); }
 .detail-author div:nth-child(2) { display:grid; }
@@ -289,6 +289,8 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .story-map-days button span { font-size:11px; }
 .story-map-days button.is-active { color:#fff; border-color:var(--primary); background:var(--primary); box-shadow:0 7px 15px rgba(47,107,255,.2); }
 .story-map-days button.is-active b { color:#fff; }
+.story-day-switcher { position:sticky; z-index:26; top:calc(var(--header-h) + env(safe-area-inset-top) + 6px); margin:14px 14px 0; padding:8px; border:1px solid rgba(222,228,237,.96); border-radius:16px; background:rgba(255,255,255,.96); box-shadow:0 8px 22px rgba(16,39,74,.12); backdrop-filter:blur(14px); }
+.story-day-switcher + .story-route-section { margin-top:14px; }
 .story-map-card { overflow:hidden; border:1px solid var(--line); border-radius:17px; background:#fff; }
 .story-map-summary { min-height:58px; padding:11px 13px; display:grid; grid-template-columns:auto 1fr; column-gap:8px; align-items:center; }
 .story-map-summary span { grid-row:1 / span 2; padding:6px 8px; border-radius:9px; color:var(--primary); background:var(--blue-soft); font-size:11px; font-weight:900; }
@@ -302,17 +304,29 @@ svg { fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:roun
 .story-map .leaflet-popup-content small { color:var(--muted); font-size:11px; }
 .story-map.has-tile-error::after { content:"일부 지도 타일을 불러오지 못했습니다"; position:absolute; z-index:600; right:8px; bottom:8px; padding:5px 7px; border-radius:8px; color:#7a4d00; background:rgba(255,244,216,.94); font-size:10px; }
 .story-map-legend { margin:0; padding:12px; display:grid; gap:9px; list-style:none; }
-.story-map-legend li { min-width:0; display:grid; grid-template-columns:25px 1fr; gap:9px; align-items:center; color:#4f5f73; font-size:12px; }
+.story-map-legend li { min-width:0; display:grid; grid-template-columns:25px minmax(0,1fr) auto; gap:9px; align-items:center; color:#4f5f73; font-size:12px; }
 .story-map-legend li b { width:25px; height:25px; display:grid; place-items:center; border-radius:50%; color:#fff; background:linear-gradient(135deg,var(--teal),var(--primary)); font-size:11px; }
 .story-map-legend li span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.story-map-legend li button,.story-detail-view .itinerary-day li button { min-height:34px; padding:0 10px; border:1px solid var(--line); border-radius:10px; color:var(--primary); background:#fff; font-size:11px; font-weight:800; white-space:nowrap; cursor:pointer; }
 .itinerary-list { display:grid; gap:12px; }
 .itinerary-day { padding:15px; border:1px solid var(--line); border-radius:18px; background:#fff; }
 .itinerary-day header { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
 .itinerary-day header b { color:var(--primary); font-size:12px; }
 .itinerary-day header strong { font-size:15px; }
 .itinerary-day ol { margin:0; padding:0; list-style:none; display:grid; gap:10px; }
-.itinerary-day li { position:relative; padding-left:21px; color:#536174; font-size:12px; }
-.itinerary-day li::before { content:""; position:absolute; top:5px; left:2px; width:7px; height:7px; border:2px solid var(--teal); border-radius:50%; background:#fff; }
+.itinerary-day li { position:relative; min-height:42px; padding:6px 0 6px 21px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:center; color:#536174; font-size:12px; }
+.itinerary-day li::before { content:""; position:absolute; top:50%; left:2px; width:7px; height:7px; transform:translateY(-50%); border:2px solid var(--teal); border-radius:50%; background:#fff; }
+.itinerary-day li span { min-width:0; line-height:1.5; }
+.story-stop-sheet { overflow:hidden; border:1px solid var(--line); border-radius:18px; background:#fff; }
+.story-stop-sheet > img { height:190px; }
+.story-stop-sheet-copy { padding:16px; }
+.story-stop-sheet-copy > small { color:var(--primary); font-size:11px; font-weight:800; }
+.story-stop-sheet-copy h2 { margin:7px 0 8px; font-size:22px; line-height:1.3; letter-spacing:-.04em; }
+.story-stop-sheet-copy > p { margin:0; color:var(--muted); font-size:13px; line-height:1.65; }
+.story-stop-sheet-copy dl { margin:15px 0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+.story-stop-sheet-copy dl div { min-width:0; padding:10px; border-radius:12px; background:var(--soft); }
+.story-stop-sheet-copy dt { color:var(--muted); font-size:10px; }
+.story-stop-sheet-copy dd { margin:5px 0 0; color:var(--ink); font-size:12px; font-weight:800; line-height:1.35; word-break:keep-all; }
 .comment-list { display:grid; gap:10px; }
 .comment { padding:13px; display:grid; grid-template-columns:30px 1fr; gap:9px; border-radius:14px; background:var(--soft); }
 .comment strong { font-size:11px; }
