@@ -385,7 +385,6 @@ const storyStopDetail = (story, day, index) => {
 };
 
 const storyMapSummaryMarkup = (day) => `<span>DAY ${day.day}</span><strong>${escapeHtml(day.title)}</strong><small>${day.items.length}개 장소 · 번호 순서로 이동</small>`;
-const storyMapLegendMarkup = (story, day) => day.items.map((item, index) => `<li><b>${index + 1}</b><span>${escapeHtml(item)}</span><button type="button" data-story-stop-detail="${story.id}" data-story-stop-day="${day.day}" data-story-stop-index="${index}">상세</button></li>`).join('');
 const storyItineraryMarkup = (story, day) => `<article class="itinerary-day is-current" id="story-day-${day.day}"><header><b>DAY ${day.day}</b><strong>${escapeHtml(day.title)}</strong></header><ol>${day.items.map((item, index) => `<li><span>${escapeHtml(item)}</span><button type="button" data-story-stop-detail="${story.id}" data-story-stop-day="${day.day}" data-story-stop-index="${index}">상세보기</button></li>`).join('')}</ol></article>`;
 
 const updateStoryDetailDay = (dayNumber) => {
@@ -401,7 +400,6 @@ const updateStoryDetailDay = (dayNumber) => {
   });
   const summary = document.querySelector('.story-map-summary');
   const map = document.querySelector('#story-route-map');
-  const legend = document.querySelector('.story-map-legend');
   const itinerary = document.querySelector('.itinerary-list');
   const itineraryEyebrow = document.querySelector('.itinerary-section .eyebrow');
   if (summary) summary.innerHTML = storyMapSummaryMarkup(day);
@@ -410,7 +408,6 @@ const updateStoryDetailDay = (dayNumber) => {
     map.setAttribute('aria-label', `DAY ${day.day} 여행 일정 지도`);
     map.innerHTML = `<div class="map-loading">DAY ${day.day} 지도를 불러오는 중입니다</div>`;
   }
-  if (legend) legend.innerHTML = storyMapLegendMarkup(story, day);
   if (itinerary) itinerary.innerHTML = storyItineraryMarkup(story, day);
   if (itineraryEyebrow) itineraryEyebrow.textContent = `DAY ${day.day} · DAY BY DAY`;
   window.scrollTo(0, scrollTop);
@@ -442,7 +439,7 @@ const detailView = (id) => {
     <section class="detail-hero"><img src="${story.cover}" alt="${escapeHtml(story.title)}"><button class="back-button" type="button" aria-label="뒤로" data-route="community">${icons.back}</button><div class="detail-hero-copy"><small>${escapeHtml(story.duration)} · ${escapeHtml(story.companions)}</small><h1>${escapeHtml(story.title)}</h1><p>${escapeHtml(story.summary)}</p></div></section>
     <section class="story-engagement-card"><div class="detail-author"><span class="avatar">${escapeHtml(story.avatar)}</span><div><strong>${escapeHtml(story.author)}</strong><small>공개 여행 ${story.days + 8}개 · 일정 인증</small></div><button type="button" data-follow-author>팔로우</button></div><div class="social-actions detail-actions"><button class="${engagement.liked ? 'is-active' : ''}" type="button" data-like-story="${story.id}">${icons.heart}<span>좋아요</span></button><button type="button" data-focus-comment>${icons.comment}<span>댓글 ${comments.length}</span></button><button class="${engagement.scrapped ? 'is-active' : ''}" type="button" data-scrap-story="${story.id}">${icons.bookmark}<span>스크랩</span></button><button type="button" data-share-story="${story.id}">${icons.share}<span>공유</span></button></div></section>
     <nav class="story-map-days story-day-switcher" aria-label="여행 날짜 선택">${story.itinerary.map((day) => `<button class="${day.day === activeStoryMapDay ? 'is-active' : ''}" type="button" data-story-map-day="${day.day}" aria-current="${day.day === activeStoryMapDay ? 'true' : 'false'}"><b>DAY ${day.day}</b><span>${day.items.length}곳</span></button>`).join('')}</nav>
-    <section class="section story-route-section"><div class="section-head"><div><span class="eyebrow">ROUTE MAP</span><h2>일정 동선</h2><p>선택한 날짜의 방문 순서와 이동 경로입니다.</p></div></div><div class="story-map-card"><div class="story-map-summary">${storyMapSummaryMarkup(mapDay)}</div><div class="story-map" id="story-route-map" aria-label="DAY ${mapDay.day} 여행 일정 지도"><div class="map-loading">DAY ${mapDay.day} 지도를 불러오는 중입니다</div></div><ol class="story-map-legend">${storyMapLegendMarkup(story, mapDay)}</ol></div></section>
+    <section class="section story-route-section"><div class="section-head"><div><span class="eyebrow">ROUTE MAP</span><h2>일정 동선</h2><p>선택한 날짜의 방문 순서와 이동 경로입니다.</p></div></div><div class="story-map-card"><div class="story-map-summary">${storyMapSummaryMarkup(mapDay)}</div><div class="story-map" id="story-route-map" aria-label="DAY ${mapDay.day} 여행 일정 지도"><div class="map-loading">DAY ${mapDay.day} 지도를 불러오는 중입니다</div></div></div></section>
     <section class="section itinerary-section"><div class="section-head"><div><span class="eyebrow">DAY ${mapDay.day} · DAY BY DAY</span><h2>날짜별 일정</h2><p>장소 소개를 확인하고 마음에 들면 내 여행으로 가져오세요.</p></div></div><div class="itinerary-list">${storyItineraryMarkup(story, mapDay)}</div></section>
     <section class="section story-comment-section"><div class="section-head"><div><h2>댓글 ${comments.length}</h2><p>실제로 다녀온 사람에게 일정 팁을 물어보세요.</p></div></div><div class="comment-list">${comments.length ? comments.map((comment) => `<article class="comment"><span class="avatar">${escapeHtml(comment.authorName.slice(0,1))}</span><div><strong>${escapeHtml(comment.authorName)}</strong><p>${escapeHtml(comment.body)}</p></div></article>`).join('') : '<div class="empty-state"><h2>첫 댓글을 남겨보세요</h2><p>동선이나 체류시간에 대해 질문할 수 있습니다.</p></div>'}</div><form class="comment-form" data-comment-form="${story.id}"><input name="comment" type="text" placeholder="댓글을 입력하세요" aria-label="댓글"><button class="primary-button" type="submit">등록</button></form></section>
     <div class="sticky-action detail-sticky-action"><button class="secondary-button" type="button" data-scrap-story="${story.id}">스크랩</button><button class="primary-button" type="button" data-copy-story="${story.id}">내 여행에 담기</button></div>
