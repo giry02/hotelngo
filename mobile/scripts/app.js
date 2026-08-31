@@ -298,47 +298,37 @@ const animateStoryRoute = () => {
   if (storyRouteAnimation) cancelAnimationFrame(storyRouteAnimation);
 
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  storyRouteLine.setLatLngs(storyRouteCoordinates);
   if (reducedMotion) {
-    storyRouteLine.setLatLngs(storyRouteCoordinates);
-    const midpointIndex = storyRouteCoordinates.length - 2;
-    const start = storyRouteCoordinates[midpointIndex];
-    const end = storyRouteCoordinates[midpointIndex + 1];
-    storyRouteMover.setLatLng([(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]);
+    storyRouteMover.setLatLng(storyRouteCoordinates.at(-1));
     return;
   }
 
-  const segmentDuration = 760;
+  const segmentLengths = storyRouteCoordinates.slice(1).map((coordinate, index) => (
+    storyMap.distance(storyRouteCoordinates[index], coordinate)
+  ));
+  const totalLength = segmentLengths.reduce((sum, value) => sum + value, 0) || 1;
+  const loopDuration = 12000;
   const startedAt = performance.now();
-  storyRouteLine.setLatLngs([storyRouteCoordinates[0]]);
   storyRouteMover.setLatLng(storyRouteCoordinates[0]);
 
   const drawFrame = (now) => {
     if (!storyMap || !storyRouteLine || !storyRouteMover) return;
-    const progress = Math.min((now - startedAt) / segmentDuration, storyRouteCoordinates.length - 1);
-    const segment = Math.min(Math.floor(progress), storyRouteCoordinates.length - 2);
-    const localProgress = Math.min(progress - segment, 1);
+    let distanceAt = (((now - startedAt) % loopDuration) / loopDuration) * totalLength;
+    let segment = 0;
+    while (segment < segmentLengths.length - 1 && distanceAt > segmentLengths[segment]) {
+      distanceAt -= segmentLengths[segment];
+      segment += 1;
+    }
+    const localProgress = Math.min(distanceAt / (segmentLengths[segment] || 1), 1);
     const start = storyRouteCoordinates[segment];
     const end = storyRouteCoordinates[segment + 1];
     const current = [
       start[0] + ((end[0] - start[0]) * localProgress),
       start[1] + ((end[1] - start[1]) * localProgress)
     ];
-    storyRouteLine.setLatLngs([...storyRouteCoordinates.slice(0, segment + 1), current]);
     storyRouteMover.setLatLng(current);
-
-    if (progress < storyRouteCoordinates.length - 1) {
-      storyRouteAnimation = requestAnimationFrame(drawFrame);
-      return;
-    }
-
-    storyRouteAnimation = undefined;
-    storyRouteLine.setLatLngs(storyRouteCoordinates);
-    const lastStart = storyRouteCoordinates.at(-2);
-    const lastEnd = storyRouteCoordinates.at(-1);
-    storyRouteMover.setLatLng([
-      lastStart[0] + ((lastEnd[0] - lastStart[0]) * .55),
-      lastStart[1] + ((lastEnd[1] - lastStart[1]) * .55)
-    ]);
+    storyRouteAnimation = requestAnimationFrame(drawFrame);
   };
 
   storyRouteAnimation = requestAnimationFrame(drawFrame);
