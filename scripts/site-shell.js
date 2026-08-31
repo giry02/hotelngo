@@ -1,4 +1,34 @@
 (() => {
+  const mobileRouteMap = {
+    'index.html': 'home',
+    'discover.html': 'discover',
+    'community.html': 'community',
+    'cart.html': 'card',
+    'trip-create.html': 'ai',
+    'trip-planner.html': 'plan',
+    'hotels.html': 'hotels',
+    'ai-travel.html': 'ai',
+    'trips.html': 'trips',
+    'my.html': 'trips',
+    'bookings.html': 'bookings',
+    'orders.html': 'bookings',
+    'saved.html': 'saved',
+    'login.html': 'login'
+  };
+  const desktopRoute = location.pathname.split('/').pop() || 'index.html';
+  const mobileRoute = mobileRouteMap[desktopRoute];
+  const query = new URLSearchParams(location.search);
+  const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
+
+  if (mobileRoute && isMobileViewport && query.get('desktop') !== '1') {
+    const mobileUrl = new URL('mobile/index.html', location.href);
+    const deployVersion = query.get('deploy');
+    if (deployVersion) mobileUrl.searchParams.set('deploy', deployVersion);
+    mobileUrl.hash = mobileRoute;
+    location.replace(mobileUrl.href);
+    return;
+  }
+
   if (!document.querySelector('link[data-hotelngo-components]')) {
     const componentStyles = document.createElement('link');
     componentStyles.rel = 'stylesheet';
