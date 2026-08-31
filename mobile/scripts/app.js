@@ -26,8 +26,13 @@ let planRouteMover;
 let planRouteAnimation;
 let planRouteCoordinates = [];
 let storyMap;
+let storyRouteLine;
+let storyRouteMover;
+let storyRouteAnimation;
+let storyRouteCoordinates = [];
 let activeStoryMapId = '';
 let activeStoryMapDay = 1;
+let activeCommunityFilter = 'RECOMMENDED';
 
 const icons = {
   search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
@@ -278,9 +283,65 @@ const initPlanMap = () => {
 };
 
 const destroyStoryMap = () => {
+  if (storyRouteAnimation) cancelAnimationFrame(storyRouteAnimation);
+  storyRouteAnimation = undefined;
+  storyRouteLine = undefined;
+  storyRouteMover = undefined;
+  storyRouteCoordinates = [];
   if (!storyMap) return;
   storyMap.remove();
   storyMap = undefined;
+};
+
+const animateStoryRoute = () => {
+  if (!storyMap || !storyRouteLine || !storyRouteMover || storyRouteCoordinates.length < 2) return;
+  if (storyRouteAnimation) cancelAnimationFrame(storyRouteAnimation);
+
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) {
+    storyRouteLine.setLatLngs(storyRouteCoordinates);
+    const midpointIndex = storyRouteCoordinates.length - 2;
+    const start = storyRouteCoordinates[midpointIndex];
+    const end = storyRouteCoordinates[midpointIndex + 1];
+    storyRouteMover.setLatLng([(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]);
+    return;
+  }
+
+  const segmentDuration = 760;
+  const startedAt = performance.now();
+  storyRouteLine.setLatLngs([storyRouteCoordinates[0]]);
+  storyRouteMover.setLatLng(storyRouteCoordinates[0]);
+
+  const drawFrame = (now) => {
+    if (!storyMap || !storyRouteLine || !storyRouteMover) return;
+    const progress = Math.min((now - startedAt) / segmentDuration, storyRouteCoordinates.length - 1);
+    const segment = Math.min(Math.floor(progress), storyRouteCoordinates.length - 2);
+    const localProgress = Math.min(progress - segment, 1);
+    const start = storyRouteCoordinates[segment];
+    const end = storyRouteCoordinates[segment + 1];
+    const current = [
+      start[0] + ((end[0] - start[0]) * localProgress),
+      start[1] + ((end[1] - start[1]) * localProgress)
+    ];
+    storyRouteLine.setLatLngs([...storyRouteCoordinates.slice(0, segment + 1), current]);
+    storyRouteMover.setLatLng(current);
+
+    if (progress < storyRouteCoordinates.length - 1) {
+      storyRouteAnimation = requestAnimationFrame(drawFrame);
+      return;
+    }
+
+    storyRouteAnimation = undefined;
+    storyRouteLine.setLatLngs(storyRouteCoordinates);
+    const lastStart = storyRouteCoordinates.at(-2);
+    const lastEnd = storyRouteCoordinates.at(-1);
+    storyRouteMover.setLatLng([
+      lastStart[0] + ((lastEnd[0] - lastStart[0]) * .55),
+      lastStart[1] + ((lastEnd[1] - lastStart[1]) * .55)
+    ]);
+  };
+
+  storyRouteAnimation = requestAnimationFrame(drawFrame);
 };
 
 const storyRouteForDay = (story, day) => {
@@ -306,21 +367,40 @@ const initStoryMap = () => {
   const day = story.itinerary.find((item) => item.day === activeStoryMapDay) || story.itinerary[0];
   const routePlaces = storyRouteForDay(story, day);
   const coordinates = routePlaces.map((place) => [place.lat, place.lng]);
+  storyRouteCoordinates = coordinates;
   storyMap = Leaflet.map(target, { zoomControl:false, attributionControl:true, dragging:true, scrollWheelZoom:true, doubleClickZoom:true, touchZoom:true, keyboard:true, zoomSnap:.5 });
   const tileLayer = Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'&copy; OpenStreetMap' }).addTo(storyMap);
   tileLayer.on('tileerror', () => target.classList.add('has-tile-error'));
   Leaflet.polyline(coordinates, { color:'#9dbcf8', weight:6, opacity:.46, dashArray:'4 9', lineCap:'round' }).addTo(storyMap);
-  Leaflet.polyline(coordinates, { color:'#2f6bff', weight:3.5, opacity:1, lineCap:'round', lineJoin:'round' }).addTo(storyMap);
+  storyRouteLine = Leaflet.polyline(coordinates.length ? [coordinates[0]] : [], { color:'#2f6bff', weight:3.5, opacity:1, lineCap:'round', lineJoin:'round' }).addTo(storyMap);
   routePlaces.forEach((place, index) => {
+    const duplicateIndexes = coordinates.reduce((indexes, coordinate, coordinateIndex) => {
+      if (Math.abs(coordinate[0] - place.lat) < .000001 && Math.abs(coordinate[1] - place.lng) < .000001) indexes.push(coordinateIndex);
+      return indexes;
+    }, []);
+    const duplicatePosition = duplicateIndexes.indexOf(index);
+    const visualOffset = duplicateIndexes.length > 1 ? (duplicatePosition - ((duplicateIndexes.length - 1) / 2)) * 22 : 0;
     const marker = Leaflet.marker([place.lat, place.lng], {
-      icon:Leaflet.divIcon({ className:'route-live-marker story-map-marker', html:`<span>${index + 1}</span>`, iconSize:[32,32], iconAnchor:[16,16] })
+      zIndexOffset:800 + index,
+      icon:Leaflet.divIcon({ className:'route-live-marker story-map-marker', html:`<span>${index + 1}</span>`, iconSize:[32,32], iconAnchor:[16 - visualOffset,16] })
     }).addTo(storyMap);
     marker.bindPopup(`<strong>${index + 1}. ${escapeHtml(place.title)}</strong><small>DAY ${day.day} 일정 순서</small>`, { closeButton:false, offset:[0,-10] });
   });
+  if (coordinates.length > 1) {
+    storyRouteMover = Leaflet.marker(coordinates[0], {
+      interactive:false,
+      zIndexOffset:650,
+      icon:Leaflet.divIcon({ className:'route-moving-marker story-route-mover', html:'<span aria-hidden="true">➜</span>', iconSize:[30,30], iconAnchor:[15,15] })
+    }).addTo(storyMap);
+  }
   if (coordinates.length > 1) storyMap.fitBounds(coordinates, { padding:[32,32] });
   else if (coordinates.length) storyMap.setView(coordinates[0], 14);
   else storyMap.setView([16.0544,108.2022], 12);
-  setTimeout(() => storyMap?.invalidateSize(), 90);
+  setTimeout(() => {
+    storyMap?.invalidateSize();
+    if (storyRouteCoordinates.length > 1) storyMap?.fitBounds(storyRouteCoordinates, { padding:[32,32] });
+    animateStoryRoute();
+  }, 90);
 };
 
 const discoverThemes = [
@@ -353,7 +433,22 @@ const feedCard = (story) => {
   return `<article class="feed-card"><header class="feed-author"><span class="avatar">${escapeHtml(story.avatar)}</span><span><strong>${escapeHtml(story.author)}</strong><small>${escapeHtml(story.duration)} · ${escapeHtml(story.companions)}</small></span><button class="more" type="button" aria-label="더보기">···</button></header><a class="feed-cover" href="#story/${story.id}"><img src="${story.cover}" alt="${escapeHtml(story.title)}"><span class="feed-cover-badge">DAY ${story.days} · ${escapeHtml(data.destinations.find((item) => item.id === story.destinationId)?.name || '')}</span></a><div class="feed-body"><h2>${escapeHtml(story.title)}</h2><p>${escapeHtml(story.summary)}</p><div class="tag-list">${story.tags.map((tag) => `<span>#${escapeHtml(tag)}</span>`).join('')}</div></div><div class="social-actions"><button class="${engagement.liked ? 'is-active' : ''}" type="button" data-like-story="${story.id}">${icons.heart}<span>${formatNumber(story.likes + (engagement.liked ? 1 : 0))}</span></button><button type="button" data-route="story/${story.id}">${icons.comment}<span>${formatNumber(story.comments)}</span></button><button class="${engagement.scrapped ? 'is-active' : ''}" type="button" data-scrap-story="${story.id}">${icons.bookmark}<span>스크랩</span></button><button type="button" data-share-story="${story.id}">${icons.share}<span>공유</span></button></div><div class="feed-copy"><a class="secondary-button" href="#story/${story.id}">가이드 보기</a><button class="primary-button" type="button" data-copy-story="${story.id}">내 여행에 담기</button></div></article>`;
 };
 
-const communityView = () => `<div class="view"><header class="page-intro"><span class="eyebrow">TRAVEL GUIDES</span><h1>여행 가이드</h1><p>다른 여행자가 만든 일정과 이야기를 보고, 마음에 들면 담아 내 여행으로 수정하세요.</p></header><section class="section"><div class="chip-row"><button class="chip is-active">추천</button><button class="chip">다낭</button><button class="chip">교토</button><button class="chip">방콕</button><button class="chip">가족여행</button></div><div class="feed-list">${data.stories.map(feedCard).join('')}</div></section></div>`;
+const communityFilters = [
+  { id:'RECOMMENDED', label:'추천' },
+  { id:'danang', label:'다낭' },
+  { id:'kyoto', label:'교토' },
+  { id:'bangkok', label:'방콕' },
+  { id:'FAMILY', label:'가족여행' }
+];
+
+const communityView = () => {
+  const filteredStories = activeCommunityFilter === 'RECOMMENDED'
+    ? data.stories
+    : activeCommunityFilter === 'FAMILY'
+      ? data.stories.filter((story) => ['story_danang_first','story_bali_slow'].includes(story.id))
+      : data.stories.filter((story) => story.destinationId === activeCommunityFilter);
+  return `<div class="view"><header class="page-intro"><span class="eyebrow">TRAVEL GUIDES</span><h1>여행 가이드</h1><p>다른 여행자가 만든 일정과 이야기를 보고, 마음에 들면 담아 내 여행으로 수정하세요.</p></header><section class="section"><div class="chip-row">${communityFilters.map((filter) => `<button class="chip ${filter.id === activeCommunityFilter ? 'is-active' : ''}" type="button" data-community-filter="${filter.id}">${filter.label}</button>`).join('')}</div><div class="feed-list">${filteredStories.map(feedCard).join('')}</div></section></div>`;
+};
 
 const storyStopDetail = (story, day, index) => {
   const title = day.items[index];
@@ -791,6 +886,12 @@ document.addEventListener('click', async (event) => {
     activeDiscoverTheme = homeTheme.dataset.homeTheme;
     discoverQuery = '';
     location.hash = 'discover';
+    return;
+  }
+  const communityFilter = event.target.closest('[data-community-filter]');
+  if (communityFilter) {
+    activeCommunityFilter = communityFilter.dataset.communityFilter;
+    render();
     return;
   }
   const discoverTheme = event.target.closest('[data-discover-theme]');
