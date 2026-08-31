@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css?v=1">
-  <link rel="stylesheet" href="styles/app.css?v=20">
+  <link rel="stylesheet" href="styles/app.css?v=22">
 </head>
 <body>
   <div class="mobile-app" data-mobile-app>
@@ -21,7 +21,7 @@
         <button class="icon-button" type="button" aria-label="전체 서비스 열기" data-open-menu>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
-        <button class="icon-button" type="button" aria-label="알림" data-route="trips" data-notification-button hidden>
+        <button class="icon-button" type="button" aria-label="알림" data-open-notifications data-notification-button hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
           <span class="notification-dot" aria-hidden="true"></span>
         </button>
@@ -45,6 +45,6 @@
   <div class="sheet-layer" data-sheet-layer hidden></div>
   <script src="scripts/native-bridge.js?v=1"></script>
   <script src="vendor/leaflet/leaflet.js?v=1"></script>
-  <script src="scripts/app.js?v=21" type="module"></script>
+  <script src="scripts/app.js?v=22" type="module"></script>
 </body>
 </html>
