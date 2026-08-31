@@ -16,6 +16,9 @@ let activeDay = 1;
 let activeDiscoverDestination = 'danang';
 let activeDiscoverTheme = 'ALL';
 let discoverQuery = '';
+let searchDestinationId = '';
+let searchCategory = 'ALL';
+let searchQuery = '';
 let activeCardDestination = localStorage.getItem(CARD_DESTINATION_KEY) || 'danang';
 let activeBookingFilter = 'ALL';
 let activeHotelFilter = 'RECOMMENDED';
@@ -689,14 +692,16 @@ const openStoryActions = (storyId) => {
   openSheet('여행 가이드 메뉴', `<div class="story-action-summary"><span class="avatar">${escapeHtml(story.avatar)}</span><span><strong>${escapeHtml(story.title)}</strong><small>${escapeHtml(story.author)} · ${escapeHtml(story.duration)}</small></span></div><div class="service-list story-action-list"><button type="button" data-route="story/${story.id}">${icons.route}<span><strong>가이드 자세히 보기</strong><small>지도와 날짜별 일정을 확인합니다.</small></span><b>›</b></button><button type="button" data-scrap-story="${story.id}">${icons.bookmark}<span><strong>저장·찜에 보관</strong><small>나중에 다시 볼 수 있도록 저장합니다.</small></span><b>›</b></button><button type="button" data-report-story="${story.id}">${icons.comment}<span><strong>게시물 신고</strong><small>부정확하거나 부적절한 내용을 알려주세요.</small></span><b>›</b></button></div>`);
 };
 
-const openHotelDetail = (hotelId) => {
+const openHotelDetail = (hotelId, returnToSearch = false) => {
   const hotel = data.hotels.find((item) => item.id === hotelId);
   if (!hotel) return;
+  const destination = destinationMeta(hotel.destinationId);
   const roomOptions = [
     { name:'디럭스 오션뷰',copy:'퀸베드 1 · 성인 2명 · 조식 포함',price:hotel.price },
     { name:'패밀리 트윈룸',copy:'더블베드 2 · 성인 2명·아동 1명',price:Math.round(hotel.price * 1.35 / 1000) * 1000 }
   ];
-  openSheet(hotel.name, `<article class="hotel-detail-sheet"><img src="${hotel.image}" alt="${escapeHtml(hotel.name)}"><div class="hotel-detail-copy"><small>${escapeHtml(hotel.area)} · ${hotel.badges.join(' · ')}</small><div class="hotel-detail-rating"><strong>★ ${hotel.rating}</strong><span>후기 ${formatNumber(hotel.reviews)}개</span></div><p>여행 일정에 숙소를 먼저 담고, 실제 예약 단계에서 객실과 투숙 조건을 선택합니다.</p><h3>객실 유형</h3><div class="room-option-list">${roomOptions.map((room, index) => `<article><span><strong>${room.name}</strong><small>${room.copy}</small></span><b>${formatPrice(room.price)}<small>/박</small></b>${index === 0 ? '<em>추천</em>' : ''}</article>`).join('')}</div><button class="primary-button full-button" type="button" data-add-hotel="${hotel.id}">이 호텔을 여행 카드에 담기</button></div></article>`);
+  const backButton = returnToSearch ? `<button class="search-back-button" type="button" data-search-back>${icons.back}<span>${escapeHtml(destination.name)} 검색 결과로 돌아가기</span></button>` : '';
+  openSheet(hotel.name, `${backButton}<article class="hotel-detail-sheet"><img src="${hotel.image}" alt="${escapeHtml(hotel.name)}"><div class="hotel-detail-copy"><small>${escapeHtml(destination.name)} · ${escapeHtml(hotel.area)} · ${hotel.badges.join(' · ')}</small><div class="hotel-detail-rating"><strong>★ ${hotel.rating}</strong><span>후기 ${formatNumber(hotel.reviews)}개</span></div><p>여행 일정에는 숙소를 먼저 담고, 예약 단계에서 객실·조식·취소 조건을 선택합니다.</p><h3>객실과 예상 금액</h3><div class="room-option-list">${roomOptions.map((room, index) => `<article><span><strong>${room.name}</strong><small>${room.copy}</small></span><b>${formatPrice(room.price)}<small>/박</small></b>${index === 0 ? '<em>추천</em>' : ''}</article>`).join('')}</div><p class="price-notice">표시 금액은 1박 기준 예상가입니다. 날짜와 인원에 따라 실제 예약 금액이 달라질 수 있습니다.</p><button class="primary-button full-button" type="button" data-add-hotel="${hotel.id}">이 호텔을 여행 카드에 담기</button></div></article>`);
 };
 
 const getEngagement = (storyId) => read(ENGAGEMENT_KEY, []).find((item) => item.id === `${userId()}_${storyId}`) || {};
@@ -815,12 +820,46 @@ const addHotelToCard = (hotelId) => {
   window.HotelnGoNative?.haptic('Light');
 };
 
-const openPlaceDetail = (placeId) => {
+const serviceOptionsFor = (place) => {
+  const base = Number(place.price || 0);
+  const options = {
+    HOTEL:[
+      { name:'스탠더드 객실',copy:'성인 2명 · 기본 객실',price:base },
+      { name:'풀·가든 뷰 객실',copy:'조식 포함 · 무료 취소 조건 확인',price:Math.round(base * 1.28 / 1000) * 1000 }
+    ],
+    RESTAURANT:[
+      { name:'대표 메뉴 구성',copy:'1인 기준 · 음료 별도',price:base },
+      { name:'여유 있는 코스',copy:'2~3가지 메뉴와 디저트',price:Math.round(base * 1.45 / 1000) * 1000 }
+    ],
+    SPA:[
+      { name:'아로마 테라피',copy:`${place.duration}분 · 1인`,price:base },
+      { name:'커플 릴렉스',copy:'120분 · 2인 룸 요청 가능',price:Math.round(base * 1.75 / 1000) * 1000 }
+    ],
+    GOLF:[
+      { name:'18홀 기본 패키지',copy:'그린피 · 캐디피 · 2인 카트',price:base },
+      { name:'트와일라이트 9홀',copy:'오후 티오프 · 현장 확정',price:Math.round(base * .55 / 1000) * 1000 }
+    ],
+    TOUR:[
+      { name:'자유 관람',copy:`추천 체류 ${place.duration}분`,price:base },
+      { name:'소규모 가이드',copy:'한국어 또는 영어 가이드 요청',price:Math.round(Math.max(base, 25000) * 1.6 / 1000) * 1000 }
+    ],
+    VEHICLE:[
+      { name:'기본 이동',copy:'편도 · 일반 차량',price:base },
+      { name:'단독 차량',copy:'기사 포함 · 대기시간 별도',price:Math.round(Math.max(base, 30000) * 1.5 / 1000) * 1000 }
+    ]
+  };
+  return options[place.category] || [];
+};
+
+const openPlaceDetail = (placeId, returnToSearch = false) => {
   const place = data.places.find((item) => item.id === placeId);
   if (!place) return;
   const destination = destinationMeta(place.destinationId);
   const saved = Boolean(session()) && getCardItems().some((item) => item.sourceId === place.id);
-  openSheet(place.title, `<article class="place-detail-sheet"><img src="${place.image}" alt=""><div class="place-detail-sheet-copy"><small>${categoryLabel(place.category)} · ${escapeHtml(destination.name)} ${escapeHtml(place.area)}</small><p>${escapeHtml(place.description)}</p><dl><div><dt>추천 시간</dt><dd>${escapeHtml(place.recommendedTime)}</dd></div><div><dt>예상 체류</dt><dd>${place.duration}분</dd></div><div><dt>기본 비용</dt><dd>${formatPrice(place.price)}</dd></div></dl><div class="place-detail-actions"><button class="secondary-button" type="button" data-close-sheet>계속 둘러보기</button><button class="primary-button ${saved ? 'is-saved' : ''}" type="button" data-add-place="${place.id}" ${saved ? 'disabled' : ''}>${saved ? '여행 카드에 담김 ✓' : '여행 카드에 담기'}</button></div></div></article>`);
+  const options = serviceOptionsFor(place);
+  const backButton = returnToSearch ? `<button class="search-back-button" type="button" data-search-back>${icons.back}<span>${escapeHtml(destination.name)} 검색 결과로 돌아가기</span></button>` : '';
+  const optionMarkup = options.length ? `<section class="service-option-section"><h3>${place.category === 'HOTEL' ? '객실과 예상 금액' : '선택 가능한 상품'}</h3><div class="service-option-list">${options.map((option, index) => `<article><span><strong>${escapeHtml(option.name)}</strong><small>${escapeHtml(option.copy)}</small></span><b>${option.price ? `${formatPrice(option.price)}부터` : '무료'}</b>${index === 0 ? '<em>기본</em>' : ''}</article>`).join('')}</div><p class="price-notice">표시 금액은 일정 작성을 위한 예상가입니다. 예약 조건과 최종 금액은 상세 옵션 선택 시 확인합니다.</p></section>` : '';
+  openSheet(place.title, `${backButton}<article class="place-detail-sheet"><img src="${place.image}" alt="${escapeHtml(place.title)}"><div class="place-detail-sheet-copy"><small>${categoryLabel(place.category)} · ${escapeHtml(destination.name)} ${escapeHtml(place.area)}</small><h2>${escapeHtml(place.title)}</h2><p>${escapeHtml(place.description)}</p><dl><div><dt>추천 시간</dt><dd>${escapeHtml(place.recommendedTime)}</dd></div><div><dt>예상 체류</dt><dd>${place.duration}분</dd></div><div><dt>${place.category === 'HOTEL' ? '1박 예상' : '기본 예상'}</dt><dd>${place.price ? formatPrice(place.price) : '무료'}</dd></div></dl>${optionMarkup}<div class="place-detail-actions"><button class="secondary-button" type="button" ${returnToSearch ? 'data-search-back' : 'data-close-sheet'}>${returnToSearch ? '검색 결과' : '계속 둘러보기'}</button><button class="primary-button ${saved ? 'is-saved' : ''}" type="button" data-add-place="${place.id}" ${saved ? 'disabled' : ''}>${saved ? '여행 카드에 담김 ✓' : '여행 카드에 담기'}</button></div></div></article>`);
 };
 
 const openCardRemoveConfirm = (cardId) => {
@@ -888,7 +927,55 @@ const buildPlanFromCard = (destinationId) => {
   return { id:`card_plan_${destinationId}_${Date.now()}`,title:`${destination.name} ${dayCount - 1}박 ${dayCount}일`,destinationId,destination:destination.name,dates:base?.dates || '날짜를 정해주세요',people:base?.people || 2,source:'TRIP_CARD',savedCount:saved.length,days };
 };
 
-const openSearch = () => openSheet('여행지와 장소 검색', `<form class="search-form" data-mobile-search><input name="query" type="search" placeholder="도시, 랜드마크, 호텔명" autocomplete="off"><button class="primary-button" type="submit" data-mobile-search-submit>검색</button></form><p class="search-guide">도시를 고르거나 ‘미케 비치’, ‘시장’, ‘호텔’처럼 장소를 검색해보세요.</p><div class="search-result-list">${data.destinations.map((item) => `<button class="search-result" type="button" data-search-destination="${item.id}"><img src="${item.image}" alt=""><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.country)} · ${item.placeCount}개 장소</small></span><b>›</b></button>`).join('')}</div>`);
+const searchCategories = [
+  { id:'ALL',label:'전체',types:[] },
+  { id:'LANDMARK',label:'랜드마크',types:['LANDMARK'] },
+  { id:'HOTEL',label:'호텔·리조트',types:['HOTEL'] },
+  { id:'FOOD',label:'식사·카페',types:['RESTAURANT'] },
+  { id:'ACTIVITY',label:'즐길거리',types:['SPA','GOLF','TOUR','VEHICLE'] }
+];
+
+const searchCatalog = (destinationId) => {
+  const hotels = data.hotels.filter((hotel) => hotel.destinationId === destinationId).map((hotel) => ({ kind:'hotel',id:hotel.id,category:'HOTEL',title:hotel.name,area:hotel.area,image:hotel.image,description:`${hotel.badges.join(' · ')} · 평점 ${hotel.rating}`,price:hotel.price,rating:hotel.rating,reviews:hotel.reviews,duration:720 }));
+  const hotelNames = new Set(hotels.map((hotel) => hotel.title));
+  const places = data.places.filter((place) => place.destinationId === destinationId && !(place.category === 'HOTEL' && hotelNames.has(place.title))).map((place) => ({ kind:'place',...place }));
+  return [...hotels,...places];
+};
+
+const searchPriceLabel = (item) => {
+  if (!item.price) return item.category === 'LANDMARK' ? '무료 방문' : '현장 확인';
+  if (item.category === 'HOTEL') return `1박 ${formatPrice(item.price)}부터`;
+  return `기본 ${formatPrice(item.price)}부터`;
+};
+
+const searchResultCard = (item) => {
+  const detailAttribute = item.kind === 'hotel' ? `data-search-hotel-detail="${item.id}"` : `data-search-place-detail="${item.id}"`;
+  const addAttribute = item.kind === 'hotel' ? `data-add-hotel="${item.id}"` : `data-add-place="${item.id}"`;
+  const info = item.kind === 'hotel' ? `★ ${item.rating} · 후기 ${formatNumber(item.reviews)}` : `${item.duration}분 · ${escapeHtml(item.recommendedTime || '시간 확인')}`;
+  return `<article class="search-place-card"><button class="search-place-media" type="button" ${detailAttribute} aria-label="${escapeHtml(item.title)} 상세 보기"><img src="${item.image}" alt=""></button><div class="search-place-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p><div class="search-place-meta"><span>${info}</span><b>${searchPriceLabel(item)}</b></div><div class="search-place-actions"><button class="secondary-button" type="button" ${detailAttribute}>상세보기</button><button class="primary-button" type="button" ${addAttribute}>여행 카드에 담기</button></div></div></article>`;
+};
+
+const openSearch = (options = {}) => {
+  if (options.reset) {
+    searchDestinationId = '';
+    searchCategory = 'ALL';
+    searchQuery = '';
+  }
+  if (Object.prototype.hasOwnProperty.call(options, 'destinationId')) searchDestinationId = options.destinationId || '';
+  if (Object.prototype.hasOwnProperty.call(options, 'category')) searchCategory = options.category || 'ALL';
+  if (Object.prototype.hasOwnProperty.call(options, 'query')) searchQuery = options.query || '';
+  const destination = data.destinations.find((item) => item.id === searchDestinationId);
+  if (!destination) {
+    openSheet('여행지 선택', `<div class="search-step-intro"><b>1</b><span><strong>먼저 여행지를 고르세요</strong><small>선택한 도시 안에서만 랜드마크·숙소·즐길거리를 찾아드립니다.</small></span></div><form class="search-form" data-mobile-search><input name="query" type="search" value="${escapeHtml(searchQuery)}" placeholder="도시명 검색" autocomplete="off"><button class="primary-button" type="submit" data-mobile-search-submit>검색</button></form><p class="search-guide">여행지를 먼저 고르면 다른 도시의 장소가 섞이지 않습니다.</p><div class="search-result-list">${data.destinations.map((item) => `<button class="search-result" type="button" data-search-pick-destination="${item.id}"><img src="${item.image}" alt=""><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.country)} · ${item.placeCount}개 장소</small></span><b>›</b></button>`).join('')}</div>`);
+    return;
+  }
+  const category = searchCategories.find((item) => item.id === searchCategory) || searchCategories[0];
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const results = searchCatalog(destination.id).filter((item) => (!category.types.length || category.types.includes(item.category)) && (!normalizedQuery || [item.title,item.area,item.description,categoryLabel(item.category)].join(' ').toLowerCase().includes(normalizedQuery)));
+  const categoryButtons = searchCategories.map((item) => `<button class="chip ${item.id === searchCategory ? 'is-active' : ''}" type="button" data-search-category="${item.id}">${item.label}</button>`).join('');
+  const resultMarkup = results.length ? results.map(searchResultCard).join('') : `<div class="search-empty">${icons.search}<strong>조건에 맞는 장소가 없어요</strong><p>다른 카테고리를 선택하거나 검색어를 지워보세요.</p><button class="secondary-button" type="button" data-search-reset-query>전체 결과 보기</button></div>`;
+  openSheet(`${destination.name}에서 찾기`, `<div class="search-current-destination"><img src="${destination.image}" alt=""><span><small>현재 여행지</small><strong>${escapeHtml(destination.name)} · ${escapeHtml(destination.country)}</strong></span><button type="button" data-search-change-destination>여행지 변경</button></div><div class="search-step-intro search-step-category"><b>2</b><span><strong>무엇을 찾고 있나요?</strong><small>${escapeHtml(destination.name)} 안에서만 결과를 보여드립니다.</small></span></div><div class="chip-row search-category-row">${categoryButtons}</div><form class="search-form search-place-form" data-mobile-search><input name="query" type="search" value="${escapeHtml(searchQuery)}" placeholder="${escapeHtml(destination.name)}의 장소·호텔명 검색" autocomplete="off"><button class="primary-button" type="submit" data-mobile-search-submit>검색</button></form><p class="search-guide">호텔·리조트와 즐길거리는 상세보기에서 객실·상품별 예상 금액과 이용 조건을 확인할 수 있습니다.</p><div class="search-result-summary"><strong>${escapeHtml(category.label)}</strong><span>${results.length}곳</span></div><div class="search-place-list">${resultMarkup}</div>`);
+};
 
 const minutesToTime = (minutes) => `${String(Math.floor(minutes / 60) % 24).padStart(2,'0')}:${String(minutes % 60).padStart(2,'0')}`;
 const timeToMinutes = (time) => { const [hour, minute] = String(time || '09:00').split(':').map(Number); return (hour * 60) + minute; };
@@ -933,7 +1020,7 @@ document.addEventListener('click', async (event) => {
   if (routeButton) { if (!sheetLayer.hidden) closeSheet(); location.hash = routeButton.dataset.route; return; }
   if (event.target.closest('[data-open-menu]')) return openServiceMenu();
   if (event.target.closest('[data-open-notifications]')) return openNotifications();
-  if (event.target.closest('[data-open-search]')) return openSearch();
+  if (event.target.closest('[data-open-search]')) return openSearch({ reset:true });
   if (event.target.closest('[data-mobile-search-submit]')) {
     event.preventDefault();
     event.target.closest('form')?.requestSubmit();
@@ -967,6 +1054,35 @@ document.addEventListener('click', async (event) => {
   if (hotelFilter) { activeHotelFilter = hotelFilter.dataset.hotelFilter; render(); return; }
   const hotelDetail = event.target.closest('[data-hotel-detail]');
   if (hotelDetail) return openHotelDetail(hotelDetail.dataset.hotelDetail);
+  const searchHotelDetail = event.target.closest('[data-search-hotel-detail]');
+  if (searchHotelDetail) return openHotelDetail(searchHotelDetail.dataset.searchHotelDetail, true);
+  const searchPlaceDetail = event.target.closest('[data-search-place-detail]');
+  if (searchPlaceDetail) return openPlaceDetail(searchPlaceDetail.dataset.searchPlaceDetail, true);
+  if (event.target.closest('[data-search-back]')) return openSearch();
+  const searchDestination = event.target.closest('[data-search-pick-destination]');
+  if (searchDestination) {
+    searchDestinationId = searchDestination.dataset.searchPickDestination;
+    searchCategory = 'ALL';
+    searchQuery = '';
+    return openSearch();
+  }
+  if (event.target.closest('[data-search-change-destination]')) {
+    searchDestinationId = '';
+    searchCategory = 'ALL';
+    searchQuery = '';
+    return openSearch();
+  }
+  const searchCategoryButton = event.target.closest('[data-search-category]');
+  if (searchCategoryButton) {
+    searchCategory = searchCategoryButton.dataset.searchCategory;
+    searchQuery = '';
+    return openSearch();
+  }
+  if (event.target.closest('[data-search-reset-query]')) {
+    searchQuery = '';
+    searchCategory = 'ALL';
+    return openSearch();
+  }
   const discoverTheme = event.target.closest('[data-discover-theme]');
   if (discoverTheme) {
     activeDiscoverTheme = discoverTheme.dataset.discoverTheme;
@@ -1134,18 +1250,18 @@ document.addEventListener('submit', (event) => {
   if (search) {
     event.preventDefault();
     const query = String(new FormData(search).get('query') || '').trim();
-    if (!query) return toast('검색어를 입력해주세요.');
-    const normalized = query.toLowerCase();
-    const destination = data.destinations.find((item) => [item.name,item.country,item.tagline].join(' ').toLowerCase().includes(normalized));
-    const place = data.places.find((item) => [item.title,item.area,item.description,categoryLabel(item.category)].join(' ').toLowerCase().includes(normalized));
-    if (!destination && !place) return toast(`‘${query}’에 맞는 여행지나 장소가 없어요.`);
-    activeDiscoverDestination = destination?.id || place.destinationId;
-    activeDiscoverTheme = 'ALL';
-    discoverQuery = destination ? '' : query;
-    closeSheet();
-    if (route().name !== 'discover') location.hash = 'discover';
-    else render();
-    toast(destination ? `${destination.name} 추천을 열었습니다.` : `‘${query}’ 검색 결과를 찾았습니다.`);
+    if (!searchDestinationId) {
+      if (!query) return toast('여행지 이름을 입력하거나 아래 도시를 선택해주세요.');
+      const normalized = query.toLowerCase();
+      const destination = data.destinations.find((item) => [item.name,item.country,item.tagline].join(' ').toLowerCase().includes(normalized));
+      if (!destination) return toast(`‘${query}’에 맞는 여행지를 찾지 못했어요.`);
+      searchDestinationId = destination.id;
+      searchCategory = 'ALL';
+      searchQuery = '';
+      return openSearch();
+    }
+    searchQuery = query;
+    openSearch();
   }
   const bookingLookup = event.target.closest('[data-mobile-booking-lookup]');
   if (bookingLookup) {
