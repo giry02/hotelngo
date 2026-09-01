@@ -998,7 +998,8 @@ const openScheduleEditor = (dayNumber, itemIndex) => {
   openSheet('시간과 체류시간 변경', `<div class="section-head schedule-editor-head"><div><span class="eyebrow">SCHEDULE OPTION</span><h2>${escapeHtml(item.title)}</h2><p>앞 일정의 체류시간과 이동 여유 30분을 반영한 시간입니다.</p></div></div><div class="chip-row schedule-time-options">${suggestions.map((time, index) => `<button class="chip ${index === 0 ? 'is-active' : ''}" type="button" data-schedule-time="${time}">${index === 0 ? '추천 ' : ''}${time}</button>`).join('')}</div><label class="form-field"><span>체류시간</span><select data-schedule-duration><option value="60" ${Number(item.duration) === 60 ? 'selected' : ''}>60분</option><option value="90" ${Number(item.duration) === 90 ? 'selected' : ''}>90분</option><option value="120" ${Number(item.duration) === 120 ? 'selected' : ''}>120분</option><option value="150" ${Number(item.duration) === 150 ? 'selected' : ''}>150분</option></select></label><button class="primary-button full-button schedule-apply" type="button" data-apply-schedule="${dayNumber}:${itemIndex}">변경 적용</button>`);
 };
 
-const render = () => {
+const render = ({ preserveScroll = false } = {}) => {
+  const previousScrollY = scrollY;
   const current = route();
   setActiveNav(current.name);
   const loggedIn = Boolean(session());
@@ -1018,7 +1019,8 @@ const render = () => {
     initStoryMap();
   });
   main.focus({ preventScroll:true });
-  scrollTo({ top:0, behavior:'instant' });
+  if (preserveScroll) requestAnimationFrame(() => scrollTo({ top:previousScrollY, behavior:'instant' }));
+  else scrollTo({ top:0, behavior:'instant' });
 };
 
 document.addEventListener('click', async (event) => {
@@ -1095,7 +1097,7 @@ document.addEventListener('click', async (event) => {
   if (discoverCategory) {
     activeDiscoverCategory = discoverCategory.dataset.discoverCategory;
     discoverQuery = '';
-    render();
+    render({ preserveScroll:true });
     return;
   }
   const placeDetail = event.target.closest('[data-place-detail]');
@@ -1105,7 +1107,7 @@ document.addEventListener('click', async (event) => {
   if (event.target.closest('[data-clear-discover-query]')) {
     discoverQuery = '';
     activeDiscoverCategory = 'ALL';
-    render();
+    render({ preserveScroll:true });
     return;
   }
   const cardDestination = event.target.closest('[data-card-destination]');
@@ -1127,7 +1129,7 @@ document.addEventListener('click', async (event) => {
     closeSheet();
     if (route().name !== 'discover') location.hash = 'discover';
     else {
-      render();
+      render({ preserveScroll:true });
     }
     toast(`${destinationMeta(activeDiscoverDestination).name} 추천 장소를 불러왔습니다.`);
     return;
@@ -1215,7 +1217,7 @@ document.addEventListener('submit', (event) => {
   if (discoverSearch) {
     event.preventDefault();
     discoverQuery = String(new FormData(discoverSearch).get('query') || '').trim();
-    render();
+    render({ preserveScroll:true });
     return;
   }
   const login = event.target.closest('[data-mobile-login]');
