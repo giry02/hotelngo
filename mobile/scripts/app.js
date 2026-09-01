@@ -15,6 +15,7 @@ let data;
 let activeDay = 1;
 let activeDiscoverDestination = 'danang';
 let activeDiscoverTheme = 'ALL';
+let activeDiscoverCategory = 'ALL';
 let discoverQuery = '';
 let searchDestinationId = '';
 let searchCategory = 'ALL';
@@ -407,19 +408,24 @@ const discoverThemes = [
 
 const placeMatchesTheme = (place, themeId) => themeId === 'ALL' || (place.themes || []).includes(themeId) || (themeId === 'FOOD' && place.category === 'RESTAURANT') || (themeId === 'GOLF' && place.category === 'GOLF');
 
-const discoverPlaceCard = (place) => {
-  const saved = Boolean(session()) && getCardItems().some((item) => item.sourceId === place.id);
-  return `<article class="discover-place-card"><button class="discover-place-media" type="button" data-place-detail="${place.id}" aria-label="${escapeHtml(place.title)} 소개 보기"><img src="${place.image}" alt=""></button><div class="discover-place-copy"><small>${categoryLabel(place.category)} · ${escapeHtml(place.area)}</small><h3>${escapeHtml(place.title)}</h3><p>${escapeHtml(place.description)}</p><div class="discover-place-meta"><span>${place.recommendedTime} 추천</span><b>${formatPrice(place.price)} · ${place.duration}분</b></div><footer><button class="secondary-button" type="button" data-place-detail="${place.id}">소개</button><button class="primary-button ${saved ? 'is-saved' : ''}" type="button" data-add-place="${place.id}" ${saved ? 'disabled' : ''}>${saved ? '담김 ✓' : '여행 카드에 담기'}</button></footer></div></article>`;
+const discoverCatalogCard = (item) => {
+  const saved = Boolean(session()) && getCardItems().some((cardItem) => cardItem.sourceId === item.id);
+  const detailAttribute = item.kind === 'hotel' ? `data-hotel-detail="${item.id}"` : `data-place-detail="${item.id}"`;
+  const addAttribute = item.kind === 'hotel' ? `data-add-hotel="${item.id}"` : `data-add-place="${item.id}"`;
+  const detailLabel = item.kind === 'hotel' ? `★ ${item.rating} · 후기 ${formatNumber(item.reviews)}개` : `${escapeHtml(item.recommendedTime || '시간 확인')} 추천 · ${item.duration}분`;
+  return `<article class="discover-place-card"><button class="discover-place-media" type="button" ${detailAttribute} aria-label="${escapeHtml(item.title)} 상세 보기"><img src="${item.image}" alt=""></button><div class="discover-place-copy"><small>${categoryLabel(item.category)} · ${escapeHtml(item.area)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p><div class="discover-place-meta"><span>${detailLabel}</span><b>${searchPriceLabel(item)}</b></div><footer><button class="secondary-button" type="button" ${detailAttribute}>상세보기</button><button class="primary-button ${saved ? 'is-saved' : ''}" type="button" ${addAttribute} ${saved ? 'disabled' : ''}>${saved ? '담김 ✓' : '여행 카드에 담기'}</button></footer></div></article>`;
 };
 
 const discoverView = () => {
   const selectedDestination = data.destinations.find((item) => item.id === activeDiscoverDestination) || data.destinations[0];
-  const destinationPlaces = data.places.filter((place) => place.destinationId === selectedDestination.id);
-  const filteredPlaces = destinationPlaces.filter((place) => placeMatchesTheme(place, activeDiscoverTheme) && (!discoverQuery || [place.title,place.area,place.description,categoryLabel(place.category)].join(' ').toLowerCase().includes(discoverQuery.toLowerCase())));
+  const selectedCategory = searchCategories.find((item) => item.id === activeDiscoverCategory) || searchCategories[0];
+  const catalog = searchCatalog(selectedDestination.id);
+  const normalizedQuery = discoverQuery.trim().toLowerCase();
+  const filteredPlaces = catalog.filter((item) => (!selectedCategory.types.length || selectedCategory.types.includes(item.category)) && (!normalizedQuery || [item.title,item.area,item.description,categoryLabel(item.category)].join(' ').toLowerCase().includes(normalizedQuery)));
   const destinationStories = data.stories.filter((story) => story.destinationId === selectedDestination.id);
-  const activeThemeLabel = discoverThemes.find((theme) => theme.id === activeDiscoverTheme)?.label || '추천';
   const destinations = data.destinations.map((item) => `<button class="destination-card ${item.id === selectedDestination.id ? 'is-active' : ''}" type="button" data-destination="${item.id}"><img src="${item.image}" alt="${escapeHtml(item.name)}"><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.country)} · ${escapeHtml(item.tagline)}</small><b>가이드 ${item.storyCount} · 장소 ${item.placeCount}</b></div></button>`).join('');
-  return `<div class="view"><header class="page-intro discover-intro"><span class="eyebrow">CHOOSE A DESTINATION</span><div class="page-intro-row"><div><h1>여행지 찾기</h1><p>도시와 테마를 고르면 장소와 여행 가이드가 함께 바뀝니다.</p></div><button class="icon-button" type="button" data-open-search aria-label="여행지 검색">${icons.search}</button></div></header><section class="section"><div class="chip-row discover-theme-row">${discoverThemes.map((theme) => `<button class="chip ${theme.id === activeDiscoverTheme ? 'is-active' : ''}" type="button" data-discover-theme="${theme.id}">${theme.label}</button>`).join('')}</div><div class="destination-grid">${destinations}</div></section><section class="discover-focus" data-discover-results><img src="${selectedDestination.image}" alt=""><div><small>NOW EXPLORING</small><h2>${escapeHtml(selectedDestination.name)}</h2><p>${escapeHtml(selectedDestination.tagline)}</p><span>${destinationPlaces.length}개 추천 장소 · ${destinationStories.length || selectedDestination.storyCount}개 가이드</span></div></section><section class="section discover-result-section"><div class="section-head"><div><span class="eyebrow">${escapeHtml(selectedDestination.name.toUpperCase())} · ${activeThemeLabel}</span><h2>${discoverQuery ? `‘${escapeHtml(discoverQuery)}’ 검색 결과` : `${escapeHtml(selectedDestination.name)}에서 많이 담아요`}</h2><p>소개를 확인하고 마음에 드는 장소를 여행 카드에 담으세요.</p></div>${discoverQuery ? '<button class="text-button" type="button" data-clear-discover-query>검색 해제</button>' : ''}</div>${filteredPlaces.length ? `<div class="discover-place-list">${filteredPlaces.map(discoverPlaceCard).join('')}</div>` : `<div class="empty-state">${icons.search}<h2>조건에 맞는 장소가 없어요</h2><p>다른 테마를 선택하거나 검색어를 지워보세요.</p><button class="primary-button" type="button" data-clear-discover-query>전체 추천 보기</button></div>`}</section>${destinationStories.length ? `<section class="section discover-guide-section"><div class="section-head"><div><span class="eyebrow">TRAVEL GUIDE</span><h2>${escapeHtml(selectedDestination.name)} 여행자가 만든 일정</h2><p>완성된 동선을 먼저 보고 내 여행으로 가져올 수 있어요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${destinationStories.map(storyCard).join('')}</div></section>` : ''}</div>`;
+  const categories = searchCategories.map((category) => `<button class="discover-category ${category.id === activeDiscoverCategory ? 'is-active' : ''}" type="button" data-discover-category="${category.id}"><span>${category.id === 'ALL' ? icons.spark : category.id === 'LANDMARK' ? icons.pin : category.id === 'HOTEL' ? icons.hotel : category.id === 'FOOD' ? icons.restaurant : icons.route}</span><b>${category.label}</b></button>`).join('');
+  return `<div class="view discover-page"><header class="page-intro discover-intro"><span class="eyebrow">DESTINATION FIRST</span><h1>여행지부터 고르고,<br>그 안에서 장소를 찾으세요</h1><p>도시를 정한 다음 랜드마크·숙소·식사·즐길거리를 골라야 서로 이동 가능한 여행 카드가 만들어집니다.</p></header><section class="section discover-step-section"><div class="discover-step-head"><b>1</b><span><strong>어디로 떠나나요?</strong><small>먼저 한 도시를 선택하세요.</small></span></div><div class="destination-grid">${destinations}</div></section><section class="discover-destination-summary" data-discover-results><img src="${selectedDestination.image}" alt=""><div><small>현재 여행지</small><strong>${escapeHtml(selectedDestination.name)} · ${escapeHtml(selectedDestination.country)}</strong><span>${escapeHtml(selectedDestination.tagline)}</span></div><button type="button" data-open-search>도시 검색</button></section><section class="section discover-step-section discover-category-section"><div class="discover-step-head"><b>2</b><span><strong>${escapeHtml(selectedDestination.name)}에서 무엇을 찾나요?</strong><small>선택한 도시 안의 결과만 보여드립니다.</small></span></div><div class="discover-category-grid">${categories}</div><form class="discover-inline-search" data-discover-catalog-search><span>${icons.search}</span><input name="query" type="search" value="${escapeHtml(discoverQuery)}" placeholder="${escapeHtml(selectedDestination.name)}의 장소·호텔명 검색" autocomplete="off"><button type="submit">검색</button></form></section><section class="section discover-result-section"><div class="section-head"><div><span class="eyebrow">${escapeHtml(selectedDestination.name.toUpperCase())} · ${escapeHtml(selectedCategory.label)}</span><h2>${discoverQuery ? `‘${escapeHtml(discoverQuery)}’ 검색 결과` : `${escapeHtml(selectedDestination.name)} ${escapeHtml(selectedCategory.label)} 추천`}</h2><p>가격과 이용 조건은 상세보기에서 확인한 뒤 여행 카드에 담으세요.</p></div>${discoverQuery ? '<button class="text-button" type="button" data-clear-discover-query>검색 해제</button>' : ''}</div>${filteredPlaces.length ? `<div class="discover-place-list">${filteredPlaces.map(discoverCatalogCard).join('')}</div>` : `<div class="empty-state">${icons.search}<h2>조건에 맞는 장소가 없어요</h2><p>다른 분류를 선택하거나 검색어를 지워보세요.</p><button class="primary-button" type="button" data-clear-discover-query>전체 결과 보기</button></div>`}</section>${destinationStories.length ? `<section class="section discover-guide-section"><div class="section-head"><div><span class="eyebrow">TRAVEL GUIDE</span><h2>${escapeHtml(selectedDestination.name)} 여행자가 만든 일정</h2><p>완성된 동선을 먼저 보고 내 여행으로 가져올 수 있어요.</p></div><a href="#community">전체보기</a></div><div class="story-reel">${destinationStories.map(storyCard).join('')}</div></section>` : ''}</div>`;
 };
 
 const feedCard = (story) => {
@@ -1031,6 +1037,7 @@ document.addEventListener('click', async (event) => {
   if (homeDestination) {
     activeDiscoverDestination = homeDestination.dataset.homeDestination;
     activeDiscoverTheme = 'ALL';
+    activeDiscoverCategory = 'ALL';
     discoverQuery = '';
     location.hash = 'discover';
     return;
@@ -1038,6 +1045,7 @@ document.addEventListener('click', async (event) => {
   const homeTheme = event.target.closest('[data-home-theme]');
   if (homeTheme) {
     activeDiscoverTheme = homeTheme.dataset.homeTheme;
+    activeDiscoverCategory = ({ FOOD:'FOOD',GOLF:'ACTIVITY',BEACH:'LANDMARK',FAMILY:'ALL' })[activeDiscoverTheme] || 'ALL';
     discoverQuery = '';
     location.hash = 'discover';
     return;
@@ -1083,12 +1091,11 @@ document.addEventListener('click', async (event) => {
     searchCategory = 'ALL';
     return openSearch();
   }
-  const discoverTheme = event.target.closest('[data-discover-theme]');
-  if (discoverTheme) {
-    activeDiscoverTheme = discoverTheme.dataset.discoverTheme;
+  const discoverCategory = event.target.closest('[data-discover-category]');
+  if (discoverCategory) {
+    activeDiscoverCategory = discoverCategory.dataset.discoverCategory;
     discoverQuery = '';
     render();
-    requestAnimationFrame(() => document.querySelector('[data-discover-results]')?.scrollIntoView({ behavior:'smooth', block:'start' }));
     return;
   }
   const placeDetail = event.target.closest('[data-place-detail]');
@@ -1097,7 +1104,7 @@ document.addEventListener('click', async (event) => {
   if (storyStop) return openStoryStopDetail(storyStop.dataset.storyStopDetail, storyStop.dataset.storyStopDay, storyStop.dataset.storyStopIndex);
   if (event.target.closest('[data-clear-discover-query]')) {
     discoverQuery = '';
-    activeDiscoverTheme = 'ALL';
+    activeDiscoverCategory = 'ALL';
     render();
     return;
   }
@@ -1115,12 +1122,12 @@ document.addEventListener('click', async (event) => {
   if (destination) {
     activeDiscoverDestination = destination.dataset.destination || destination.dataset.searchDestination;
     activeDiscoverTheme = 'ALL';
+    activeDiscoverCategory = 'ALL';
     discoverQuery = '';
     closeSheet();
     if (route().name !== 'discover') location.hash = 'discover';
     else {
       render();
-      requestAnimationFrame(() => document.querySelector('[data-discover-results]')?.scrollIntoView({ behavior:'smooth', block:'start' }));
     }
     toast(`${destinationMeta(activeDiscoverDestination).name} 추천 장소를 불러왔습니다.`);
     return;
@@ -1204,6 +1211,13 @@ document.addEventListener('change', (event) => {
 });
 
 document.addEventListener('submit', (event) => {
+  const discoverSearch = event.target.closest('[data-discover-catalog-search]');
+  if (discoverSearch) {
+    event.preventDefault();
+    discoverQuery = String(new FormData(discoverSearch).get('query') || '').trim();
+    render();
+    return;
+  }
   const login = event.target.closest('[data-mobile-login]');
   if (login) {
     event.preventDefault();
